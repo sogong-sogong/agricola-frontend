@@ -1,0 +1,6 @@
+.container {
+  background-color: rgb(237, 112, 74);
+  display: flex;
+  width: 100%;
+  height: 100%;
+}

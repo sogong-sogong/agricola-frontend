@@ -1,0 +1,65 @@
+.container {
+  display: flex;
+  width: 100vw;
+  height: 100vh; /* 화면 전체 기준 100% 높이. */
+}
+
+/* 상단 로그와 행동판 */
+.leftBoard {
+  background-color: rgb(139, 139, 139);
+  width: 90%;
+  height: 100%; /* 부모 기준 100% 높이. */
+}
+
+/* 우측 화면의 프로필, 점수, 로그 등 */
+.logBoard {
+  background-color: rgb(100, 100, 100);
+  width: 10%;
+  height: 100%;
+}
+
+/* 상단 행동 로그 */
+.header {
+  background-color: rgb(107, 107, 107);
+  width: 100%;
+  height: 10%;
+}
+
+/* 행동판과 집 판 */
+.gameBoard {
+  background-color: #c8c8c8;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 90%;
+}
+
+/* 행동판 */
+.actBoard {
+  background-color: #4e4e4e;
+  display: flex;
+  flex-direction: row;
+  width: 67%;
+  height: 100%;
+}
+
+/* 집 판 */
+.homeBoard {
+  background-color: #b8b8b8;
+  width: 33%;
+  height: 100%;
+}
+
+/* 좌측 행동판 */
+.leftActBoard {
+  background-color: #d9d9d9;
+  width: 50%;
+  height: 100%;
+}
+
+/* 우측 행동판 */
+.rightActBoard {
+  background-color: #5a5a5a3e;
+  width: 50%;
+  height: 100%;
+}
