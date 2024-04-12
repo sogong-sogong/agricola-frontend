@@ -1,6 +1,190 @@
 .container {
   background-color: rgb(186, 55, 190);
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
+}
+
+.box1 {
+  background-color: rgb(82, 85, 135);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 10%;
+  font-size: 15px;
+}
+
+.box2 {
+  background-color: rgb(41, 188, 142);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40%;
+  font-size: 15px;
+}
+
+.box3 {
+  background-color: rgb(170, 196, 75);
+  width: 100%;
+  height: 50%;
+}
+
+.menu {
+  background-color: rgb(194, 194, 194);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 60%;
+  border-radius: 10px;
+}
+
+.iconBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2%;
+  width: 30%;
+  height: 90%;
+}
+
+.player {
+  display: flex;
+  flex-direction: row;
+  margin: 2%;
+  width: 90%;
+  height: 50%;
+}
+
+.clock {
+  background-color: rgb(194, 194, 194);
+
+  margin: 2%;
+  width: 90%;
+  height: 30%;
+  border-radius: 10px;
+}
+
+.turn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 100%;
+}
+
+.turnIcon {
+  width: 100%;
+  height: 25%;
+}
+
+.profile {
+  background-color: rgb(194, 194, 194);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.profileBox {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 25%;
+}
+
+.profileImg {
+  background-color: rgb(57, 223, 204);
+  width: 30%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.family {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  width: 70%;
+  height: 100%;
+}
+
+.clockText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+  font-size: 15px;
+}
+
+.clockBottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+}
+
+.clockButton {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 60%;
+  font-size: 70%;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+.box3Top {
+  background-color: aquamarine;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 15%;
+  font-size: 10px;
+}
+
+.foodButton {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 80%;
+  font-size: 100%;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+.logBox {
+  background-color: bisque;
+  width: 100%;
+  height: 85%;
+  overflow-y: auto;
+}
+
+.logText {
+  background-color: rgb(232, 232, 232);
+  font-size: 15px;
+  border-radius: 10px;
+  margin-top: 10%;
+}
+
+.logBox::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera에서 기본 스크롤바를 숨깁니다. */
 }
