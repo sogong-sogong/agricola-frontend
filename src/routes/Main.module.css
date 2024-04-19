@@ -49,17 +49,3 @@
   width: 33%;
   height: 100%;
 }
-
-/* 좌측 행동판 */
-.leftActBoard {
-  background-color: #d9d9d9;
-  width: 50%;
-  height: 100%;
-}
-
-/* 우측 행동판 */
-.rightActBoard {
-  background-color: #5a5a5a3e;
-  width: 50%;
-  height: 100%;
-}
