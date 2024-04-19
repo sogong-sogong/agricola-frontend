@@ -4,3 +4,53 @@
   width: 100%;
   height: 100%;
 }
+
+.bottom-section {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: calc(5/9 * 100%);
+}
+
+.cardContainer {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: calc(5/9 * 100%);
+  gap: 5px;
+}
+
+.cardContainer img {
+  width: 100%;
+  height: 100%;
+  margin: 0%;
+}
+
+.card {
+  /* display: inline; */
+  position: relative;
+  width: 5.5%;
+  height: 30%;
+  margin: 0.1%;
+}
+
+.cardText {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: black;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.cardPileText {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  color: black;
+  padding: 5px;
+  box-sizing: border-box;
+}

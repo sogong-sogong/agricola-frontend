@@ -1,31 +1,31 @@
 .container {
   display: flex;
   width: 100vw;
-  height: 100vh; /* È­¸é ÀüÃ¼ ±âÁØ 100% ³ôÀÌ. */
+  height: 100vh; /* í™”ë©´ ì „ì²´ ê¸°ì¤€ 100% ë†’ì´. */
 }
 
-/* »ó´Ü ·Î±×¿Í Çàµ¿ÆÇ */
+/* ìƒë‹¨ ë¡œê·¸ì™€ í–‰ë™íŒ */
 .leftBoard {
   background-color: rgb(139, 139, 139);
   width: 90%;
-  height: 100%; /* ºÎ¸ğ ±âÁØ 100% ³ôÀÌ. */
+  height: 100%; /* ë¶€ëª¨ ê¸°ì¤€ 100% ë†’ì´. */
 }
 
-/* ¿ìÃø È­¸éÀÇ ÇÁ·ÎÇÊ, Á¡¼ö, ·Î±× µî */
+/* ìš°ì¸¡ í™”ë©´ì˜ í”„ë¡œí•„, ì ìˆ˜, ë¡œê·¸ ë“± */
 .logBoard {
   background-color: rgb(100, 100, 100);
   width: 10%;
   height: 100%;
 }
 
-/* »ó´Ü Çàµ¿ ·Î±× */
+/* ìƒë‹¨ í–‰ë™ ë¡œê·¸ */
 .header {
   background-color: rgb(107, 107, 107);
   width: 100%;
   height: 10%;
 }
 
-/* Çàµ¿ÆÇ°ú Áı ÆÇ */
+/* í–‰ë™íŒê³¼ ì§‘ íŒ */
 .gameBoard {
   background-color: #c8c8c8;
   display: flex;
@@ -34,7 +34,7 @@
   height: 90%;
 }
 
-/* Çàµ¿ÆÇ */
+/* í–‰ë™íŒ */
 .actBoard {
   background-color: #4e4e4e;
   display: flex;
@@ -43,21 +43,21 @@
   height: 100%;
 }
 
-/* Áı ÆÇ */
+/* ì§‘ íŒ */
 .homeBoard {
   background-color: #b8b8b8;
   width: 33%;
   height: 100%;
 }
 
-/* ÁÂÃø Çàµ¿ÆÇ */
+/* ì¢Œì¸¡ í–‰ë™íŒ */
 .leftActBoard {
   background-color: #d9d9d9;
   width: 50%;
   height: 100%;
 }
 
-/* ¿ìÃø Çàµ¿ÆÇ */
+/* ìš°ì¸¡ í–‰ë™íŒ */
 .rightActBoard {
   background-color: #5a5a5a3e;
   width: 50%;
