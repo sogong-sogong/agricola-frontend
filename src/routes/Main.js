@@ -3,6 +3,7 @@ import styles from "./Main.module.css";
 import Header from "../components/Header";
 import ActBoard from "../components/ActBoard";
 import HomeBoard from "../components/HomeBoard";
+import CardBoard from "../components/CardBoard";
 import LogBoard from "../components/LogBoard";
 
 function Main() {
@@ -16,8 +17,13 @@ function Main() {
           <div className={styles.actBoard}>
             <ActBoard />
           </div>
-          <div className={styles.homeBoard}>
-            <HomeBoard />
+          <div className={styles.rightBoard}>
+            <div className={styles.homeBoard}>
+              <HomeBoard />
+            </div>
+            <div className={styles.cardBoard}>
+              <CardBoard />
+            </div>
           </div>
         </div>
       </div>
