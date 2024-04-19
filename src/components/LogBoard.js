@@ -5,12 +5,12 @@ import styles from "./LogBoard.module.css";
 import calenderIcon from "../assets/icons/calendar-add.png";
 import settingIcon from "../assets/icons/setting.png";
 import starIcon from "../assets/icons/star.png";
-import rightArrowIcon from "../assets/icons/right-arrow.png";
+//import rightArrowIcon from "../assets/icons/right-arrow.png";
 import clockIcon from "../assets/icons/clock.png";
 
 import coalImg from "../assets/objects/coal.png";
-import foodImg from "../assets/objects/food.png";
-import reedImg from "../assets/objects/reed.png";
+//import foodImg from "../assets/objects/food.png";
+//import reedImg from "../assets/objects/reed.png";
 import soilImg from "../assets/objects/soil.png";
 import turnImg from "../assets/objects/turn.png";
 
@@ -151,7 +151,7 @@ function LogBoard() {
           </div>
           <div className={styles.profile}>
             {[...Array(4)].map((_, index) => (
-              <div className={styles.profileBox}>
+              <div key={index} className={styles.profileBox}>
                 <div className={styles.profileImg}></div>
                 <div
                   className={styles.family}

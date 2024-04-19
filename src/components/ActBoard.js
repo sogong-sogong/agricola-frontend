@@ -1,4 +1,4 @@
-import styles from "./RightActBoard.module.css";
+import styles from "./ActBoard.module.css";
 
 function RightActBoard() {
   return <div className={styles.container}></div>;

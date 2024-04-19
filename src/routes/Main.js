@@ -1,9 +1,9 @@
 import styles from "./Main.module.css";
 
 import Header from "../components/Header";
-import LeftActBoard from "../components/LeftActBoard";
-import RightActBoard from "../components/RightActBoard";
+import ActBoard from "../components/ActBoard";
 import HomeBoard from "../components/HomeBoard";
+import CardBoard from "../components/CardBoard";
 import LogBoard from "../components/LogBoard";
 
 function Main() {
@@ -15,15 +15,15 @@ function Main() {
         </div>
         <div className={styles.gameBoard}>
           <div className={styles.actBoard}>
-            <div className={styles.leftActBoard}>
-              <LeftActBoard />
-            </div>
-            <div className={styles.rightActBoard}>
-              <RightActBoard />
-            </div>
+            <ActBoard />
           </div>
-          <div className={styles.homeBoard}>
-            <HomeBoard />
+          <div className={styles.rightBoard}>
+            <div className={styles.homeBoard}>
+              <HomeBoard />
+            </div>
+            <div className={styles.cardBoard}>
+              <CardBoard />
+            </div>
           </div>
         </div>
       </div>
