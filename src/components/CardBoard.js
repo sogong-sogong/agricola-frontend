@@ -8,6 +8,7 @@ import subBackImage from "../assets/cards/sub/sub_back.png";
 import jobBackImage from "../assets/cards/job/job_back.png";
 
 function CardBoard() {
+  // 사용한 주요설비카드
   const majorCard = (
     <div className={styles.card}>
       <div className={styles.majorText} style={{ position: "relative", top: "-50%", left:"5%" }}>
@@ -32,6 +33,7 @@ function CardBoard() {
   );
 
   const subCard = (
+    // 사용한 보조설비카드
     <div className={styles.card}>
       <div className={styles.subText} style={{ position: "relative", top: "-50%", left:"105%" }}>
         보조설비
@@ -55,6 +57,7 @@ function CardBoard() {
   );
 
   const jobCard = (
+    // 사용한 직업카드
     <div className={styles.card}>
       <div className={styles.jobText} style={{ position: "relative", top: "-50%", left:"222%" }}>
         직업
@@ -84,6 +87,7 @@ function CardBoard() {
   );
 
   const majorCardBack = (
+    // 미사용 주요설비카드
     <div className={styles.card}>
       <img
         src={majorBackImage}
@@ -107,6 +111,7 @@ function CardBoard() {
   );
 
   const subCardBack = (
+    // 미사용 보조설비카드
     <div className={styles.card}>
       <img
         src={subBackImage}
@@ -131,6 +136,7 @@ function CardBoard() {
   );
 
   const jobCardBack = (
+    // 미사용 직업카드
     <div className={styles.card}>
       <img
         src={jobBackImage}
