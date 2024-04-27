@@ -10,128 +10,161 @@ import jobBackImage from "../assets/cards/job/job_back.png";
 function CardBoard() {
   const majorCard = (
     <div className={styles.card}>
-      <span className={styles.cardText}>주요설비</span>
-      <br />
-      <br />
+      <div className={styles.majorText} style={{ position: "relative", top: "-50%", left:"5%" }}>
+        주요설비
+      </div>
       <img
         src={majorBackImage}
         alt="major_back"
-        style={{ position: "relative", top: "0%", left: 0 }}
+        style={{ position: "absolute", top: "0%", left: 0 }}
       />
       <img
         src={majorBackImage}
         alt="major_back"
-        style={{ position: "absolute", top: "45%", left: 0 }}
+        style={{ position: "absolute", top: "10%", left: 0 }}
       />
       <img
         src={majorFrontImage}
         alt="major_front"
-        style={{ position: "absolute", top: "55%", left: 0 }}
+        style={{ position: "absolute", top: "20%", left: 0 }}
       />
     </div>
   );
 
   const subCard = (
     <div className={styles.card}>
-      <span className={styles.cardText}>보조설비</span>
-      <br />
-      <br />
+      <div className={styles.subText} style={{ position: "relative", top: "-50%", left:"105%" }}>
+        보조설비
+      </div>
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "relative", top: "0%", left: 0 }}
+        style={{ position: "absolute", top: "0%", left: "100%" }}
       />
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "absolute", top: "45%", left: 0 }}
+        style={{ position: "absolute", top: "10%", left: "100%" }}
       />
       <img
         src={subFrontImage}
         alt="sub_front"
-        style={{ position: "absolute", top: "55%", left: 0 }}
+        style={{ position: "absolute", top: "20%", left: "100%" }}
       />
     </div>
   );
 
   const jobCard = (
     <div className={styles.card}>
-      <span className={styles.cardText}>직업</span>
-      <br />
-      <br />
+      <div className={styles.jobText} style={{ position: "relative", top: "-50%", left:"222%" }}>
+        직업
+      </div>
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "relative", top: "0%", left: 0 }}
+        style={{ position: "absolute", top: "0%", left: "200%" }}
       />
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "absolute", top: "45%", left: 0 }}
+        style={{ position: "absolute", top: "10%", left: "200%" }}
       />
       <img
         src={jobFrontImage}
         alt="job_front"
-        style={{ position: "absolute", top: "55%", left: 0 }}
+        style={{ position: "absolute", top: "20%", left: "200%" }}
       />
+    </div>
+  );
+
+  const cardPileText = (
+      <div className={styles.majorText} style={{ position: "relative", top: "-40%", left:"-1%" }}>
+        카드더미
+      </div>
+  );
+
+  const majorCardBack = (
+    <div className={styles.card}>
+      <img
+        src={majorBackImage}
+        alt="major_back"
+        style={{ position: "absolute", top: "0%", left: 0 }}
+      />
+      <img
+        src={majorBackImage}
+        alt="major_back"
+        style={{ position: "absolute", top: "10%", left: 0 }}
+      />
+      <img
+        src={majorBackImage}
+        alt="major_back"
+        style={{ position: "absolute", top: "20%", left: 0 }}
+      />
+      <div className={styles.majorText} style={{ position: "relative", top: "130%", left:"0%" }}>
+        주요설비
+      </div>
     </div>
   );
 
   const subCardBack = (
     <div className={styles.card}>
-      <span className={styles.cardPileText}>카드 더미</span>
-      <br />
-      <br />
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "relative", top: "0%", left: 0 }}
+        style={{ position: "absolute", top: "0%", left: "100%" }}
       />
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "absolute", top: "45%", left: 0 }}
+        style={{ position: "absolute", top: "10%", left: "100%" }}
       />
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "absolute", top: "55%", left: 0 }}
+        style={{ position: "absolute", top: "20%", left: "100%" }}
       />
+      <div className={styles.subBackBottomText} style={{ position: "relative", top: "130%", left:"105%" }}>
+        보조설비
+      </div>
     </div>
+    
   );
 
   const jobCardBack = (
     <div className={styles.card}>
-      <br />
-      <br />
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "relative", top: "0%", left: 0 }}
+        style={{ position: "absolute", top: "0%", left: "200%" }}
       />
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "absolute", top: "45%", left: 0 }}
+        style={{ position: "absolute", top: "10%", left: "200%" }}
       />
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "absolute", top: "55%", left: 0 }}
+        style={{ position: "absolute", top: "20%", left: "200%" }}
       />
+      <div className={styles.jobBackText} style={{ position: "relative", top: "130%", left:"222%" }}>
+        직업
+      </div>
     </div>
   );
 
   return (
     <div className={styles.container}>
+      <div className={styles.topSection}>
+        {majorCard}
+        {subCard}
+        {jobCard}
+      </div>
       <div className={styles.bottomSection}>
-        <div className={styles.cardContainer}>
-          {majorCard}
-          {subCard}
-          {jobCard}
-          {subCardBack}
-          {jobCardBack}
-        </div>
+        {cardPileText}
+        {majorCardBack}
+        {subCardBack}
+        {jobCardBack}
       </div>
     </div>
   );
