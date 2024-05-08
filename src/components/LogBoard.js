@@ -194,7 +194,13 @@ function LogBoard() {
           </div>
           <div className={styles.profile}>
             {[...Array(4)].map((_, index) => (
-              <div key={index} className={styles.profileBox}>
+              <div
+                key={index}
+                className={styles.profileBox}
+                onClick={() => {
+                  clickProfile(index);
+                }}
+              >
                 <div
                   className={styles.profileImg}
                   style={
@@ -209,12 +215,7 @@ function LogBoard() {
                 >
                   {myID === index + 1 ? "나" : index + 1}
                 </div>
-                <div
-                  className={styles.family}
-                  onClick={() => {
-                    clickProfile(index);
-                  }}
-                >
+                <div className={styles.family}>
                   {renderFamilyImages(index, familyCount, familyImages)}
                 </div>
               </div>
