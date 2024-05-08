@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import Modal from "react-modal";
 
 import styles from "./LogBoard.module.css";
 
@@ -15,6 +16,8 @@ import familyBlueImg from "../assets/objects/family-blue.png";
 import familyGreenImg from "../assets/objects/family-green.png";
 import familyPurpleImg from "../assets/objects/family-purple.png";
 import familyRedImg from "../assets/objects/family-red.png";
+
+import scorecardImg from "../assets/objects/scorecard.png";
 
 const familyImages = [
   familyBlueImg,
@@ -37,9 +40,30 @@ const renderFamilyImages = (idx, count, imgSrc) => {
   );
 };
 
+const scorecardStyles = {
+  content: {
+    backgroundColor: "white",
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
+
+Modal.setAppElement("#root");
+
 function LogBoard() {
-  const clickCalendar = () => {
-    console.log("click calender");
+  const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
+
+  const closeScorecard = () => {
+    setScorecardIsOpen(false);
+  };
+
+  const openScorecard = () => {
+    //console.log("click calender");
+    setScorecardIsOpen(true);
   };
 
   const clickStar = () => {
@@ -95,13 +119,34 @@ function LogBoard() {
 
   return (
     <div className={styles.container}>
+      <Modal
+        isOpen={scorecardIsOpen}
+        onRequestClose={closeScorecard}
+        style={scorecardStyles}
+        contentLabel="scorecard"
+      >
+        <div className={styles.scorecard}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              paddingBottom: "5%",
+              width: "100%",
+              borderBottom: "1px solid #000",
+            }}
+          >
+            참조표
+          </div>
+          <img src={scorecardImg} alt="scorecard" style={{ height: "80vh" }} />
+        </div>
+      </Modal>
       <div className={styles.box1}>
         도움판
         <div className={styles.menu}>
           <div
             className={styles.iconBox}
             onClick={() => {
-              clickCalendar();
+              openScorecard();
             }}
           >
             <img src={calenderIcon} alt="calender" style={{ width: "80%" }} />
@@ -140,7 +185,7 @@ function LogBoard() {
                           backgroundColor: `${profileStyle[index]}`,
                           color: "white",
                         }
-                      : { border: `3px solid ${profileStyle[indexedDB]}` }
+                      : { border: `3px solid ${profileStyle[index]}` }
                   }
                 >
                   {myID === index + 1 ? "나" : index + 1}
