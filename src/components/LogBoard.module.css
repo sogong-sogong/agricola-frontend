@@ -24,14 +24,14 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 40%;
+  height: 35%;
   font-size: 15px;
 }
 
 .box3 {
   background-color: rgb(170, 196, 75);
   width: 100%;
-  height: 50%;
+  height: 55%;
 }
 
 .menu {
@@ -64,11 +64,13 @@
 
 .clock {
   background-color: rgb(194, 194, 194);
-
-  margin: 2%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 90%;
-  height: 30%;
+  height: 20%;
   border-radius: 10px;
+  margin-top: 10%;
 }
 
 .turn {
@@ -128,21 +130,13 @@
   font-size: 15px;
 }
 
-.clockBottom {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 50%;
-}
-
 .clockButton {
   background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60%;
-  height: 60%;
+  width: 100%;
+  height: 100%;
   font-size: 70%;
   border-radius: 10px;
   border: 1px solid black;
