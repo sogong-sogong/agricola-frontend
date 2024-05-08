@@ -3,6 +3,8 @@ import Modal from "react-modal";
 
 import styles from "./LogBoard.module.css";
 
+import ScoreBoardComponent from "../components/ScoreBoard";
+
 import calenderIcon from "../assets/icons/calendar-add.png";
 import starIcon from "../assets/icons/star.png";
 
@@ -57,6 +59,8 @@ Modal.setAppElement("#root");
 function LogBoard() {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
 
+  const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
+
   const closeScorecard = () => {
     setScorecardIsOpen(false);
   };
@@ -66,8 +70,13 @@ function LogBoard() {
     setScorecardIsOpen(true);
   };
 
-  const clickStar = () => {
+  const closeScoreBoard = () => {
+    setScoreBoardIsOpen(false);
+  };
+
+  const openScoreBoard = () => {
     console.log("click star");
+    setScoreBoardIsOpen(true);
   };
 
   const clickProfile = (id) => {
@@ -140,6 +149,16 @@ function LogBoard() {
           <img src={scorecardImg} alt="scorecard" style={{ height: "80vh" }} />
         </div>
       </Modal>
+      <Modal
+        isOpen={scoreBoardIsOpen}
+        onRequestClose={closeScoreBoard}
+        style={scorecardStyles}
+        contentLabel="scorecard"
+      >
+        <div className={styles.scorecard}>
+          <ScoreBoardComponent />
+        </div>
+      </Modal>
       <div className={styles.box1}>
         도움판
         <div className={styles.menu}>
@@ -154,7 +173,7 @@ function LogBoard() {
           <div
             className={styles.iconBox}
             onClick={() => {
-              clickStar();
+              openScoreBoard();
             }}
           >
             <img src={starIcon} alt="star" style={{ width: "80%" }} />
