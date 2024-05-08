@@ -4,7 +4,6 @@ import styles from "./LogBoard.module.css";
 
 import calenderIcon from "../assets/icons/calendar-add.png";
 import starIcon from "../assets/icons/star.png";
-//import rightArrowIcon from "../assets/icons/right-arrow.png";
 
 import coalImg from "../assets/objects/coal.png";
 import foodImg from "../assets/objects/food.png";
@@ -59,8 +58,18 @@ function LogBoard() {
     console.log("click food exchange");
   };
 
+  // 자신의 아이디
+  const myID = 2;
+
   // 현재 턴인 유저
   const turnNow = 0;
+
+  const profileStyle = [
+    ["rgb(12, 169, 177)"],
+    ["rgb(17, 100, 37)"],
+    ["rgb(102, 4, 173)"],
+    ["rgb(164, 5, 5)"],
+  ];
 
   // 남은 가족 수
   const familyCount = [2, 2, 1, 4];
@@ -95,7 +104,7 @@ function LogBoard() {
               clickCalendar();
             }}
           >
-            <img src={calenderIcon} alt="calender" style={{ width: "100%" }} />
+            <img src={calenderIcon} alt="calender" style={{ width: "80%" }} />
           </div>
           <div
             className={styles.iconBox}
@@ -103,7 +112,7 @@ function LogBoard() {
               clickStar();
             }}
           >
-            <img src={starIcon} alt="star" style={{ width: "100%" }} />
+            <img src={starIcon} alt="star" style={{ width: "80%" }} />
           </div>
         </div>
       </div>
@@ -122,7 +131,20 @@ function LogBoard() {
           <div className={styles.profile}>
             {[...Array(4)].map((_, index) => (
               <div key={index} className={styles.profileBox}>
-                <div className={styles.profileImg}></div>
+                <div
+                  className={styles.profileImg}
+                  style={
+                    myID === index + 1
+                      ? {
+                          border: `3px solid ${profileStyle[index]}`,
+                          backgroundColor: `${profileStyle[index]}`,
+                          color: "white",
+                        }
+                      : { border: `3px solid ${profileStyle[indexedDB]}` }
+                  }
+                >
+                  {myID === index + 1 ? "나" : index + 1}
+                </div>
                 <div
                   className={styles.family}
                   onClick={() => {
