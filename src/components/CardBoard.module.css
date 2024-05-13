@@ -29,7 +29,7 @@
   height: 120%;
   margin: 0%;
   justify-content: flex-start;
-  margin-top: -15%;
+  margin-top: 10%;
 }
 
 .card {
@@ -40,6 +40,13 @@
   margin: 7.5%;
 }
 
+.cardPile {
+  display: flex;
+  position: absolute;
+  width: 5%;
+  height: 10%;
+  margin: 7.5%;
+}
 
 
 .cardPileText {
@@ -48,7 +55,7 @@
   left: 50%;
   width: 100%;
   color: black;
-  padding: 5px;
+  /* padding: 5px; */
   box-sizing: border-box;
 }
 
@@ -59,5 +66,4 @@
   height: 10%;
   margin: 0%;
 }
-
 
