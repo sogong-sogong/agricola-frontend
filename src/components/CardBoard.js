@@ -83,19 +83,19 @@ function CardBoard() {
       <img
         src={majorBackImage}
         alt="major_back"
-        style={{ position: "absolute", top: "0%", left: 0,cursor: "pointer" }}
+        style={{ position: "absolute", top: "-20%", left: 0,cursor: "pointer" }}
         onClick={() => handleCardClick(majorCards)}
       />
       <img
         src={majorBackImage}
         alt="major_back"
-        style={{ position: "absolute", top: "10%", left: 0,cursor: "pointer" }}
+        style={{ position: "absolute", top: "-10%", left: 0,cursor: "pointer" }}
         onClick={() => handleCardClick(majorCards)}
       />
       <img
         src={hwaroImage01}
         alt="hwaroImage01"
-        style={{ position: "absolute", top: "20%", left: 0, cursor: "pointer" }}
+        style={{ position: "absolute", top: "0%", left: 0, cursor: "pointer" }}
         onClick={() => handleCardClick(majorCards)}
       />
     </div>
@@ -109,19 +109,19 @@ function CardBoard() {
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "absolute", top: "0%", left: "100%" , cursor:"pointer"}}
+        style={{ position: "absolute", top: "-20%", left: "100%" , cursor:"pointer"}}
         onClick={() => handleCardClick(subCards)}
       />
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "absolute", top: "10%", left: "100%", cursor:"pointer"}}
+        style={{ position: "absolute", top: "-10%", left: "100%", cursor:"pointer"}}
         onClick={() => handleCardClick(subCards)}
       />
       <img
         src={bedroomImage}
         alt="bedroomImage"
-        style={{ position: "absolute", top: "20%", left: "100%", cursor:"pointer"}}
+        style={{ position: "absolute", top: "0%", left: "100%", cursor:"pointer"}}
         onClick={() => handleCardClick(subCards)}
       />
     </div>
@@ -135,32 +135,32 @@ function CardBoard() {
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "absolute", top: "0%", left: "200%", cursor:"pointer" }}
+        style={{ position: "absolute", top: "-20%", left: "200%", cursor:"pointer" }}
         onClick={() => handleCardClick(jobCards)}
       />
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "absolute", top: "10%", left: "200%", cursor:"pointer" }}
+        style={{ position: "absolute", top: "-10%", left: "200%", cursor:"pointer" }}
         onClick={() => handleCardClick(jobCards)}
       />
       <img
         src={bricklayerImage}
         alt="bricklayerImage"
-        style={{ position: "absolute", top: "20%", left: "200%", cursor:"pointer" }}
+        style={{ position: "absolute", top: "0%", left: "200%", cursor:"pointer" }}
         onClick={() => handleCardClick(jobCards)}
       />
     </div>
   );
 
   const cardPileText = (
-      <div className={styles.majorText} style={{ position: "relative", top: "-40%", left:"-1%" }}>
+      <div className={styles.cardPileText} style={{ position: "relative", top: "-40%", left:"-0%" }}>
         카드더미
       </div>
   );
 
   const majorCardBack = (
-    <div className={styles.card}>
+    <div className={styles.cardPile}>
       <img
         src={majorBackImage}
         alt="major_back"
@@ -179,14 +179,14 @@ function CardBoard() {
         style={{ position: "absolute", top: "20%", left: 0,cursor: "pointer" }}
         onClick={() => handleCardClick(majorCards)}
       />
-      <div className={styles.majorText} style={{ position: "relative", top: "130%", left:"0%" }}>
+      <div className={styles.majorBackText} style={{ position: "relative", top: "-25%", left:"0%" }}>
         주요설비
       </div>
     </div>
   );
 
   const subCardBack = (
-    <div className={styles.card}>
+    <div className={styles.cardPile}>
       <img
         src={subBackImage}
         alt="sub_back"
@@ -205,7 +205,7 @@ function CardBoard() {
         style={{ position: "absolute", top: "20%", left: "100%", cursor:"pointer"}}
         onClick={() => handleCardClick(subCards)}
       />
-      <div className={styles.subBackBottomText} style={{ position: "relative", top: "130%", left:"105%" }}>
+      <div className={styles.subBackText} style={{ position: "relative", top: "-25%", left:"105%" }}>
         보조설비
       </div>
     </div>
@@ -213,7 +213,7 @@ function CardBoard() {
   );
 
   const jobCardBack = (
-    <div className={styles.card}>
+    <div className={styles.cardPile}>
       <img
         src={jobBackImage}
         alt="job_back"
@@ -232,7 +232,7 @@ function CardBoard() {
         style={{ position: "absolute", top: "20%", left: "200%", cursor:"pointer" }}
         onClick={() => handleCardClick(jobCards)}
       />
-      <div className={styles.jobBackText} style={{ position: "relative", top: "130%", left:"222%" }}>
+      <div className={styles.jobBackText} style={{ position: "relative", top: "-25%", left:"222%" }}>
         직업
       </div>
     </div>
