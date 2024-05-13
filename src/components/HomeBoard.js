@@ -104,7 +104,7 @@ function HomeBoard() {
                 {data.img.map((imgSrc, imgIndex) => (
                   <React.Fragment key={imgIndex}>
                     <span>{data.number[imgIndex]}</span>
-                    <img src={imgSrc} alt="resource" style={{ marginRight: '4.5px' }}/>
+                    <img src={imgSrc} alt="resource" style={{ marginRight: '4%' }}/>
                   </React.Fragment>
                 ))}
               </div>
@@ -119,7 +119,7 @@ function HomeBoard() {
                   <React.Fragment key={imgIndex}>
                     <div key={imgIndex} className={styles.resourceItem}>
                       <span>{data.number[imgIndex]}</span>
-                      <img src={imgSrc} alt="resource" style={{ marginRight: '5px' }}/>
+                      <img src={imgSrc} alt="resource" style={{ marginRight: '11%' }}/>
                     </div>
                   </React.Fragment>
                 ))}
@@ -138,7 +138,7 @@ function HomeBoard() {
                           {imgIndex === 0 && <span style={{ fontSize: 'x-small' }}>/5</span>}
                           {imgIndex === 1 && <span style={{ fontSize: 'x-small' }}>/15</span>}
                           {imgIndex === 2 && <span style={{ fontSize: 'x-small' }}>/4</span>}
-                        <img src={imgSrc} alt="resource" style={{ marginRight: '4px' }}/>
+                        <img src={imgSrc} alt="resource" style={{ marginRight: '4.5%' }}/>
                       </div>
                     </React.Fragment>
                   ))}

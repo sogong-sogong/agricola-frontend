@@ -52,11 +52,15 @@
   justify-content:center;
 }
 
+.number {
+  font-size: 100%;
+}
+
 .resource1 {
   background-color: rgb(194, 194, 194);
   display: flex;
   justify-content: center;
-  font-size: 15px;
+  font-size: 95%;
   align-items: center;
   width: 80%;
   height: 86%;
@@ -66,31 +70,45 @@
   flex-direction: row;
 }
 
+.resource1 img{
+  width: 13%;
+  height: 38%;
+}
+
 .resource2 {
   background-color: rgb(194, 194, 194);
   display: flex;
   justify-content: center;
-  font-size: 15px;
+  font-size: 95%;
   align-items: center;
   width: 90%;
   height: 40%;
   border-radius: 10px;
   margin: 0 auto 13% auto;
   flex-wrap: wrap;
+}
 
+.resource2 img{
+  width:55%;
+  height: auto;
 }
 
 .resource3 {
   background-color: rgb(194, 194, 194);
   display: flex;
   justify-content: center;
-  font-size: 15px;
+  font-size: 95%;
   align-items: center;
   width: 90%;
   height: 40%;
   border-radius: 10px;
   margin: 0 auto 13% auto;
   flex-wrap: wrap;
+}
+
+.resource3 img{
+  width:35%;
+  height: auto;
 }
 
 .resource-item {
