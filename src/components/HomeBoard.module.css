@@ -3,4 +3,146 @@
   display: flex;
   width: 100%;
   height: 100%;
+  flex-direction: column;
+  justify-content:center;
+}
+
+.topSection{
+  background-color: rgb(55, 255, 0);
+  display: flex;
+  width: 100%;
+  height: 7%;
+  flex-direction: row;
+  justify-content:center;
+}
+
+.middleSection{
+  background-color: rgb(255, 77, 0);
+  display: flex;
+  width: 100%;
+  height: 18%;
+  flex-direction: row;
+  justify-content:center;
+}
+
+.box1{
+  background-color: rgb(255, 225, 0);
+  display: flex;
+  width: 40%;
+  height: 100%;
+  flex-direction: column;
+  justify-content:center;
+}
+
+.box2{
+  background-color: rgb(255, 0, 179);
+  display: flex;
+  width: 30%;
+  height: 100%;
+  flex-direction: column;
+  justify-content:center;
+}
+
+.box3{
+  background-color: rgb(183, 255, 0);
+  display: flex;
+  width: 30%;
+  height: 100%;
+  flex-direction: column;
+  justify-content:center;
+}
+
+.resource1 {
+  background-color: rgb(194, 194, 194);
+  display: flex;
+  justify-content: center;
+  font-size: 15px;
+  align-items: center;
+  width: 80%;
+  height: 86%;
+  border-radius: 10px;
+  margin: auto;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.resource2 {
+  background-color: rgb(194, 194, 194);
+  display: flex;
+  justify-content: center;
+  font-size: 15px;
+  align-items: center;
+  width: 90%;
+  height: 40%;
+  border-radius: 10px;
+  margin: 0 auto 13% auto;
+  flex-wrap: wrap;
+
+}
+
+.resource3 {
+  background-color: rgb(194, 194, 194);
+  display: flex;
+  justify-content: center;
+  font-size: 15px;
+  align-items: center;
+  width: 90%;
+  height: 40%;
+  border-radius: 10px;
+  margin: 0 auto 13% auto;
+  flex-wrap: wrap;
+}
+
+.resource-item {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.resourceItem img {
+  margin-right: 0px;
+}
+
+.resourceItem span {
+  margin-left: 0px;
+}
+
+.bottomSection {
+  background-color: rgb(0, 0, 255);
+  display: flex;
+  width: 100%;
+  height: 75%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.farmland {
+  justify-content: flex-start;
+  position : relative;
+}
+
+.farmland img {
+  width: 16%;
+  height: auto;
+  margin: 0.8%;
+  /* margin-right: 2.1%;
+  margin-bottom: 1%; */
+}
+
+.transparentButton {
+  margin-top: 1%;
+  margin-right: 2%;
+  /* margin-left: 1%; */
+  width: 15%;
+  height: 3%;
+  background-color: transparent;
+  color: black;
+  border: 2px solid red;;
+  cursor: pointer;
+}
+
+.transparentButton:hover {
+  background-color: red;
 }

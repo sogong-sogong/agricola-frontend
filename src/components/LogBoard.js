@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import Modal from "react-modal";
 
 import styles from "./LogBoard.module.css";
 
+import ScoreBoardComponent from "../components/ScoreBoard";
+
 import calenderIcon from "../assets/icons/calendar-add.png";
-import settingIcon from "../assets/icons/setting.png";
 import starIcon from "../assets/icons/star.png";
-//import rightArrowIcon from "../assets/icons/right-arrow.png";
-import clockIcon from "../assets/icons/clock.png";
 
 import coalImg from "../assets/objects/coal.png";
-//import foodImg from "../assets/objects/food.png";
+import foodImg from "../assets/objects/food.png";
 //import reedImg from "../assets/objects/reed.png";
 import soilImg from "../assets/objects/soil.png";
 import turnImg from "../assets/objects/turn.png";
@@ -18,6 +18,8 @@ import familyBlueImg from "../assets/objects/family-blue.png";
 import familyGreenImg from "../assets/objects/family-green.png";
 import familyPurpleImg from "../assets/objects/family-purple.png";
 import familyRedImg from "../assets/objects/family-red.png";
+
+import scorecardImg from "../assets/objects/scorecard.png";
 
 const familyImages = [
   familyBlueImg,
@@ -40,30 +42,41 @@ const renderFamilyImages = (idx, count, imgSrc) => {
   );
 };
 
-// 일단 넣긴 했는데 이게 꼭 필요한 기능일까..?
-const getCurrentTime = () => {
-  const now = new Date();
-  let hours = now.getHours();
-  let minutes = now.getMinutes();
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // 0 시간은 12시로 표시
-  minutes = minutes < 10 ? "0" + minutes : minutes; // 분이 한 자리 숫자일 경우 앞에 0 붙이기
-  const currentTime = hours + ":" + minutes + " " + ampm;
-  return currentTime;
+const scorecardStyles = {
+  content: {
+    backgroundColor: "white",
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
 };
 
+Modal.setAppElement("#root");
+
 function LogBoard() {
-  const clickCalendar = () => {
-    console.log("click calender");
+  const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
+
+  const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
+
+  const closeScorecard = () => {
+    setScorecardIsOpen(false);
   };
 
-  const clickStar = () => {
+  const openScorecard = () => {
+    //console.log("click calender");
+    setScorecardIsOpen(true);
+  };
+
+  const closeScoreBoard = () => {
+    setScoreBoardIsOpen(false);
+  };
+
+  const openScoreBoard = () => {
     console.log("click star");
-  };
-
-  const clickSetting = () => {
-    console.log("click setting");
+    setScoreBoardIsOpen(true);
   };
 
   const clickProfile = (id) => {
@@ -78,14 +91,21 @@ function LogBoard() {
     console.log("click food exchange");
   };
 
-  // 현재 몇 번째 플레이어의 차례인지 표시한다.
+  // 자신의 아이디
+  const myID = 2;
+
+  // 현재 턴인 유저
   const turnNow = 0;
 
-  // 각 플레이어의 남은 가족 수를 표시한다.
-  const familyCount = [2, 2, 1, 4];
+  const profileStyle = [
+    ["rgb(12, 169, 177)"],
+    ["rgb(17, 100, 37)"],
+    ["rgb(102, 4, 173)"],
+    ["rgb(164, 5, 5)"],
+  ];
 
-  // 남은 턴 시간을 표시한다.
-  const time = 0;
+  // 남은 가족 수
+  const familyCount = [2, 2, 1, 4];
 
   // 로그 임시 데이터
   const logData = [
@@ -108,32 +128,55 @@ function LogBoard() {
 
   return (
     <div className={styles.container}>
+      <Modal
+        isOpen={scorecardIsOpen}
+        onRequestClose={closeScorecard}
+        style={scorecardStyles}
+        contentLabel="scorecard"
+      >
+        <div className={styles.scorecard}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              paddingBottom: "5%",
+              width: "100%",
+              borderBottom: "1px solid #000",
+            }}
+          >
+            참조표
+          </div>
+          <img src={scorecardImg} alt="scorecard" style={{ height: "80vh" }} />
+        </div>
+      </Modal>
+      <Modal
+        isOpen={scoreBoardIsOpen}
+        onRequestClose={closeScoreBoard}
+        style={scorecardStyles}
+        contentLabel="scorecard"
+      >
+        <div className={styles.scorecard}>
+          <ScoreBoardComponent />
+        </div>
+      </Modal>
       <div className={styles.box1}>
-        도움말
+        도움판
         <div className={styles.menu}>
           <div
             className={styles.iconBox}
             onClick={() => {
-              clickCalendar();
+              openScorecard();
             }}
           >
-            <img src={calenderIcon} alt="calender" style={{ width: "100%" }} />
+            <img src={calenderIcon} alt="calender" style={{ width: "80%" }} />
           </div>
           <div
             className={styles.iconBox}
             onClick={() => {
-              clickStar();
+              openScoreBoard();
             }}
           >
-            <img src={starIcon} alt="star" style={{ width: "100%" }} />
-          </div>
-          <div
-            className={styles.iconBox}
-            onClick={() => {
-              clickSetting();
-            }}
-          >
-            <img src={settingIcon} alt="setting" style={{ width: "90%" }} />
+            <img src={starIcon} alt="star" style={{ width: "80%" }} />
           </div>
         </div>
       </div>
@@ -151,14 +194,28 @@ function LogBoard() {
           </div>
           <div className={styles.profile}>
             {[...Array(4)].map((_, index) => (
-              <div key={index} className={styles.profileBox}>
-                <div className={styles.profileImg}></div>
+              <div
+                key={index}
+                className={styles.profileBox}
+                onClick={() => {
+                  clickProfile(index);
+                }}
+              >
                 <div
-                  className={styles.family}
-                  onClick={() => {
-                    clickProfile(index);
-                  }}
+                  className={styles.profileImg}
+                  style={
+                    myID === index + 1
+                      ? {
+                          border: `3px solid ${profileStyle[index]}`,
+                          backgroundColor: `${profileStyle[index]}`,
+                          color: "white",
+                        }
+                      : { border: `3px solid ${profileStyle[index]}` }
+                  }
                 >
+                  {myID === index + 1 ? "나" : index + 1}
+                </div>
+                <div className={styles.family}>
                   {renderFamilyImages(index, familyCount, familyImages)}
                 </div>
               </div>
@@ -166,23 +223,13 @@ function LogBoard() {
           </div>
         </div>
         <div className={styles.clock}>
-          <div className={styles.clockText}>
-            <img
-              src={clockIcon}
-              alt="clock"
-              style={{ height: "80%", marginRight: "10%" }}
-            />
-            {time} 초
-          </div>
-          <div className={styles.clockBottom}>
-            <div
-              className={styles.clockButton}
-              onClick={() => {
-                clickTurnOff();
-              }}
-            >
-              턴 종료
-            </div>
+          <div
+            className={styles.clockButton}
+            onClick={() => {
+              clickTurnOff();
+            }}
+          >
+            내 턴 종료하기
           </div>
         </div>
       </div>
@@ -192,22 +239,23 @@ function LogBoard() {
             className={styles.foodButton}
             onClick={() => clickFoodExchange()}
           >
-            식량 교환
+            <img src={foodImg} alt="food exchange" />
+            <span>식량 교환</span>
           </div>
-          {getCurrentTime()}
         </div>
         <div className={styles.logBox}>
+          전체 로그
           {logData.map((data, index) => (
             <div key={index} className={styles.logText}>
               <span>{data.name}님이</span>
               {data.img.map((imgSrc, imgIndex) => (
                 <React.Fragment key={imgIndex}>
                   <img src={imgSrc} alt="resource" />
-                  <span>{data.number[imgIndex]}개</span>
+                  <span>{data.number[imgIndex]}</span>
                   {imgIndex !== data.img.length - 1 && <span>, </span>}
                 </React.Fragment>
               ))}
-              <span>를 가져갑니다.</span>
+              <span>을 가져갑니다.</span>
             </div>
           ))}
         </div>
