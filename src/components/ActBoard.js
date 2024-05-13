@@ -21,7 +21,7 @@ import round2 from '../assets/image/number2.png';
 import round3 from '../assets/image/number3.png';
 import round4 from '../assets/image/number4.png';
 import round5 from '../assets/image/number5.png';
-import round6 from '.../assets/image/number6.png';
+import round6 from '../assets/image/number6.png';
 
 
 // import seedImage from '../image/seed.png';
@@ -29,7 +29,7 @@ import round6 from '.../assets/image/number6.png';
 // import rockImage from '../image/rock.png';
 // import reedImage from '../image/reed.png';
 
-import userMark from '../image/farmer_blue.png';
+import userMark from '../assets/image/farmer_blue.png';
 
 const ActBoard = () => {
   const [userResources, setUserResources] = useState({
