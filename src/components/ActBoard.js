@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
+
+
 import styles from './ActBoard.module.css';
+import { initialGameResources, initialUserResources } from './resources';
+import ResourceDisplay from './ResourceDisplay';
+
 import bush1 from '../assets/image/1_bush.png';
 import farmEx2 from '../assets/image/2_farm_expending.png';
 import forest7 from '../assets/image/7_forest.png';
@@ -23,30 +28,64 @@ import round4 from '../assets/image/number4.png';
 import round5 from '../assets/image/number5.png';
 import round6 from '../assets/image/number6.png';
 
+import branchIcon from '../assets/image/tree.png';
+import seedIcon from '../assets/image/seed.png';
+import clayIcon from '../assets/image/clay.png';
+import rockIcon from '../assets/image/rock.png';
+import reedIcon from '../assets/image/reed.png';
+import vegetableIcon from '../assets/image/vegetable.png';
+import houseIcon from '../assets/image/house.png';
+import turnIcon from '../assets/image/turn.png';
+import cardIcon from '../assets/cards/job/bricklayer.jpg';
+import foodIcon from '../assets/image/food.png';
+import fenceIcon from '../assets/image/fence.png';
 
-// import seedImage from '../image/seed.png';
-// import clayImage from '../image/clay.png';
-// import rockImage from '../image/rock.png';
-// import reedImage from '../image/reed.png';
 
-import userMark from '../assets/image/farmer_blue.png';
+import pigIcon from '../assets/image/pig.png';
+import cowIcon from '../assets/image/cow.png';
+import sheepIcon from '../assets/image/sheep.png';
+import begIcon from '../assets/image/beg.png';
+
+
+import mark from '../assets/image/farmer_blue.png';
 
 const ActBoard = () => {
-  const [userResources, setUserResources] = useState({
-    branch: 0,
-    seed: 0,
-    clay: 0,
-    rock: 0,
-    reed: 0,
-    barn: 0,
-    sheep: 0,
-    firsturn: 0,
-    card: 0,
-    food:0
-  });
+  const [userResources, setUserResources] = useState(initialUserResources);
+  const [gameResources, setGameResources] = useState(initialGameResources);
+  const [selectedCards, setSelectedCards] = useState([]);
 
-  const [selectedCard, setSelectedCard] = useState(null);
+  const resourceIcons = {
+    branch: branchIcon,
+    seed: seedIcon,
+    clay: clayIcon,
+    rock: rockIcon,
+    reed: reedIcon,
+    sheep: sheepIcon,
+    turn: turnIcon,
+    card: cardIcon,
+    food: foodIcon,
+    vegetable: vegetableIcon,
+    pig: pigIcon,
+    cow: cowIcon,
+  };
 
+  /*동현님
+  const UserresourceIcons = {
+    branch: branchIcon,
+    clay: clayIcon,
+    rock: rockIcon,
+    reed: reedIcon,
+    seed: seedIcon,
+    vegetable: vegetableIcon,
+    food: foodIcon,
+    beg: begIcon
+  };
+
+  const animalresourceIcons = {
+    pig: pigIcon,
+    cow: cowIcon,
+  };
+  */
 
   const cards = [
     { id: 1, image: bush1, resources: { branch: 1 } },
@@ -56,7 +95,7 @@ const ActBoard = () => {
     { id: 5, image: round1},
     { id: 6, image: round1},
     { id: 7, image: forest7, resources: { branch: 2 } },
-    { id: 8, image: get8, resources: { firsturn: 1, card: 1 } },
+    { id: 8, image: get8, resources: { turn: 1, card: 1 } },
     { id: 9, image: forest9, resources: { branch: 3 } },
     { id: 10, image: round2},
     { id: 11, image: round2},
@@ -82,21 +121,29 @@ const ActBoard = () => {
     { id: 31, image: show31, resources: {food: 1}},
     { id: 32, image: sell32, resources: {food: 2}},
     { id: 33, image: fish33, resources: {food: 1}},
+    
     // Add more cards if needed
   ];
 
   const handleCardClick = (card) => {
-    setSelectedCard(card);
-    const updatedUserResources = { ...userResources };
-
-    
-
-    // Update user resources
-    Object.keys(card.resources).forEach(resource => {
-      updatedUserResources[resource] += card.resources[resource];
-    });
-
-    setUserResources(updatedUserResources);
+    if (!selectedCards.includes(card.id)) {
+      setSelectedCards([...selectedCards, card.id]);
+  
+      // Update user resources
+      const updatedUserResources = { ...userResources };
+      const updatedGameResources = { ...gameResources };
+  
+      Object.keys(card.resources).forEach(resource => {
+        // Update user resources
+        updatedUserResources[resource] = (updatedUserResources[resource] || 0) + card.resources[resource];
+        
+        // Update game resources
+        updatedGameResources[resource] = (updatedGameResources[resource] || 0) - card.resources[resource];
+      });
+  
+      setUserResources(updatedUserResources);
+      setGameResources(updatedGameResources);
+    }
   };
 
   return (
@@ -104,30 +151,29 @@ const ActBoard = () => {
       <div className={styles.grid}>
         {cards.map((card) => (
           <button
-            key={card.id}
-            className={styles.card}
-            onClick={() => handleCardClick(card)}
-          >
-            {selectedCard && selectedCard.id === card.id && (
-              <img src={userMark} className={styles.userMark} alt="User Mark" />
-            )}
-            <img src={card.image} alt={card.name} />
-            <span>{card.name}</span>
-          </button>
+          key={card.id}
+          className={styles.card}
+          onClick={() => handleCardClick(card)}
+        >
+          {card.image && <img src={card.image} alt={`Card ${card.id}`} />}
+          {selectedCards.includes(card.id) && (
+            <div className={styles.userMark}><img src={mark} alt="User Mark" /></div>
+          )}
+        </button>
         ))}
       </div>
-      <div>
-        <h3>User Resources</h3>
-        <ul>
-          {Object.keys(userResources).map((resource) => (
-            <li key={resource}>
-              {resource}: {userResources[resource]}
-            </li>
-          ))}
-        </ul>
+      <div className={styles.resources}>
+        <ResourceDisplay resources={gameResources} resourceIcons={resourceIcons} />
+        {/* 동현님
+         <h3>User Resources</h3>
+        <ResourceDisplay resources={userResources} resourceIcons={UserresourceIcons} />
+        <h3>animal Resources</h3>
+        <ResourceDisplay resources={userResources} resourceIcons={animalresourceIcons} />
+        */}
       </div>
     </div>
   );
+  
 };
 
 export default ActBoard;
