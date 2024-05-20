@@ -9,9 +9,18 @@
   width: 100%;
   height: 10%;
   display: flex;
-  justify-content: start;
+  justify-content: end;
   align-items: center;
+}
+
+.headerText {
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  width: 90%;
+  height: 100%;
   font-size: 200%;
+  font-weight: bold;
 }
 
 .body {
@@ -25,22 +34,77 @@
   width: 75%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.list {
-  background-color: rgb(204, 204, 204);
+.listName {
+  width: 80%;
+  height: 10%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  font-size: larger;
+  font-weight: bold;
+  padding-left: 5%;
+}
+
+.scrollableList {
+  background-color: rgb(217, 217, 217);
   width: 90%;
   height: 80%;
   border-radius: 10px;
+  overflow-y: auto; /* 세로 스크롤을 활성화합니다. */
 }
 
-.startbtn {
+.row {
+  display: flex;
+  height: 25%;
+  width: 100%;
+}
+
+.list {
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  height: 70%;
+  margin: 5%;
+  border-radius: 10px;
+  font-size: larger;
+}
+
+.roomnum {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 65%;
+  height: 100%;
+  font-size: 150%;
+}
+
+.usernum {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  width: 25%;
+  height: 80%;
+}
+
+.startbox {
   width: 25%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  align-items: start;
+}
+
+.startbtn {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: start;
   align-items: end;
 }
 
@@ -53,7 +117,8 @@
   align-items: center;
   border-radius: 10px;
   border: 2px solid rgb(0, 0, 0);
-  font-size: larger;
+  font-size: 150%;
   text-decoration: none;
   color: black;
+  font-weight: bold;
 }
