@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 
 import styles from "./LogBoard.module.css";
 
 import ScoreBoardComponent from "../components/ScoreBoard";
+
+import { initialUserResources } from "./resources";
 
 import calenderIcon from "../assets/icons/calendar-add.png";
 import starIcon from "../assets/icons/star.png";
@@ -20,6 +22,7 @@ import familyPurpleImg from "../assets/objects/family-purple.png";
 import familyRedImg from "../assets/objects/family-red.png";
 
 import scorecardImg from "../assets/objects/scorecard.png";
+import FoodExchangeBoard from "./FoodExchangeBoard";
 
 const familyImages = [
   familyBlueImg,
@@ -56,17 +59,20 @@ const scorecardStyles = {
 
 Modal.setAppElement("#root");
 
-function LogBoard() {
+function LogBoard({ memberId, userInfos }) {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
-
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
+  const [foodExchangeIsOpen, setFoodExchangeIsOpen] = useState(false);
+
+  const starter = findStarterNumber() - 1; // 자신의 선턴 상태
+
+  const myID = findMemberInfo(memberId).number; // 자신의 number
 
   const closeScorecard = () => {
     setScorecardIsOpen(false);
   };
 
   const openScorecard = () => {
-    //console.log("click calender");
     setScorecardIsOpen(true);
   };
 
@@ -75,27 +81,38 @@ function LogBoard() {
   };
 
   const openScoreBoard = () => {
-    console.log("click star");
     setScoreBoardIsOpen(true);
   };
 
   const clickProfile = (id) => {
-    console.log("click profile " + id);
+    console.log("click profile " + memberId);
   };
 
   const clickTurnOff = () => {
     console.log("click turn off");
   };
 
-  const clickFoodExchange = () => {
-    console.log("click food exchange");
+  const openFoodExchange = () => {
+    setFoodExchangeIsOpen(true);
   };
 
-  // 자신의 아이디
-  const myID = 2;
+  const closeFoodExchange = () => {
+    setFoodExchangeIsOpen(false);
+  };
 
-  // 현재 턴인 유저
-  const turnNow = 0;
+  // 멤버 ID로 number, sterter 정보를 찾는다.
+  function findMemberInfo(memberId) {
+    const memberInfo = userInfos.find((member) => member.memberId === memberId);
+    return memberInfo
+      ? memberInfo
+      : `Member with memberId ${memberId} not found`;
+  }
+
+  // starter 멤버를 찾는다.
+  function findStarterNumber() {
+    const starterInfo = userInfos.find((member) => member.starter === true);
+    return starterInfo ? starterInfo.number : "No starter found";
+  }
 
   const profileStyle = [
     ["rgb(12, 169, 177)"],
@@ -105,7 +122,7 @@ function LogBoard() {
   ];
 
   // 남은 가족 수
-  const familyCount = [2, 2, 1, 4];
+  const familyCount = [2, 2, 2, 2];
 
   // 로그 임시 데이터
   const logData = [
@@ -134,7 +151,7 @@ function LogBoard() {
         style={scorecardStyles}
         contentLabel="scorecard"
       >
-        <div className={styles.scorecard}>
+        <div className={styles.modal}>
           <div
             style={{
               display: "flex",
@@ -155,8 +172,18 @@ function LogBoard() {
         style={scorecardStyles}
         contentLabel="scorecard"
       >
-        <div className={styles.scorecard}>
+        <div className={styles.modal}>
           <ScoreBoardComponent />
+        </div>
+      </Modal>
+      <Modal
+        isOpen={foodExchangeIsOpen}
+        onRequestClose={closeFoodExchange}
+        style={scorecardStyles}
+        contentLabel="food exchange"
+      >
+        <div className={styles.modal}>
+          <FoodExchangeBoard />
         </div>
       </Modal>
       <div className={styles.box1}>
@@ -186,7 +213,7 @@ function LogBoard() {
           <div className={styles.turn}>
             {[...Array(4)].map((_, index) => (
               <div className={styles.turnIcon} key={index}>
-                {turnNow === index && (
+                {starter === index && (
                   <img src={turnImg} alt="turn" style={{ height: "90%" }} />
                 )}
               </div>
@@ -201,23 +228,29 @@ function LogBoard() {
                   clickProfile(index);
                 }}
               >
-                <div
-                  className={styles.profileImg}
-                  style={
-                    myID === index + 1
-                      ? {
-                          border: `3px solid ${profileStyle[index]}`,
-                          backgroundColor: `${profileStyle[index]}`,
-                          color: "white",
-                        }
-                      : { border: `3px solid ${profileStyle[index]}` }
-                  }
-                >
-                  {myID === index + 1 ? "나" : index + 1}
-                </div>
-                <div className={styles.family}>
-                  {renderFamilyImages(index, familyCount, familyImages)}
-                </div>
+                {userInfos[index] ? (
+                  <div className={styles.profileBox}>
+                    <div
+                      className={styles.profileImg}
+                      style={
+                        myID === index + 1
+                          ? {
+                              border: `3px solid ${profileStyle[index]}`,
+                              backgroundColor: `${profileStyle[index]}`,
+                              color: "white",
+                            }
+                          : { border: `3px solid ${profileStyle[index]}` }
+                      }
+                    >
+                      {myID === index + 1 ? "나" : index + 1}
+                    </div>
+                    <div className={styles.family}>
+                      {renderFamilyImages(index, familyCount, familyImages)}
+                    </div>
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             ))}
           </div>
@@ -235,10 +268,7 @@ function LogBoard() {
       </div>
       <div className={styles.box3}>
         <div className={styles.box3Top}>
-          <div
-            className={styles.foodButton}
-            onClick={() => clickFoodExchange()}
-          >
+          <div className={styles.foodButton} onClick={() => openFoodExchange()}>
             <img src={foodImg} alt="food exchange" />
             <span>식량 교환</span>
           </div>

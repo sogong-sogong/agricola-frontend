@@ -10,9 +10,11 @@ import CardBoard from "../components/CardBoard";
 import LogBoard from "../components/LogBoard";
 
 function Main() {
-  const [roomnumber, setRoomnumber] = useState();
-  const [memberId, setMemberId] = useState();
-  const [messages, setMessages] = useState([]);
+  const [roomnumber, setRoomnumber] = useState(); // 방 번호
+  const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
+
+  // 멤버 ID를 저장하는 Ref
+  const memberIdRef = useRef();
 
   // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
   const stompClient = useRef(null);
@@ -33,9 +35,9 @@ function Main() {
         stompClient.current.subscribe(`/sub/room/${roomnumber}`, (message) => {
           const newMessage = JSON.parse(message.body);
           console.log("메시지 도착:", newMessage);
-          setMessages((prevMessages) => [...prevMessages, newMessage]);
+          setUserInfos(newMessage);
         });
-        // 연결 성공 후 sendData 호출
+        // 연결되면 sendr
         sendData();
       },
       (error) => {
@@ -63,7 +65,7 @@ function Main() {
     stompClient.current.debug = () => {};
 
     const dataToSend = {
-      memberId: memberId,
+      memberId: memberIdRef.current,
     };
 
     // 데이터 전송
@@ -75,7 +77,20 @@ function Main() {
     );
   };
 
-  // 컴포넌트가 마운트될 때 쿠키에서 방 번호를 가져온다.
+  function findMemberInfo(memberId) {
+    const memberInfo = userInfos.find((member) => member.memberId === memberId);
+    return memberInfo
+      ? memberInfo
+      : `Member with memberId ${memberId} not found`;
+  }
+
+  const test = () => {
+    console.log(userInfos);
+    console.log(memberIdRef);
+    console.log(findMemberInfo(Number(memberIdRef.current)));
+  };
+
+  // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
   useEffect(() => {
     const savedRoomNumber = Cookies.get("roomnumber");
     if (savedRoomNumber) {
@@ -83,7 +98,7 @@ function Main() {
     }
     const savedMemberId = Cookies.get("memberId");
     if (savedMemberId) {
-      setMemberId(savedMemberId);
+      memberIdRef.current = savedMemberId;
     }
   }, []);
 
@@ -101,7 +116,9 @@ function Main() {
     <div className={styles.container}>
       <div className={styles.leftBoard}>
         <div className={styles.header}>
-          <div className={styles.text}>ROOM #{roomnumber}</div>
+          <div className={styles.text} onClick={test}>
+            ROOM #{roomnumber}
+          </div>
         </div>
         <div className={styles.gameBoard}>
           <div className={styles.actBoard}>
@@ -118,7 +135,10 @@ function Main() {
         </div>
       </div>
       <div className={styles.logBoard}>
-        <LogBoard />
+        <LogBoard
+          memberId={Number(memberIdRef.current)}
+          userInfos={userInfos}
+        />
       </div>
     </div>
   );
