@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
+import { Stomp } from "@stomp/stompjs";
 
 import styles from "./Main.module.css";
 
@@ -10,6 +11,69 @@ import LogBoard from "../components/LogBoard";
 
 function Main() {
   const [roomnumber, setRoomnumber] = useState();
+  const [memberId, setMemberId] = useState();
+  const [messages, setMessages] = useState([]);
+
+  // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
+  const stompClient = useRef(null);
+
+  // 웹소켓 구독 함수
+  const connect = () => {
+    // Stomp.over에 WebSocket을 생성하는 공장 함수 전달
+    stompClient.current = Stomp.over(
+      () => new WebSocket("ws://localhost:8080/ws-stomp")
+    );
+    // 디버그 출력을 비활성화하는 빈 함수 설정
+    stompClient.current.debug = () => {};
+
+    stompClient.current.connect(
+      {},
+      (frame) => {
+        console.log("연결 성공");
+        stompClient.current.subscribe(`/sub/room/${roomnumber}`, (message) => {
+          const newMessage = JSON.parse(message.body);
+          console.log("메시지 도착:", newMessage);
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        });
+        // 연결 성공 후 sendData 호출
+        sendData();
+      },
+      (error) => {
+        console.error("연결 실패:", error);
+      }
+    );
+  };
+
+  // 웹소켓 연결 해제
+  const disconnect = () => {
+    if (stompClient.current) {
+      stompClient.current.disconnect();
+      console.log("연결 해제됨");
+    }
+  };
+
+  // 웹소켓 데이터 전송 코드
+  const sendData = () => {
+    if (!stompClient.current || !stompClient.current.connected) {
+      console.error("STOMP 연결이 설정되지 않았습니다.");
+      return;
+    }
+
+    // 디버그 출력을 비활성화하는 빈 함수 설정
+    stompClient.current.debug = () => {};
+
+    const dataToSend = {
+      memberId: memberId,
+    };
+
+    // 데이터 전송
+    console.log("데이터 전송:", dataToSend);
+    stompClient.current.send(
+      `/pub/room/${roomnumber}`,
+      {},
+      JSON.stringify(dataToSend)
+    );
+  };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호를 가져온다.
   useEffect(() => {
@@ -17,13 +81,20 @@ function Main() {
     if (savedRoomNumber) {
       setRoomnumber(savedRoomNumber);
     }
+    const savedMemberId = Cookies.get("memberId");
+    if (savedMemberId) {
+      setMemberId(savedMemberId);
+    }
   }, []);
 
-  // 방 이름을 출력한다.
+  // roomnumber가 설정될 때 connect 함수 호출
   useEffect(() => {
     if (roomnumber) {
-      console.log(roomnumber);
+      connect();
     }
+
+    // 컴포넌트 언마운트 시 웹소켓 연결 해제
+    return () => disconnect();
   }, [roomnumber]);
 
   return (
