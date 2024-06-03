@@ -189,5 +189,6 @@
 }
 
 .logBox::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera���� �⺻ ��ũ�ѹٸ� ����ϴ�. */
+  display: none; /* Chrome, Safari, Opera      ⺻   ũ ѹٸ      ϴ . */
 }
+

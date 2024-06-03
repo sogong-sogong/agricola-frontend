@@ -1,9 +1,9 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { Stomp } from "@stomp/stompjs";
-
 import styles from "./Lobby.module.css";
 
 import userImage from "../assets/icons/user.png";
@@ -12,6 +12,7 @@ function Lobby() {
   const [roomnumber, setRoomnumber] = useState();
   const [rooms, setRooms] = useState([]); // 전체 방 목록을 저장할 상태
   const navigate = useNavigate();
+
   const [messages, setMessages] = useState([]);
 
   // Stomp.over에 WebSocket을 생성하는 공장 함수 전달

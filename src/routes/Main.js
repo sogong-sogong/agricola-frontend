@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { Stomp } from "@stomp/stompjs";
@@ -9,6 +10,7 @@ import ActBoard from "../components/ActBoard";
 import HomeBoard from "../components/HomeBoard";
 import CardBoard from "../components/CardBoard";
 import LogBoard from "../components/LogBoard";
+
 
 import { useResources } from "../context/ResourceContext";
 
@@ -119,11 +121,13 @@ function Main() {
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
+
   useEffect(() => {
     const savedRoomNumber = Cookies.get("roomnumber");
     if (savedRoomNumber) {
       setRoomnumber(savedRoomNumber);
     }
+
     const savedMemberId = Cookies.get("memberId");
     if (savedMemberId) {
       memberIdRef.current = savedMemberId;
@@ -141,6 +145,7 @@ function Main() {
   }, [roomnumber]);
 
   return (
+    <ResourceProvider>
     <div className={styles.container}>
       <div className={styles.leftBoard}>
         <div className={styles.header}>
@@ -169,6 +174,7 @@ function Main() {
         />
       </div>
     </div>
+    </ResourceProvider>
   );
 }
 

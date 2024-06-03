@@ -1,155 +1,217 @@
-import React, { useState } from "react";
-import styles from "./HomeBoard.module.css";
+import React, { useState, useContext } from 'react';
+import { ResourceContext } from '../components/Resource';
+import { initialUserResources } from './resources.js';
+import ResourceDisplay from './ResourceDisplay';
+import styles from './HomeBoard.module.css';
+import resources from './resources.js'
+import ActBoard from './ActBoard';
 
-import woodImg from "../assets/objects/wood.png";
-import soilImg from "../assets/objects/soil.png";
-import coalImg from "../assets/objects/coal.png";
-import reedImg from "../assets/objects/reed.png";
-import grainImg from "../assets/objects/grain.png";
-import vegeImg from "../assets/objects/vege.png";
-import foodImg from "../assets/objects/food.png";
-import beggingImg from "../assets/objects/begging.png";
+import emptyImg from '../assets/objects/empty.png';
+import woodHomeImg from '../assets/objects/wood_home.jpg';
+import soilHomeImg from '../assets/objects/soil_home.jpg';
+import stoneHomeImg from '../assets/objects/stone_home.jpg';
 
-import sheepImg from "../assets/objects/sheep.png";
-import boarImg from "../assets/objects/boar.png";
-import cowImg from "../assets/objects/cow.png";
+import fence2Img from '../assets/objects/fence2.png';
 
-import farmerImg from "../assets/objects/farmer.png";
-import fenceImg from "../assets/objects/fence.png";
-import homeImg from "../assets/objects/home.png";
+import branchIcon from '../assets/image/tree.png';
+import seedIcon from '../assets/image/seed.png';
+import clayIcon from '../assets/image/clay.png';
+import rockIcon from '../assets/image/rock.png';
+import reedIcon from '../assets/image/reed.png';
+import vegetableIcon from '../assets/image/vegetable.png';
+import houseIcon from '../assets/image/house.png';
+import turnIcon from '../assets/image/turn.png';
+import cardIcon from '../assets/cards/job/bricklayer.jpg';
+import foodIcon from '../assets/image/food.png';
+import fenceIcon from '../assets/image/fence.png';
 
-import farmlandImg from "../assets/objects/farmland.png";
-import woodhomeImg from "../assets/objects/wood_home.jpg";
-import soilhomeImg from "../assets/objects/soil_home.jpg";
-import stonehomeImg from "../assets/objects/stone_home.jpg";
-
+import pigIcon from '../assets/image/pig.png';
+import cowIcon from '../assets/image/cow.png';
+import sheepIcon from '../assets/image/sheep.png';
+import beggingIcon from '../assets/image/begging.png';
+import farmerIcon from '../assets/image/farmer.png';
 
 
 function HomeBoard() {
-  const resourceData1 = [
-    {
-      name: "leftBox",
-      img: [woodImg, soilImg,coalImg,reedImg,
-        grainImg,vegeImg,foodImg,beggingImg],
-      number: [0,1,3,4,3,2,2,0],
-    },
-  ];
 
-  const resourceData2 = [
-  {
-    name: "middleBox",
-    img: [sheepImg, boarImg,cowImg],
-    number: [3,3,4],
-  },
-];
+  const { setResourceData1 } =
+    useContext(ResourceContext);
+  const [userResources, setUserResources] = useState(initialUserResources);
+  const [updatedUserResources, setUpdatedUserResources] = useState(initialUserResources);
+  const [data, setData] = useState({
+    farm: [
+      'empty',
+      'empty',
+      'empty',
+      'empty',
+      'empty',
+      'wood_home',
+      'empty',
+      'empty',
+      'empty',
+      'empty',
+      'wood_home',
+      'empty',
+      'empty',
+      'empty',
+      'empty',
+    ],
+  });
+  const [showModal, setShowModal] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
 
-  const resourceData3 = [
-    {
-      name: "rightBox",
-      img: [farmerImg, fenceImg,homeImg],
-      number: [2,2,2],
-    },
-  ]; 
+  
+  const UserresourceIcons = {
+    branch: branchIcon,
+    clay: clayIcon,
+    rock: rockIcon,
+    reed: reedIcon,
+    seed: seedIcon,
+    vegetable: vegetableIcon,
+    food: foodIcon,
+    begging: beggingIcon
+  };
 
-  const farmland = [];
+  const animalresourceIcons = {
+    sheep: sheepIcon,
+    pig: pigIcon,
+    cow: cowIcon
+  };
 
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 5; j++) {
-      if (i === 0 && j === 0) {
-        farmland.push(
-          <img
-            key={`img-${i}-${j}`}
-            className="grid-item"
-            src={farmlandImg}
-            alt="farmland"
-          />
-        );
+  const farmresourceIcons = {
+    farmer: farmerIcon,
+    fence: fenceIcon,
+    house: houseIcon
+  };
+  
+  const resourceData1 = Object.entries(UserresourceIcons).map(([key, value]) => ({
+    img: [value],
+    number: [initialUserResources[key]]
+  }));
+  
+  const resourceData2 = Object.entries(animalresourceIcons).map(([key, value]) => ({
+    img: [value],
+    number: [initialUserResources[key]]
+  }));
+  
+  const resourceData3 = Object.entries(farmresourceIcons).map(([key, value]) => ({
+    img: [value],
+    number: [initialUserResources[key]]
+  }));
+  
+  
 
-      } else if (j === 0) {
-        farmland.push(
-          <img
-            key={`img-${i}-${j}`}
-            className="home"
-            src={woodhomeImg}
-            alt="wood_home"
-            style={{ width: '14%', height: 'auto', position: 'relative', left: '-1%', top: '-1%' }}
-            />
-        );
+  const handleFenceInstallation = (index) => {
+    const updatedFarm = [...data.farm];
+
+    if (updatedFarm[index] === 'empty') {
+      let requiredResources = 4;
+      if (clickCount > 0) {
+        requiredResources = 3;
       }
-        else {
-        farmland.push(
-          <img
-            key={`img-${i}-${j}`}
-            className="grid-item"
-            src={farmlandImg}
-            alt="Farmland Image"
-          />
-        );
+
+      if (userResources.branch < requiredResources) {
+        setShowModal(true);
+        return;
       }
+
+      updatedFarm[index] = 'fence2';
+      setUserResources(prevResources => ({
+        ...prevResources,
+        branch: prevResources.branch - requiredResources
+      }));
+      setClickCount(clickCount + 1);
     }
-  }
-  
-  
+
+    setData({ farm: updatedFarm });
+  };
+
+  const upgradeHome = (index) => {
+    const updatedFarm = [...data.farm];
+    let requiredResources = 5;
+    let requiredReeds = 2;
+
+    if (updatedFarm[index] === 'wood_home') {
+      if (userResources.branch < requiredResources) {
+        setShowModal(true);
+        return;
+      }
+      updatedFarm[index] = 'soil_home';
+      updatedFarm[index + 5] = 'soil_home';
+      setUserResources(prevResources => ({
+        ...prevResources,
+        branch: prevResources.branch - requiredResources,
+        reed: prevResources.reed - requiredReeds
+      }));
+    } else if (updatedFarm[index] === 'soil_home') {
+      if (userResources.rock < requiredResources) {
+        setShowModal(true);
+        return;
+      }
+      updatedFarm[index] = 'stone_home';
+      updatedFarm[index + 5] = 'stone_home';
+      setUserResources(prevResources => ({
+        ...prevResources,
+        rock: prevResources.rock - requiredResources,
+        reed: prevResources.reed - requiredReeds
+      }));
+    }
+    setData({ farm: updatedFarm });
+  };
+
+  const renderFarm = (slot, index) => {
+    switch (slot) {
+      case 'empty':
+        return (
+          <img
+            src={emptyImg}
+            alt="Empty"
+            className={styles.pointerCursor}
+            onClick={() => handleFenceInstallation(index)}
+          />
+        );
+      case 'wood_home':
+        return (
+          <img
+            src={woodHomeImg}
+            alt="WoodHome"
+            className={styles.pointerCursor}
+            onClick={() => upgradeHome(index)}
+          />
+        );
+      case 'soil_home':
+        return (
+          <img
+            src={soilHomeImg}
+            alt="SoilHome"
+            className={styles.pointerCursor}
+            onClick={() => upgradeHome(index)}
+          />
+        );
+      case 'wood_home':
+        return <img src={woodHomeImg} alt="WoodHome" />;
+      case 'soil_home':
+        return <img src={soilHomeImg} alt="SoilHome" />;
+      case 'stone_home':
+        return <img src={stoneHomeImg} alt="StoneHome" />;
+      case 'fence2':
+        return <img src={fence2Img} alt="Fence2" />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className={styles.container}>
-      <div className={styles.topSection}>
-        개인 창고
-      </div>
+      <div className={styles.topSection}>개인 창고</div>
       <div className={styles.middleSection}>
-        <div className={styles.box1}>
-          <div className={styles.resource1}>
-            {resourceData1.map((data, index) => (
-              <div key={index} className={styles.resource1}>
-                {data.img.map((imgSrc, imgIndex) => (
-                  <React.Fragment key={imgIndex}>
-                    <span>{data.number[imgIndex]}</span>
-                    <img src={imgSrc} alt="resource" style={{ marginRight: '4%' }}/>
-                  </React.Fragment>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className={styles.box2}>
-          <div className={styles.resource2}>
-            {resourceData2.map((data, index) => (
-              <div key={index} className={styles.resource2}>
-                {data.img.map((imgSrc, imgIndex) => (
-                  <React.Fragment key={imgIndex}>
-                    <div key={imgIndex} className={styles.resourceItem}>
-                      <span>{data.number[imgIndex]}</span>
-                      <img src={imgSrc} alt="resource" style={{ marginRight: '11%' }}/>
-                    </div>
-                  </React.Fragment>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-          <div className={styles.box3}>
-            <div className={styles.resource3}>
-              {resourceData3.map((data, index) => (
-                <div key={index} className={styles.resource3}>
-                  {data.img.map((imgSrc, imgIndex) => (
-                    <React.Fragment key={imgIndex}>
-                      <div key={imgIndex} className={styles.resourceItem}>
-                        <span>{data.number[imgIndex]}</span>
-                          {imgIndex === 0 && <span style={{ fontSize: 'x-small' }}>/5</span>}
-                          {imgIndex === 1 && <span style={{ fontSize: 'x-small' }}>/15</span>}
-                          {imgIndex === 2 && <span style={{ fontSize: 'x-small' }}>/4</span>}
-                        <img src={imgSrc} alt="resource" style={{ marginRight: '4.5%' }}/>
-                      </div>
-                    </React.Fragment>
-                  ))}
-                </div>
-              ))}
-            </div>
-        </div>
+        <ResourceDisplay resources={userResources} resourceIcons={UserresourceIcons} />
+        <ResourceDisplay resources={userResources} resourceIcons={animalresourceIcons} />
+        <ResourceDisplay resources={userResources} resourceIcons={farmresourceIcons} />              
       </div>
       <div className={styles.bottomSection}>
-        <div className={styles.farmland}>        
-          {farmland}
+        <div className={styles.farm}>
+          {data.farm.map((slot, index) => renderFarm(slot, index))}
         </div>
       </div>
     </div>

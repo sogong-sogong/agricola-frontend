@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
 
-
 import styles from './ActBoard.module.css';
-import { initialGameResources, initialUserResources } from './resources';
+import { initialGameResources, initialUserResources } from './resources.js';
 import ResourceDisplay from './ResourceDisplay';
+
 
 import bush1 from '../assets/image/1_bush.png';
 import farmEx2 from '../assets/image/2_farm_expending.png';
@@ -46,7 +46,6 @@ import round5b from '../assets/image/5-2.png';
 import round6a from '../assets/image/6-1.png';
 
 
-
 import branchIcon from '../assets/image/tree.png';
 import seedIcon from '../assets/image/seed.png';
 import clayIcon from '../assets/image/clay.png';
@@ -67,9 +66,6 @@ import begIcon from '../assets/image/beg.png';
 
 
 import mark from '../assets/image/farmer_blue.png';
-
-
-
 
 const ActBoard = () => {
   const [userResources, setUserResources] = useState(initialUserResources);
@@ -112,6 +108,7 @@ const ActBoard = () => {
   const cards = [
     { id: 1, image: bush1, resources: { branch: 1 } },
 
+
     { id: 2, image: farmEx2, resources: { branch: -2, barn :1 } },
     { id: 3, image: round1a},
     { id: 4, image: round1b},
@@ -136,17 +133,19 @@ const ActBoard = () => {
     { id: 21, image: clay21, resources: { seed :1,  } },
     { id: 22, image: round4a},
     { id: 23, image: round4b},
+
     { id: 24 },
     { id: 25, image: study25, resources: {food: -2, card: 1} },
     { id: 26, image: studay26, resources: {food: -1, card: 1} },
     { id: 27, image: reed27, resources: {reed: 1}},
+
     { id: 28, image: round5a},
     { id: 29, image: round5b},
     { id: 30, image: round6a },
+
     { id: 31, image: show31, resources: {food: 1}},
     { id: 32, image: sell32, resources: {food: 2}},
     { id: 33, image: fish33, resources: {food: 1}},
-    
 
     // Add more cards if needed
   ];
@@ -155,22 +154,25 @@ const ActBoard = () => {
     if (!selectedCards.includes(card.id)) {
       setSelectedCards([...selectedCards, card.id]);
 
+  
       // Update user resources
       const updatedUserResources = { ...userResources };
       const updatedGameResources = { ...gameResources };
-
-      Object.keys(card.resources).forEach((resource) => {
+  
+      Object.keys(card.resources).forEach(resource => {
         // Update user resources
-        updatedUserResources[resource] =
-          (updatedUserResources[resource] || 0) + card.resources[resource];
-
+        updatedUserResources[resource] = (updatedUserResources[resource] || 0) + card.resources[resource];
+        
         // Update game resources
-        updatedGameResources[resource] =
-          (updatedGameResources[resource] || 0) - card.resources[resource];
+        updatedGameResources[resource] = (updatedGameResources[resource] || 0) - card.resources[resource];
       });
-
+  
       setUserResources(updatedUserResources);
       setGameResources(updatedGameResources);
+
+      console.log("Updated User Resources:", updatedUserResources);
+      console.log("Updated Game Resources:", updatedGameResources);
+
     }
   };
 
@@ -179,23 +181,23 @@ const ActBoard = () => {
       <div className={styles.grid}>
         {cards.map((card) => (
           <button
-            key={card.id}
-            className={styles.card}
-            onClick={() => handleCardClick(card)}
-          >
-            {card.image && <img src={card.image} alt={`Card ${card.id}`} />}
-            {selectedCards.includes(card.id) && (
-              <div className={styles.userMark}>
-                <img src={mark} alt="User Mark" />
-              </div>
-            )}
-          </button>
+
+          key={card.id}
+          className={styles.card}
+          onClick={() => handleCardClick(card)}
+        >
+          {card.image && <img src={card.image} alt={`Card ${card.id}`} />}
+          {selectedCards.includes(card.id) && (
+            <div className={styles.userMark}><img src={mark} alt="User Mark" /></div>
+          )}
+        </button>
         ))}
       </div>
       <div className={styles.resources}>
-        <ResourceDisplay />
+        <ResourceDisplay resources={gameResources} resourceIcons={resourceIcons} />
         {/* 동현님
-         <h3>User Resources</h3>
+        <h3>User Resources</h3>
+
         <ResourceDisplay resources={userResources} resourceIcons={UserresourceIcons} />
         <h3>animal Resources</h3>
         <ResourceDisplay resources={userResources} resourceIcons={animalresourceIcons} />
@@ -203,6 +205,9 @@ const ActBoard = () => {
       </div>
     </div>
   );
+
+  
 };
 
 export default ActBoard;
+
