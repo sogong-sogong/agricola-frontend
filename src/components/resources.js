@@ -1,5 +1,11 @@
 // components/resources.js
 
+// ResourceProvider로 변경
+import React, { createContext, useState, useContext } from "react";
+
+// Context 생성
+const ResourceContext = createContext();
+
 export const initialGameResources = {
   branch: 30,
   seed: 18,
@@ -30,3 +36,9 @@ export const initialUserResources = {
   house: 0,
   family: 2,
 };
+
+function resources({ children }) {
+  return <div></div>;
+}
+
+export default resources;

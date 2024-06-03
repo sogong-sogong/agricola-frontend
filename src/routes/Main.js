@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { Stomp } from "@stomp/stompjs";
+import axios from "axios";
 
 import styles from "./Main.module.css";
 
@@ -8,6 +9,8 @@ import ActBoard from "../components/ActBoard";
 import HomeBoard from "../components/HomeBoard";
 import CardBoard from "../components/CardBoard";
 import LogBoard from "../components/LogBoard";
+
+import { useResources } from "../context/ResourceContext";
 
 function Main() {
   const [roomnumber, setRoomnumber] = useState(); // 방 번호
@@ -18,6 +21,8 @@ function Main() {
 
   // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
   const stompClient = useRef(null);
+
+  const { updateGameResources } = useResources();
 
   // 웹소켓 구독 함수
   const connect = () => {
@@ -84,10 +89,33 @@ function Main() {
       : `Member with memberId ${memberId} not found`;
   }
 
+  // 공동창고를 조회하고 데이터를 업데이트 하는 함수
+  const inquiryCommonstorage = async () => {
+    // 공동창고 조회 API 호출
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/commonstorage/${roomnumber}`
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const data = await fetchData();
+    if (data) {
+      console.log(data);
+      updateGameResources(data);
+    }
+  };
+
   const test = () => {
-    console.log(userInfos);
-    console.log(memberIdRef);
-    console.log(findMemberInfo(Number(memberIdRef.current)));
+    //console.log(userInfos);
+    //console.log(memberIdRef);
+    //console.log(findMemberInfo(Number(memberIdRef.current)));
+    inquiryCommonstorage();
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
