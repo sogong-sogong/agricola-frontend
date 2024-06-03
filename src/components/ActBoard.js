@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 
 
@@ -67,6 +68,9 @@ import begIcon from '../assets/image/beg.png';
 
 import mark from '../assets/image/farmer_blue.png';
 
+
+
+
 const ActBoard = () => {
   const [userResources, setUserResources] = useState(initialUserResources);
   const [gameResources, setGameResources] = useState(initialGameResources);
@@ -107,6 +111,7 @@ const ActBoard = () => {
 
   const cards = [
     { id: 1, image: bush1, resources: { branch: 1 } },
+
     { id: 2, image: farmEx2, resources: { branch: -2, barn :1 } },
     { id: 3, image: round1a},
     { id: 4, image: round1b},
@@ -123,9 +128,11 @@ const ActBoard = () => {
     { id: 15, },
     { id: 16, image: round3a},
     { id: 17, image: round3b},
+
     { id: 18 },
-    { id: 19, image: clay19, resources: { clay :2  } },
+    { id: 19, image: clay19, resources: { clay: 2 } },
     { id: 20, image: farmGet20, resources: { reed: 1, rock: 1, food: 1 } },
+
     { id: 21, image: clay21, resources: { seed :1,  } },
     { id: 22, image: round4a},
     { id: 23, image: round4b},
@@ -140,25 +147,28 @@ const ActBoard = () => {
     { id: 32, image: sell32, resources: {food: 2}},
     { id: 33, image: fish33, resources: {food: 1}},
     
+
     // Add more cards if needed
   ];
 
   const handleCardClick = (card) => {
     if (!selectedCards.includes(card.id)) {
       setSelectedCards([...selectedCards, card.id]);
-  
+
       // Update user resources
       const updatedUserResources = { ...userResources };
       const updatedGameResources = { ...gameResources };
-  
-      Object.keys(card.resources).forEach(resource => {
+
+      Object.keys(card.resources).forEach((resource) => {
         // Update user resources
-        updatedUserResources[resource] = (updatedUserResources[resource] || 0) + card.resources[resource];
-        
+        updatedUserResources[resource] =
+          (updatedUserResources[resource] || 0) + card.resources[resource];
+
         // Update game resources
-        updatedGameResources[resource] = (updatedGameResources[resource] || 0) - card.resources[resource];
+        updatedGameResources[resource] =
+          (updatedGameResources[resource] || 0) - card.resources[resource];
       });
-  
+
       setUserResources(updatedUserResources);
       setGameResources(updatedGameResources);
     }
@@ -169,19 +179,21 @@ const ActBoard = () => {
       <div className={styles.grid}>
         {cards.map((card) => (
           <button
-          key={card.id}
-          className={styles.card}
-          onClick={() => handleCardClick(card)}
-        >
-          {card.image && <img src={card.image} alt={`Card ${card.id}`} />}
-          {selectedCards.includes(card.id) && (
-            <div className={styles.userMark}><img src={mark} alt="User Mark" /></div>
-          )}
-        </button>
+            key={card.id}
+            className={styles.card}
+            onClick={() => handleCardClick(card)}
+          >
+            {card.image && <img src={card.image} alt={`Card ${card.id}`} />}
+            {selectedCards.includes(card.id) && (
+              <div className={styles.userMark}>
+                <img src={mark} alt="User Mark" />
+              </div>
+            )}
+          </button>
         ))}
       </div>
       <div className={styles.resources}>
-        <ResourceDisplay resources={gameResources} resourceIcons={resourceIcons} />
+        <ResourceDisplay />
         {/* 동현님
          <h3>User Resources</h3>
         <ResourceDisplay resources={userResources} resourceIcons={UserresourceIcons} />
@@ -191,7 +203,6 @@ const ActBoard = () => {
       </div>
     </div>
   );
-  
 };
 
 export default ActBoard;

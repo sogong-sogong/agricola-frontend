@@ -5,7 +5,7 @@
   height: 100%;
 }
 
-.scorecard {
+.modal {
   display: flex;
   flex-direction: column;
   justify-content: center;
