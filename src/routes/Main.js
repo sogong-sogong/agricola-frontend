@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { Stomp } from "@stomp/stompjs";
@@ -10,7 +9,6 @@ import ActBoard from "../components/ActBoard";
 import HomeBoard from "../components/HomeBoard";
 import CardBoard from "../components/CardBoard";
 import LogBoard from "../components/LogBoard";
-
 
 import { useResources } from "../context/ResourceContext";
 
@@ -145,7 +143,6 @@ function Main() {
   }, [roomnumber]);
 
   return (
-    <ResourceProvider>
     <div className={styles.container}>
       <div className={styles.leftBoard}>
         <div className={styles.header}>
@@ -174,7 +171,6 @@ function Main() {
         />
       </div>
     </div>
-    </ResourceProvider>
   );
 }
 

@@ -1,5 +1,22 @@
 import React, { createContext, useState, useContext } from "react";
 
+import woodImg from "../assets/objects/wood.png";
+import soilImg from "../assets/objects/soil.png";
+import coalImg from "../assets/objects/coal.png";
+import reedImg from "../assets/objects/reed.png";
+import grainImg from "../assets/objects/grain.png";
+import vegeImg from "../assets/objects/vege.png";
+import foodImg from "../assets/objects/food.png";
+import beggingImg from "../assets/objects/begging.png";
+
+import sheepImg from "../assets/objects/sheep.png";
+import boarImg from "../assets/objects/boar.png";
+import cowImg from "../assets/objects/cow.png";
+
+import farmerImg from "../assets/objects/farmer.png";
+import fenceImg from "../assets/objects/fence.png";
+import homeImg from "../assets/objects/home.png";
+
 // Context 생성
 const ResourceContext = createContext();
 
@@ -51,10 +68,13 @@ export const ResourceProvider = ({ children }) => {
       food: newData.food ?? prevResources.food,
     }));
   };
-
   return (
     <ResourceContext.Provider
-      value={{ gameResources, userResources, updateGameResources }}
+      value={{
+        gameResources,
+        userResources,
+        updateGameResources,
+      }}
     >
       {children}
     </ResourceContext.Provider>

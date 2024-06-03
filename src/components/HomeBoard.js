@@ -1,66 +1,63 @@
-import React, { useState, useContext } from 'react';
-import { ResourceContext } from '../components/Resource';
-import { initialUserResources } from './resources.js';
-import ResourceDisplay from './ResourceDisplay';
-import styles from './HomeBoard.module.css';
-import resources from './resources.js'
-import ActBoard from './ActBoard';
+import React, { useState, useContext } from "react";
+import { ResourceContext } from "../components/Resource";
+import { initialUserResources } from "./resources.js";
+import ResourceDisplay from "./ResourceDisplay";
+import styles from "./HomeBoard.module.css";
+import resources from "./resources.js";
+import ActBoard from "./ActBoard";
 
-import emptyImg from '../assets/objects/empty.png';
-import woodHomeImg from '../assets/objects/wood_home.jpg';
-import soilHomeImg from '../assets/objects/soil_home.jpg';
-import stoneHomeImg from '../assets/objects/stone_home.jpg';
+import emptyImg from "../assets/objects/empty.png";
+import woodHomeImg from "../assets/objects/wood_home.jpg";
+import soilHomeImg from "../assets/objects/soil_home.jpg";
+import stoneHomeImg from "../assets/objects/stone_home.jpg";
 
-import fence2Img from '../assets/objects/fence2.png';
+import fence2Img from "../assets/objects/fence2.png";
 
-import branchIcon from '../assets/image/tree.png';
-import seedIcon from '../assets/image/seed.png';
-import clayIcon from '../assets/image/clay.png';
-import rockIcon from '../assets/image/rock.png';
-import reedIcon from '../assets/image/reed.png';
-import vegetableIcon from '../assets/image/vegetable.png';
-import houseIcon from '../assets/image/house.png';
-import turnIcon from '../assets/image/turn.png';
-import cardIcon from '../assets/cards/job/bricklayer.jpg';
-import foodIcon from '../assets/image/food.png';
-import fenceIcon from '../assets/image/fence.png';
+import branchIcon from "../assets/image/tree.png";
+import seedIcon from "../assets/image/seed.png";
+import clayIcon from "../assets/image/clay.png";
+import rockIcon from "../assets/image/rock.png";
+import reedIcon from "../assets/image/reed.png";
+import vegetableIcon from "../assets/image/vegetable.png";
+import houseIcon from "../assets/image/house.png";
+import turnIcon from "../assets/image/turn.png";
+import cardIcon from "../assets/cards/job/bricklayer.jpg";
+import foodIcon from "../assets/image/food.png";
+import fenceIcon from "../assets/image/fence.png";
 
-import pigIcon from '../assets/image/pig.png';
-import cowIcon from '../assets/image/cow.png';
-import sheepIcon from '../assets/image/sheep.png';
-import beggingIcon from '../assets/image/begging.png';
-import farmerIcon from '../assets/image/farmer.png';
-
+import pigIcon from "../assets/image/pig.png";
+import cowIcon from "../assets/image/cow.png";
+import sheepIcon from "../assets/image/sheep.png";
+import beggingIcon from "../assets/image/begging.png";
+import farmerIcon from "../assets/image/farmer.png";
 
 function HomeBoard() {
-
-  const { setResourceData1 } =
-    useContext(ResourceContext);
+  //const { setResourceData1 } = useContext(ResourceContext);
   const [userResources, setUserResources] = useState(initialUserResources);
-  const [updatedUserResources, setUpdatedUserResources] = useState(initialUserResources);
+  const [updatedUserResources, setUpdatedUserResources] =
+    useState(initialUserResources);
   const [data, setData] = useState({
     farm: [
-      'empty',
-      'empty',
-      'empty',
-      'empty',
-      'empty',
-      'wood_home',
-      'empty',
-      'empty',
-      'empty',
-      'empty',
-      'wood_home',
-      'empty',
-      'empty',
-      'empty',
-      'empty',
+      "empty",
+      "empty",
+      "empty",
+      "empty",
+      "empty",
+      "wood_home",
+      "empty",
+      "empty",
+      "empty",
+      "empty",
+      "wood_home",
+      "empty",
+      "empty",
+      "empty",
+      "empty",
     ],
   });
   const [showModal, setShowModal] = useState(false);
   const [clickCount, setClickCount] = useState(0);
 
-  
   const UserresourceIcons = {
     branch: branchIcon,
     clay: clayIcon,
@@ -69,21 +66,21 @@ function HomeBoard() {
     seed: seedIcon,
     vegetable: vegetableIcon,
     food: foodIcon,
-    begging: beggingIcon
+    begging: beggingIcon,
   };
 
   const animalresourceIcons = {
     sheep: sheepIcon,
     pig: pigIcon,
-    cow: cowIcon
+    cow: cowIcon,
   };
 
   const farmresourceIcons = {
     farmer: farmerIcon,
     fence: fenceIcon,
-    house: houseIcon
+    house: houseIcon,
   };
-  
+  /*
   const resourceData1 = Object.entries(UserresourceIcons).map(([key, value]) => ({
     img: [value],
     number: [initialUserResources[key]]
@@ -99,12 +96,12 @@ function HomeBoard() {
     number: [initialUserResources[key]]
   }));
   
-  
+  */
 
   const handleFenceInstallation = (index) => {
     const updatedFarm = [...data.farm];
 
-    if (updatedFarm[index] === 'empty') {
+    if (updatedFarm[index] === "empty") {
       let requiredResources = 4;
       if (clickCount > 0) {
         requiredResources = 3;
@@ -115,10 +112,10 @@ function HomeBoard() {
         return;
       }
 
-      updatedFarm[index] = 'fence2';
-      setUserResources(prevResources => ({
+      updatedFarm[index] = "fence2";
+      setUserResources((prevResources) => ({
         ...prevResources,
-        branch: prevResources.branch - requiredResources
+        branch: prevResources.branch - requiredResources,
       }));
       setClickCount(clickCount + 1);
     }
@@ -131,29 +128,29 @@ function HomeBoard() {
     let requiredResources = 5;
     let requiredReeds = 2;
 
-    if (updatedFarm[index] === 'wood_home') {
+    if (updatedFarm[index] === "wood_home") {
       if (userResources.branch < requiredResources) {
         setShowModal(true);
         return;
       }
-      updatedFarm[index] = 'soil_home';
-      updatedFarm[index + 5] = 'soil_home';
-      setUserResources(prevResources => ({
+      updatedFarm[index] = "soil_home";
+      updatedFarm[index + 5] = "soil_home";
+      setUserResources((prevResources) => ({
         ...prevResources,
         branch: prevResources.branch - requiredResources,
-        reed: prevResources.reed - requiredReeds
+        reed: prevResources.reed - requiredReeds,
       }));
-    } else if (updatedFarm[index] === 'soil_home') {
+    } else if (updatedFarm[index] === "soil_home") {
       if (userResources.rock < requiredResources) {
         setShowModal(true);
         return;
       }
-      updatedFarm[index] = 'stone_home';
-      updatedFarm[index + 5] = 'stone_home';
-      setUserResources(prevResources => ({
+      updatedFarm[index] = "stone_home";
+      updatedFarm[index + 5] = "stone_home";
+      setUserResources((prevResources) => ({
         ...prevResources,
         rock: prevResources.rock - requiredResources,
-        reed: prevResources.reed - requiredReeds
+        reed: prevResources.reed - requiredReeds,
       }));
     }
     setData({ farm: updatedFarm });
@@ -161,7 +158,7 @@ function HomeBoard() {
 
   const renderFarm = (slot, index) => {
     switch (slot) {
-      case 'empty':
+      case "empty":
         return (
           <img
             src={emptyImg}
@@ -170,7 +167,7 @@ function HomeBoard() {
             onClick={() => handleFenceInstallation(index)}
           />
         );
-      case 'wood_home':
+      case "wood_home":
         return (
           <img
             src={woodHomeImg}
@@ -179,7 +176,7 @@ function HomeBoard() {
             onClick={() => upgradeHome(index)}
           />
         );
-      case 'soil_home':
+      case "soil_home":
         return (
           <img
             src={soilHomeImg}
@@ -188,13 +185,13 @@ function HomeBoard() {
             onClick={() => upgradeHome(index)}
           />
         );
-      case 'wood_home':
+      case "wood_home":
         return <img src={woodHomeImg} alt="WoodHome" />;
-      case 'soil_home':
+      case "soil_home":
         return <img src={soilHomeImg} alt="SoilHome" />;
-      case 'stone_home':
+      case "stone_home":
         return <img src={stoneHomeImg} alt="StoneHome" />;
-      case 'fence2':
+      case "fence2":
         return <img src={fence2Img} alt="Fence2" />;
       default:
         return null;
@@ -205,9 +202,18 @@ function HomeBoard() {
     <div className={styles.container}>
       <div className={styles.topSection}>개인 창고</div>
       <div className={styles.middleSection}>
-        <ResourceDisplay resources={userResources} resourceIcons={UserresourceIcons} />
-        <ResourceDisplay resources={userResources} resourceIcons={animalresourceIcons} />
-        <ResourceDisplay resources={userResources} resourceIcons={farmresourceIcons} />              
+        <ResourceDisplay
+          resources={userResources}
+          resourceIcons={UserresourceIcons}
+        />
+        <ResourceDisplay
+          resources={userResources}
+          resourceIcons={animalresourceIcons}
+        />
+        <ResourceDisplay
+          resources={userResources}
+          resourceIcons={farmresourceIcons}
+        />
       </div>
       <div className={styles.bottomSection}>
         <div className={styles.farm}>
