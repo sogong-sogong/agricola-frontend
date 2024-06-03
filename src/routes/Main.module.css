@@ -21,8 +21,20 @@
 /* ?? ?? ?? */
 .header {
   background-color: rgb(107, 107, 107);
+  display: flex;
+  justify-content: end;
   width: 100%;
   height: 10%;
+  font-size: larger;
+}
+
+.text {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 95%;
+  font-size: larger;
+  font-weight: bold;
 }
 
 /* ???? ? ? */
@@ -36,7 +48,7 @@
 
 /* ??? */
 .actBoard {
-  background-color: #4e4e4e;
+  background-color: #c3c3c3;
   display: flex;
   flex-direction: row;
   width: 67%;
