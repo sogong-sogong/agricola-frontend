@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./ScoreBoard.module.css";
+
+import { initialUserResources } from "./resources";
 
 import fieldImg from "../assets/objects/field_small.png";
 import cageImg from "../assets/objects/cageland-small.png";
@@ -19,6 +21,8 @@ import familyRedImg from "../assets/objects/family-red.png";
 import beggingImg from "../assets/objects/begging.png";
 
 function ScoreBoard() {
+  // UseState변수에 데이터 저장하며 반영
+
   const column = [
     "",
     "밭",
