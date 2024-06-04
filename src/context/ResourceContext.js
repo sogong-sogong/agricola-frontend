@@ -23,16 +23,16 @@ const ResourceContext = createContext();
 export const ResourceProvider = ({ children }) => {
   // 공동창고 자원
   const [gameResources, setGameResources] = useState({
-    wood: 30,
-    grain: 18,
-    clay: 18,
-    stone: 16,
-    weed: 14,
-    vegetable: 12,
-    sheep: 18,
-    pig: 15,
-    cow: 13,
-    food: 20,
+    wood: 0,
+    grain: 0,
+    clay: 0,
+    stone: 0,
+    weed: 0,
+    vegetable: 0,
+    sheep: 0,
+    pig: 0,
+    cow: 0,
+    food: 0,
   });
 
   const [userResources, setUserResources] = useState({

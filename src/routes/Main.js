@@ -40,9 +40,22 @@ function Main() {
         stompClient.current.subscribe(`/sub/room/${roomnumber}`, (message) => {
           const newMessage = JSON.parse(message.body);
           console.log("메시지 도착:", newMessage);
-          setUserInfos(newMessage);
+
+          // 어떤 메시지인지 구분하여 다음 실행을 수행한다.
+          if (
+            Array.isArray(newMessage) &&
+            newMessage[0].memberId !== undefined
+          ) {
+            console.log("메시지 경로", `/pub/room/${roomnumber}`);
+            setUserInfos(newMessage);
+          } else if (newMessage.id !== undefined) {
+            console.log("메시지 경로", `/pub/room/${roomnumber}/common/update`);
+            updateGameResources(newMessage); // 공동자원 업데이트
+          } else {
+            console.log("undefined message....");
+          }
         });
-        // 연결되면 sendr
+        // 연결되면 send
         sendData();
       },
       (error) => {
@@ -59,7 +72,7 @@ function Main() {
     }
   };
 
-  // 웹소켓 데이터 전송 코드
+  // 웹소켓 방 입장 데이터 전송 코드
   const sendData = () => {
     if (!stompClient.current || !stompClient.current.connected) {
       console.error("STOMP 연결이 설정되지 않았습니다.");
@@ -81,13 +94,14 @@ function Main() {
       JSON.stringify(dataToSend)
     );
   };
-
+  /*
   function findMemberInfo(memberId) {
     const memberInfo = userInfos.find((member) => member.memberId === memberId);
     return memberInfo
       ? memberInfo
       : `Member with memberId ${memberId} not found`;
   }
+  */
 
   // 공동창고를 조회하고 데이터를 업데이트 하는 함수
   const inquiryCommonstorage = async () => {
@@ -106,20 +120,48 @@ function Main() {
 
     const data = await fetchData();
     if (data) {
-      console.log(data);
+      console.log(data); // 전송받은 데이터 콘솔 출력
       updateGameResources(data);
     }
   };
 
+  // 웹소켓 공동 창고 업데이트
+  const sendCommonstorageData = () => {
+    if (!stompClient.current || !stompClient.current.connected) {
+      console.error("STOMP 연결이 설정되지 않았습니다.");
+      return;
+    }
+
+    // 디버그 출력을 비활성화하는 빈 함수 설정
+    stompClient.current.debug = () => {};
+
+    const dataToSend = {
+      roomId: {
+        id: roomnumber,
+      },
+      wood: 47,
+      clay: 18,
+    };
+
+    // 데이터 전송
+    console.log("데이터 전송:", dataToSend);
+    stompClient.current.send(
+      `/pub/room/${roomnumber}/common/update`,
+      {},
+      JSON.stringify(dataToSend)
+    );
+  };
+
+  // 테스트 함수
   const test = () => {
     //console.log(userInfos);
     //console.log(memberIdRef);
     //console.log(findMemberInfo(Number(memberIdRef.current)));
-    inquiryCommonstorage();
+    //inquiryCommonstorage();
+    sendCommonstorageData();
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
-
   useEffect(() => {
     const savedRoomNumber = Cookies.get("roomnumber");
     if (savedRoomNumber) {
@@ -133,9 +175,11 @@ function Main() {
   }, []);
 
   // roomnumber가 설정될 때 connect 함수 호출
+  // roomnumber가 설정될 때 공동창고 자원을 업데이트 한다.
   useEffect(() => {
     if (roomnumber) {
       connect();
+      inquiryCommonstorage();
     }
 
     // 컴포넌트 언마운트 시 웹소켓 연결 해제
