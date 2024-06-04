@@ -74,10 +74,13 @@ const ActBoard = ({
   inquiryFamilyPosition,
   updateFamilyPosition,
   userInfos,
+  familyPosition,
 }) => {
   const [userResources, setUserResources] = useState(initialUserResources);
   const [gameResources, setGameResources] = useState(initialGameResources);
   const [selectedCards, setSelectedCards] = useState([]);
+
+  const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
 
   const resourceIcons = {
     branch: branchIcon,
@@ -113,45 +116,44 @@ const ActBoard = ({
   */
 
   const cards = [
-    { id: 1, image: bush1, resources: { branch: 1 } },
+    { id: 16, image: bush1, resources: { branch: 1 } },
+    { id: 22, image: farmEx2, resources: { branch: -2, barn: 1 } },
+    { id: 32, image: round1a },
+    { id: 33, image: round1b },
+    { id: 34, image: round1c },
+    { id: 35, image: round1d },
 
-    { id: 2, image: farmEx2, resources: { branch: -2, barn: 1 } },
-    { id: 3, image: round1a },
-    { id: 4, image: round1b },
-    { id: 5, image: round1c },
-    { id: 6, image: round1d },
-    { id: 7, image: forest7, resources: { branch: 2 } },
-    { id: 8, image: get8, resources: { turn: 1, card: 1 } },
-    { id: 9, image: forest9, resources: { branch: 3 } },
-    { id: 10, image: round2a },
-    { id: 11, image: round2b },
-    { id: 12, image: round2c },
-    { id: 13, image: rsc13, resources: { reed: 1, rock: 1, food: 1 } },
-    { id: 14, image: grain14, resources: { seed: 1 } },
-    { id: 15 },
-    { id: 16, image: round3a },
-    { id: 17, image: round3b },
+    { id: 17, image: forest7, resources: { branch: 2 } },
+    { id: 23, image: get8, resources: { turn: 1, card: 1 } },
+    { id: 28, image: forest9, resources: { branch: 3 } },
+    { id: 36, image: round2a },
+    { id: 37, image: round2b },
+    { id: 38, image: round2c },
 
-    { id: 18 },
+    { id: 18, image: rsc13, resources: { reed: 1, rock: 1, food: 1 } },
+    { id: 24, image: grain14, resources: { seed: 1 } },
+    { id: 100 },
+    { id: 39, image: round3a },
+    { id: 40, image: round3b },
+    { id: 101 },
+
     { id: 19, image: clay19, resources: { clay: 2 } },
-    { id: 20, image: farmGet20, resources: { reed: 1, rock: 1, food: 1 } },
+    { id: 25, image: farmGet20, resources: { reed: 1, rock: 1, food: 1 } },
+    { id: 29, image: clay21, resources: { seed: 1 } },
+    { id: 41, image: round4a },
+    { id: 42, image: round4b },
+    { id: 102 },
 
-    { id: 21, image: clay21, resources: { seed: 1 } },
-    { id: 22, image: round4a },
-    { id: 23, image: round4b },
-
-    { id: 24 },
-    { id: 25, image: study25, resources: { food: -2, card: 1 } },
+    { id: 20, image: study25, resources: { food: -2, card: 1 } },
     { id: 26, image: studay26, resources: { food: -1, card: 1 } },
-    { id: 27, image: reed27, resources: { reed: 1 } },
+    { id: 30, image: reed27, resources: { reed: 1 } },
+    { id: 43, image: round5a },
+    { id: 44, image: round5b },
+    { id: 45, image: round6a },
 
-    { id: 28, image: round5a },
-    { id: 29, image: round5b },
-    { id: 30, image: round6a },
-
-    { id: 31, image: show31, resources: { food: 1 } },
-    { id: 32, image: sell32, resources: { food: 2 } },
-    { id: 33, image: fish33, resources: { food: 1 } },
+    { id: 21, image: show31, resources: { food: 1 } },
+    { id: 27, image: sell32, resources: { food: 2 } },
+    { id: 31, image: fish33, resources: { food: 1 } },
 
     // Add more cards if needed
   ];
@@ -182,16 +184,11 @@ const ActBoard = ({
     }
   };
 
-  // 멤버 ID로 number, sterter 정보를 찾는다.
-  function findMemberInfo(memberId) {
-    const memberInfo = userInfos.find((member) => member.memberId === memberId);
-    return memberInfo
-      ? memberInfo
-      : `Member with memberId ${memberId} not found`;
-  }
-
   // 테스트 함수
-  const test = () => {};
+  const test = async () => {
+    //inquiryFamilyPosition();
+    console.log(familyCount);
+  };
 
   return (
     <div className={styles.container}>
@@ -201,16 +198,44 @@ const ActBoard = ({
             key={card.id}
             className={styles.card}
             onClick={() => {
-              handleCardClick(card);
+              //handleCardClick(card);
               console.log(card.id);
+              if (familyCount < 2) {
+                updateFamilyPosition(memberId * 2 - familyCount, card.id);
+                setFamilyCount((prev) => prev + 1);
+              }
+              test();
             }}
           >
             {card.image && <img src={card.image} alt={`Card ${card.id}`} />}
-            {selectedCards.includes(card.id) && (
-              <div className={styles.userMark}>
-                <img src={familyImages[0]} alt="User Mark" />
-              </div>
-            )}
+            {familyPosition[0] &&
+              (familyPosition[0].family[0].xy === card.id ||
+                familyPosition[0].family[1].xy === card.id) && (
+                <div className={styles.userMark}>
+                  <img src={familyImages[0]} alt="User Mark" />
+                </div>
+              )}
+            {familyPosition[1] &&
+              (familyPosition[1].family[0].xy === card.id ||
+                familyPosition[1].family[1].xy === card.id) && (
+                <div className={styles.userMark}>
+                  <img src={familyImages[1]} alt="User Mark" />
+                </div>
+              )}
+            {familyPosition[2] &&
+              (familyPosition[2].family[0].xy === card.id ||
+                familyPosition[2].family[1].xy === card.id) && (
+                <div className={styles.userMark}>
+                  <img src={familyImages[2]} alt="User Mark" />
+                </div>
+              )}
+            {familyPosition[3] &&
+              (familyPosition[3].family[0].xy === card.id ||
+                familyPosition[3].family[1].xy === card.id) && (
+                <div className={styles.userMark}>
+                  <img src={familyImages[3]} alt="User Mark" />
+                </div>
+              )}
           </button>
         ))}
       </div>
