@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
-import { ResourceContext } from "../components/Resource";
-import { initialUserResources } from "./resources.js";
-import ResourceDisplay from "./ResourceDisplay";
+
+import { useResources } from "../context/ResourceContext";
+import ResourceDisplay2 from './ResourceDisplay2';
+
 import styles from "./HomeBoard.module.css";
-import resources from "./resources.js";
 import ActBoard from "./ActBoard";
+
 
 import emptyImg from "../assets/objects/empty.png";
 import woodHomeImg from "../assets/objects/wood_home.jpg";
@@ -33,9 +34,7 @@ import farmerIcon from "../assets/image/farmer.png";
 
 function HomeBoard() {
   //const { setResourceData1 } = useContext(ResourceContext);
-  const [userResources, setUserResources] = useState(initialUserResources);
-  const [updatedUserResources, setUpdatedUserResources] =
-    useState(initialUserResources);
+  const { userResources, setuserResources} = useResources();
   const [data, setData] = useState({
     farm: [
       "empty",
@@ -58,27 +57,17 @@ function HomeBoard() {
   const [showModal, setShowModal] = useState(false);
   const [clickCount, setClickCount] = useState(0);
 
-  const UserresourceIcons = {
-    branch: branchIcon,
+  const resourceIcons = {
+    wood: branchIcon,
+    grain: seedIcon,
     clay: clayIcon,
-    rock: rockIcon,
-    reed: reedIcon,
-    seed: seedIcon,
+    stone: rockIcon,
+    weed: reedIcon,
     vegetable: vegetableIcon,
-    food: foodIcon,
-    begging: beggingIcon,
-  };
-
-  const animalresourceIcons = {
     sheep: sheepIcon,
+    food: foodIcon,
     pig: pigIcon,
     cow: cowIcon,
-  };
-
-  const farmresourceIcons = {
-    farmer: farmerIcon,
-    fence: fenceIcon,
-    house: houseIcon,
   };
   /*
   const resourceData1 = Object.entries(UserresourceIcons).map(([key, value]) => ({
@@ -113,7 +102,7 @@ function HomeBoard() {
       }
 
       updatedFarm[index] = "fence2";
-      setUserResources((prevResources) => ({
+      setuserResources((prevResources) => ({
         ...prevResources,
         branch: prevResources.branch - requiredResources,
       }));
@@ -135,7 +124,7 @@ function HomeBoard() {
       }
       updatedFarm[index] = "soil_home";
       updatedFarm[index + 5] = "soil_home";
-      setUserResources((prevResources) => ({
+      setuserResources((prevResources) => ({
         ...prevResources,
         branch: prevResources.branch - requiredResources,
         reed: prevResources.reed - requiredReeds,
@@ -147,7 +136,7 @@ function HomeBoard() {
       }
       updatedFarm[index] = "stone_home";
       updatedFarm[index + 5] = "stone_home";
-      setUserResources((prevResources) => ({
+      setuserResources((prevResources) => ({
         ...prevResources,
         rock: prevResources.rock - requiredResources,
         reed: prevResources.reed - requiredReeds,
@@ -202,17 +191,9 @@ function HomeBoard() {
     <div className={styles.container}>
       <div className={styles.topSection}>개인 창고</div>
       <div className={styles.middleSection}>
-        <ResourceDisplay
+        <ResourceDisplay2
           resources={userResources}
-          resourceIcons={UserresourceIcons}
-        />
-        <ResourceDisplay
-          resources={userResources}
-          resourceIcons={animalresourceIcons}
-        />
-        <ResourceDisplay
-          resources={userResources}
-          resourceIcons={farmresourceIcons}
+          resourceIcons={resourceIcons}
         />
       </div>
       <div className={styles.bottomSection}>
