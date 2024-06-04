@@ -1,16 +1,16 @@
 import React, { useState, useContext } from "react";
-
-import { useResources } from "../context/ResourceContext";
-import ResourceDisplay2 from './ResourceDisplay2';
-
+import { ResourceContext } from "../context/ResourceContext";
+import { initialUserResources } from "./resources.js";
+import ResourceDisplay from "./ResourceDisplay";
 import styles from "./HomeBoard.module.css";
+import resources from '../components/resources'
 import ActBoard from "./ActBoard";
-
 
 import emptyImg from "../assets/objects/empty.png";
 import woodHomeImg from "../assets/objects/wood_home.jpg";
 import soilHomeImg from "../assets/objects/soil_home.jpg";
 import stoneHomeImg from "../assets/objects/stone_home.jpg";
+import plowImg from "../assets/objects/plow.png";
 
 import fence2Img from "../assets/objects/fence2.png";
 
@@ -32,9 +32,12 @@ import sheepIcon from "../assets/image/sheep.png";
 import beggingIcon from "../assets/image/begging.png";
 import farmerIcon from "../assets/image/farmer.png";
 
+
 function HomeBoard() {
   //const { setResourceData1 } = useContext(ResourceContext);
-  const { userResources, setuserResources} = useResources();
+  const [userResources, setUserResources] = useState(initialUserResources);
+  const [updatedUserResources, setUpdatedUserResources] =
+    useState(initialUserResources);
   const [data, setData] = useState({
     farm: [
       "empty",
@@ -57,40 +60,52 @@ function HomeBoard() {
   const [showModal, setShowModal] = useState(false);
   const [clickCount, setClickCount] = useState(0);
 
-  const resourceIcons = {
-    wood: branchIcon,
-    grain: seedIcon,
+  const UserresourceIcons = {
+    branch: branchIcon,
     clay: clayIcon,
-    stone: rockIcon,
-    weed: reedIcon,
+    rock: rockIcon,
+    reed: reedIcon,
+    seed: seedIcon,
     vegetable: vegetableIcon,
-    sheep: sheepIcon,
     food: foodIcon,
+    begging: beggingIcon,
+  };
+
+  const animalresourceIcons = {
+    sheep: sheepIcon,
     pig: pigIcon,
     cow: cowIcon,
   };
-  /*
-  const resourceData1 = Object.entries(UserresourceIcons).map(([key, value]) => ({
-    img: [value],
-    number: [initialUserResources[key]]
-  }));
+
+  const farmresourceIcons = {
+    farmer: farmerIcon,
+    fence: fenceIcon,
+    house: houseIcon,
+  };
   
-  const resourceData2 = Object.entries(animalresourceIcons).map(([key, value]) => ({
-    img: [value],
-    number: [initialUserResources[key]]
-  }));
+  // const resourceData1 = Object.entries(UserresourceIcons).map(([key, value]) => ({
+  //   img: [value],
+  //   number: [initialUserResources[key]]
+  // }));
   
-  const resourceData3 = Object.entries(farmresourceIcons).map(([key, value]) => ({
-    img: [value],
-    number: [initialUserResources[key]]
-  }));
+  // const resourceData2 = Object.entries(animalresourceIcons).map(([key, value]) => ({
+  //   img: [value],
+  //   number: [initialUserResources[key]]
+  // }));
   
-  */
+  // const resourceData3 = Object.entries(farmresourceIcons).map(([key, value]) => ({
+  //   img: [value],
+  //   number: [initialUserResources[key]]
+  // }));
+  
+  
 
   const handleFenceInstallation = (index) => {
     const updatedFarm = [...data.farm];
-
-    if (updatedFarm[index] === "empty") {
+    if (index === 6) {
+      updatedFarm[index] = "plow"
+    }
+    else if (updatedFarm[index] === "empty") {
       let requiredResources = 4;
       if (clickCount > 0) {
         requiredResources = 3;
@@ -102,7 +117,7 @@ function HomeBoard() {
       }
 
       updatedFarm[index] = "fence2";
-      setuserResources((prevResources) => ({
+      setUserResources((prevResources) => ({
         ...prevResources,
         branch: prevResources.branch - requiredResources,
       }));
@@ -122,21 +137,9 @@ function HomeBoard() {
         setShowModal(true);
         return;
       }
-      updatedFarm[index] = "soil_home";
-      updatedFarm[index + 5] = "soil_home";
-      setuserResources((prevResources) => ({
-        ...prevResources,
-        branch: prevResources.branch - requiredResources,
-        reed: prevResources.reed - requiredReeds,
-      }));
-    } else if (updatedFarm[index] === "soil_home") {
-      if (userResources.rock < requiredResources) {
-        setShowModal(true);
-        return;
-      }
       updatedFarm[index] = "stone_home";
       updatedFarm[index + 5] = "stone_home";
-      setuserResources((prevResources) => ({
+      setUserResources((prevResources) => ({
         ...prevResources,
         rock: prevResources.rock - requiredResources,
         reed: prevResources.reed - requiredReeds,
@@ -182,6 +185,8 @@ function HomeBoard() {
         return <img src={stoneHomeImg} alt="StoneHome" />;
       case "fence2":
         return <img src={fence2Img} alt="Fence2" />;
+      case "plow":
+        return <img src={plowImg} alt="Plow" />;
       default:
         return null;
     }
@@ -191,9 +196,17 @@ function HomeBoard() {
     <div className={styles.container}>
       <div className={styles.topSection}>개인 창고</div>
       <div className={styles.middleSection}>
-        <ResourceDisplay2
+        <ResourceDisplay
+          resources={updatedUserResources}
+          resourceIcons={UserresourceIcons}
+        />
+        <ResourceDisplay
           resources={userResources}
-          resourceIcons={resourceIcons}
+          resourceIcons={animalresourceIcons}
+        />
+        <ResourceDisplay
+          resources={userResources}
+          resourceIcons={farmresourceIcons}
         />
       </div>
       <div className={styles.bottomSection}>
@@ -206,3 +219,4 @@ function HomeBoard() {
 }
 
 export default HomeBoard;
+
