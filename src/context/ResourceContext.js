@@ -36,21 +36,19 @@ export const ResourceProvider = ({ children }) => {
   });
 
   const [userResources, setUserResources] = useState({
-    branch: 0,
+    wood: 0,
+    grain: 0,
     clay: 0,
-    rock: 0,
-    reed: 0,
-    seed: 0,
+    stone: 0,
+    weed: 0,
     vegetable: 0,
-    food: 0,
-    beg: 0,
     sheep: 0,
     pig: 0,
     cow: 0,
-    mark: 0,
-    fence: 0,
-    house: 0,
+    food: 0,
     family: 2,
+    fence: 0,
+    cowshed: 0,
   });
 
   // 공동창고 자원 업데이트
@@ -68,12 +66,34 @@ export const ResourceProvider = ({ children }) => {
       food: newData.food ?? prevResources.food,
     }));
   };
+
+    // 공동창고 자원 업데이트
+    const updateUserResources = (newData) => {
+      setUserResources((prevResources) => ({
+        wood: newData.wood ?? prevResources.wood,
+        grain: newData.grain ?? prevResources.grain,
+        clay: newData.clay ?? prevResources.clay,
+        stone: newData.stone ?? prevResources.stone,
+        weed: newData.weed ?? prevResources.weed,
+        vegetable: newData.vegetable ?? prevResources.vegetable,
+        sheep: newData.sheep ?? prevResources.sheep,
+        pig: newData.pig ?? prevResources.pig,
+        cow: newData.cow ?? prevResources.cow,
+        food: newData.food ?? prevResources.food,
+        family: newData.family ?? prevResources.family,
+        fence: newData.fence ?? prevResources.fence,
+        cowshed: newData.cowshed ?? prevResources.cowshed,
+      }));
+    };
+
+
   return (
     <ResourceContext.Provider
       value={{
         gameResources,
         userResources,
         updateGameResources,
+        updateUserResources,
       }}
     >
       {children}
