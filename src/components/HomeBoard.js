@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { ResourceContext } from "../context/ResourceContext";
 import { initialUserResources } from "./resources.js";
-import ResourceDisplay2 from "./ResourceDisplay2";
+import ResourceDisplay from "./ResourceDisplay";
 import styles from "./HomeBoard.module.css";
 import resources from '../components/resources'
 import ActBoard from "./ActBoard";
@@ -196,9 +196,17 @@ function HomeBoard() {
     <div className={styles.container}>
       <div className={styles.topSection}>개인 창고</div>
       <div className={styles.middleSection}>
-        <ResourceDisplay2
+        <ResourceDisplay
           resources={updatedUserResources}
           resourceIcons={UserresourceIcons}
+        />
+        <ResourceDisplay
+          resources={userResources}
+          resourceIcons={animalresourceIcons}
+        />
+        <ResourceDisplay
+          resources={userResources}
+          resourceIcons={farmresourceIcons}
         />
       </div>
       <div className={styles.bottomSection}>
