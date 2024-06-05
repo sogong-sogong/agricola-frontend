@@ -5,8 +5,6 @@ import styles from "./LogBoard.module.css";
 
 import ScoreBoardComponent from "../components/ScoreBoard";
 
-import { initialUserResources } from "./resources";
-
 import calenderIcon from "../assets/icons/calendar-add.png";
 import starIcon from "../assets/icons/star.png";
 
@@ -59,7 +57,7 @@ const scorecardStyles = {
 
 Modal.setAppElement("#root");
 
-function LogBoard({ memberId, userInfos }) {
+function LogBoard({ memberId, userInfos, inquiryScore }) {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
   const [foodExchangeIsOpen, setFoodExchangeIsOpen] = useState(false);
@@ -81,6 +79,7 @@ function LogBoard({ memberId, userInfos }) {
   };
 
   const openScoreBoard = () => {
+    inquiryScore();
     setScoreBoardIsOpen(true);
   };
 
