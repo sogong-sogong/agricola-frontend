@@ -23,7 +23,7 @@ function Main() {
   // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
   const stompClient = useRef(null);
 
-  const { updateGameResources } = useResources();
+  const { updateGameResources, setScore } = useResources();
 
   // 웹소켓 구독 함수
   const connect = () => {
@@ -209,15 +209,40 @@ function Main() {
     //console.log(Number(memberIdRef.current));
   };
 
+  // 전체 유저 점수 현황을 가져오는 함수
+  const inquiryScore = async () => {
+    // 점수 현황 조회 API 호출
+    const fetchData = async () => {
+      const urls = [
+        `http://localhost:8080/score/member/${userInfos[0].memberId}`,
+        `http://localhost:8080/score/member/${userInfos[1].memberId}`,
+        `http://localhost:8080/score/member/${userInfos[2].memberId}`,
+        `http://localhost:8080/score/member/${userInfos[3].memberId}`,
+      ];
+      try {
+        const responses = await Promise.all(urls.map((url) => axios.get(url)));
+        const data = responses.map((response) => response.data);
+        setScore(data.flat());
+        return data.flat();
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const data = await fetchData();
+    if (data) {
+      //console.log(data); // 전송받은 데이터 콘솔 출력
+    }
+  };
+
   // 테스트 함수
   const test = () => {
-    console.log(familyPosition);
     //console.log(memberIdRef);
     //console.log(findMemberInfo(Number(memberIdRef.current)));
     //inquiryCommonstorage();
     //sendCommonstorageData();
     //updateFamilyPosition(Number(memberIdRef.current) * 2 - 1, 30);
-    inquiryFamilyPosition();
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -281,6 +306,7 @@ function Main() {
         <LogBoard
           memberId={Number(memberIdRef.current)}
           userInfos={userInfos}
+          inquiryScore={inquiryScore}
         />
       </div>
     </div>

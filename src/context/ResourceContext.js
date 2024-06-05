@@ -51,6 +51,29 @@ export const ResourceProvider = ({ children }) => {
     cowshed: 0,
   });
 
+  // 점수판 초기화
+  const initialScore = {
+    begging: 0,
+    blank: 0,
+    cage: 0,
+    card: 0,
+    cow: 0,
+    extra: 0,
+    family: 0,
+    fencedCowshed: 0,
+    field: 0,
+    grain: 0,
+    memberId: 0,
+    mudHouse: 0,
+    pig: 0,
+    score: 0,
+    sheep: 0,
+    stoneHouse: 0,
+    vegetable: 0,
+  };
+
+  const [score, setScore] = useState(Array(4).fill(initialScore));
+
   // 공동창고 자원 업데이트
   const updateGameResources = (newData) => {
     setGameResources((prevResources) => ({
@@ -67,25 +90,24 @@ export const ResourceProvider = ({ children }) => {
     }));
   };
 
-    // 공동창고 자원 업데이트
-    const updateUserResources = (newData) => {
-      setUserResources((prevResources) => ({
-        wood: newData.wood ?? prevResources.wood,
-        grain: newData.grain ?? prevResources.grain,
-        clay: newData.clay ?? prevResources.clay,
-        stone: newData.stone ?? prevResources.stone,
-        weed: newData.weed ?? prevResources.weed,
-        vegetable: newData.vegetable ?? prevResources.vegetable,
-        sheep: newData.sheep ?? prevResources.sheep,
-        pig: newData.pig ?? prevResources.pig,
-        cow: newData.cow ?? prevResources.cow,
-        food: newData.food ?? prevResources.food,
-        family: newData.family ?? prevResources.family,
-        fence: newData.fence ?? prevResources.fence,
-        cowshed: newData.cowshed ?? prevResources.cowshed,
-      }));
-    };
-
+  // 유저 자원 업데이트
+  const updateUserResources = (newData) => {
+    setUserResources((prevResources) => ({
+      wood: newData.wood ?? prevResources.wood,
+      grain: newData.grain ?? prevResources.grain,
+      clay: newData.clay ?? prevResources.clay,
+      stone: newData.stone ?? prevResources.stone,
+      weed: newData.weed ?? prevResources.weed,
+      vegetable: newData.vegetable ?? prevResources.vegetable,
+      sheep: newData.sheep ?? prevResources.sheep,
+      pig: newData.pig ?? prevResources.pig,
+      cow: newData.cow ?? prevResources.cow,
+      food: newData.food ?? prevResources.food,
+      family: newData.family ?? prevResources.family,
+      fence: newData.fence ?? prevResources.fence,
+      cowshed: newData.cowshed ?? prevResources.cowshed,
+    }));
+  };
 
   return (
     <ResourceContext.Provider
@@ -94,6 +116,8 @@ export const ResourceProvider = ({ children }) => {
         userResources,
         updateGameResources,
         updateUserResources,
+        score,
+        setScore,
       }}
     >
       {children}
