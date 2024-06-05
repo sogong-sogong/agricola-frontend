@@ -15,6 +15,7 @@ import { useResources } from "../context/ResourceContext";
 function Main() {
   const [roomnumber, setRoomnumber] = useState(); // 방 번호
   const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
+  const [familyPosition, setFamilyPosition] = useState([]);
 
   // 멤버 ID를 저장하는 Ref
   const memberIdRef = useRef();
@@ -42,7 +43,13 @@ function Main() {
           console.log("메시지 도착:", newMessage);
 
           // 어떤 메시지인지 구분하여 다음 실행을 수행한다.
-          if (
+          if (Array.isArray(newMessage) && newMessage[0].family) {
+            console.log(
+              "메시지 경로",
+              `/pub/room/${roomnumber}/family/position/update`
+            );
+            setFamilyPosition(newMessage);
+          } else if (
             Array.isArray(newMessage) &&
             newMessage[0].memberId !== undefined
           ) {
@@ -120,7 +127,7 @@ function Main() {
 
     const data = await fetchData();
     if (data) {
-      console.log(data); // 전송받은 데이터 콘솔 출력
+      //console.log(data); // 전송받은 데이터 콘솔 출력
       updateGameResources(data);
     }
   };
@@ -152,13 +159,65 @@ function Main() {
     );
   };
 
+  // 가족 위치를 가져오는 함수
+  const inquiryFamilyPosition = async () => {
+    // 가족 위치 조회 API 호출
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/family/get/${roomnumber}`
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const data = await fetchData();
+    if (data) {
+      console.log(data); // 전송받은 데이터 콘솔 출력
+      setFamilyPosition(data);
+    }
+  };
+
+  // 가족 위치 업데이트 함수
+  const updateFamilyPosition = async (id, xy) => {
+    // 가족 위치 업데이트 API 호출
+    if (!stompClient.current || !stompClient.current.connected) {
+      console.error("STOMP 연결이 설정되지 않았습니다.");
+      return;
+    }
+
+    // 디버그 출력을 비활성화하는 빈 함수 설정
+    stompClient.current.debug = () => {};
+
+    const dataToSend = [
+      {
+        id: id, //familyId
+        xy: xy, //family 위치
+      },
+    ];
+    // 데이터 전송
+    console.log("데이터 전송:", dataToSend);
+    stompClient.current.send(
+      `/pub/room/${roomnumber}/family/position/update`,
+      {},
+      JSON.stringify(dataToSend)
+    );
+
+    //console.log(Number(memberIdRef.current));
+  };
+
   // 테스트 함수
   const test = () => {
-    //console.log(userInfos);
+    console.log(familyPosition);
     //console.log(memberIdRef);
     //console.log(findMemberInfo(Number(memberIdRef.current)));
     //inquiryCommonstorage();
-    sendCommonstorageData();
+    //sendCommonstorageData();
+    //updateFamilyPosition(Number(memberIdRef.current) * 2 - 1, 30);
+    inquiryFamilyPosition();
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -176,10 +235,13 @@ function Main() {
 
   // roomnumber가 설정될 때 connect 함수 호출
   // roomnumber가 설정될 때 공동창고 자원을 업데이트 한다.
+  // roomnumber가 설정될 때 가족 초기 위치를 가져온다.
+  // 가족 초기 위치가 안 가져와져서 test 한번 실행해줘야함,,
   useEffect(() => {
     if (roomnumber) {
       connect();
       inquiryCommonstorage();
+      inquiryFamilyPosition();
     }
 
     // 컴포넌트 언마운트 시 웹소켓 연결 해제
@@ -196,7 +258,14 @@ function Main() {
         </div>
         <div className={styles.gameBoard}>
           <div className={styles.actBoard}>
-            <ActBoard />
+            <ActBoard
+              roomnumber={roomnumber}
+              memberId={Number(memberIdRef.current)}
+              inquiryFamilyPosition={inquiryFamilyPosition}
+              updateFamilyPosition={updateFamilyPosition}
+              userInfos={userInfos}
+              familyPosition={familyPosition}
+            />
           </div>
           <div className={styles.rightBoard}>
             <div className={styles.homeBoard}>

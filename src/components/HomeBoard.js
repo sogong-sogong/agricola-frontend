@@ -153,6 +153,7 @@ function HomeBoard() {
       case "empty":
         return (
           <img
+            key={index}
             src={emptyImg}
             alt="Empty"
             className={styles.pointerCursor}
@@ -162,6 +163,7 @@ function HomeBoard() {
       case "wood_home":
         return (
           <img
+            key={index}
             src={woodHomeImg}
             alt="WoodHome"
             className={styles.pointerCursor}
@@ -171,6 +173,7 @@ function HomeBoard() {
       case "soil_home":
         return (
           <img
+            key={index}
             src={soilHomeImg}
             alt="SoilHome"
             className={styles.pointerCursor}

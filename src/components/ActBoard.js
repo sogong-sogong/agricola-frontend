@@ -1,5 +1,7 @@
 
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 import styles from './ActBoard.module.css';
 import ResourceDisplay from './ResourceDisplay';
@@ -72,6 +74,8 @@ const ActBoard = () => {
   const [showButtons, setShowButtons] = useState(false); // State to manage button visibility
 
 
+  const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
+
   const resourceIcons = {
     branch: branchIcon,
     seed: seedIcon,
@@ -99,6 +103,83 @@ const ActBoard = () => {
     updateGameResources({ wood: gameResources.wood + 5 , weed: gameResources.weed + 2});
     updateUserResources({ wood: userResources.wood - 5 , weed: userResources.weed - 2});
   };
+  */
+
+  const cards = [
+    { id: 16, image: bush1, resources: { branch: 1 } },
+    { id: 22, image: farmEx2, resources: { branch: -2, barn: 1 } },
+    { id: 32, image: round1a },
+    { id: 33, image: round1b },
+    { id: 34, image: round1c },
+    { id: 35, image: round1d },
+
+    { id: 17, image: forest7, resources: { branch: 2 } },
+    { id: 23, image: get8, resources: { turn: 1, card: 1 } },
+    { id: 28, image: forest9, resources: { branch: 3 } },
+    { id: 36, image: round2a },
+    { id: 37, image: round2b },
+    { id: 38, image: round2c },
+
+    { id: 18, image: rsc13, resources: { reed: 1, rock: 1, food: 1 } },
+    { id: 24, image: grain14, resources: { seed: 1 } },
+    { id: 100 },
+    { id: 39, image: round3a },
+    { id: 40, image: round3b },
+    { id: 101 },
+
+    { id: 19, image: clay19, resources: { clay: 2 } },
+    { id: 25, image: farmGet20, resources: { reed: 1, rock: 1, food: 1 } },
+    { id: 29, image: clay21, resources: { seed: 1 } },
+    { id: 41, image: round4a },
+    { id: 42, image: round4b },
+    { id: 102 },
+
+    { id: 20, image: study25, resources: { food: -2, card: 1 } },
+    { id: 26, image: studay26, resources: { food: -1, card: 1 } },
+    { id: 30, image: reed27, resources: { reed: 1 } },
+    { id: 43, image: round5a },
+    { id: 44, image: round5b },
+    { id: 45, image: round6a },
+
+    { id: 21, image: show31, resources: { food: 1 } },
+    { id: 27, image: sell32, resources: { food: 2 } },
+    { id: 31, image: fish33, resources: { food: 1 } },
+
+    // Add more cards if needed
+  ];
+
+  const handleCardClick = (card) => {
+    if (!selectedCards.includes(card.id)) {
+      setSelectedCards([...selectedCards, card.id]);
+
+      // Update user resources
+      const updatedUserResources = { ...userResources };
+      const updatedGameResources = { ...gameResources };
+
+      Object.keys(card.resources).forEach((resource) => {
+        // Update user resources
+        updatedUserResources[resource] =
+          (updatedUserResources[resource] || 0) + card.resources[resource];
+
+        // Update game resources
+        updatedGameResources[resource] =
+          (updatedGameResources[resource] || 0) - card.resources[resource];
+      });
+
+      setUserResources(updatedUserResources);
+      setGameResources(updatedGameResources);
+
+      console.log("Updated User Resources:", updatedUserResources);
+      console.log("Updated Game Resources:", updatedGameResources);
+    }
+  };
+
+  // 테스트 함수
+  const test = async () => {
+    //inquiryFamilyPosition();
+    console.log(familyCount);
+  };
+
 
   //양시장
   const handleButton32 = () => {
@@ -417,4 +498,3 @@ const ActBoard = () => {
 };
 
 export default ActBoard;
-
