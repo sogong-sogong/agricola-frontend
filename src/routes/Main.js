@@ -236,13 +236,74 @@ function Main() {
     }
   };
 
+  // 밭 조회 함수
+  const inquiryFarm = async () => {
+    // 밭 조회 API 호출
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/farm/member/${Number(memberIdRef.current)}`
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const data = await fetchData();
+    if (data) {
+      console.log(data); // 전송받은 데이터 콘솔 출력
+    }
+  };
+
+  // 집 조회 함수
+  const inquiryHouse = async () => {
+    // 집 조회 API 호출
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/house/member/${Number(memberIdRef.current)}`
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const data = await fetchData();
+    if (data) {
+      console.log(data); // 전송받은 데이터 콘솔 출력
+    }
+  };
+
+  // 우리 조회 함수
+  const inquiryCage = async () => {
+    // 우리 조회 API 호출
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://localhost:8080/cage/member/${Number(memberIdRef.current)}`
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const data = await fetchData();
+    if (data) {
+      console.log(data); // 전송받은 데이터 콘솔 출력
+    }
+  };
+
   // 테스트 함수
   const test = () => {
-    //console.log(memberIdRef);
-    //console.log(findMemberInfo(Number(memberIdRef.current)));
-    //inquiryCommonstorage();
-    //sendCommonstorageData();
-    //updateFamilyPosition(Number(memberIdRef.current) * 2 - 1, 30);
+    //inquiryFarm();
+    //inquiryHouse();
+    inquiryCage();
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.

@@ -120,7 +120,7 @@ function ScoreBoard() {
                         justifyContent: "center",
                       }}
                     >
-                      {score[index][key]}
+                      {}
                     </div>
                     <div
                       style={{
