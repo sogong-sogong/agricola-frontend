@@ -1,5 +1,7 @@
 import React,{ useState } from "react";
-import Modal from "./Modal";
+import MajorModal from "./MajorModal";
+import SubModal from "./SubModal";
+import JobModal from "./JobModal";
 import HwaroModal from "./HwaroModal";
 
 import styles from "./CardBoard.module.css";
@@ -362,21 +364,66 @@ const handleUsedModalMajorCardClick = () => {
         {jobCardBack}
       </div>
       {modalOpen && (
-        <Modal
+  <>
+      {cardsToShow === majorCardStack && (
+      <MajorModal
         cards={cardsToShow}
         onClose={() => setModalOpen(false)}
         onCardClick={(cardImage) => {
-          if (cardsToShow === majorCardStack) {
-            handleModalMajorCardClick(cardImage);
-          } else if (cardsToShow === subCardStack) {
-            handleModalSubCardClick(cardImage);
-          } else if (cardsToShow === jobCardStack) {
-            handleModalJobCardClick(cardImage);
-          }
+          handleModalMajorCardClick(cardImage);
         }}
         onEnableButtonClick={handleEnableButtonClick}
+      />
+    )}
+    {cardsToShow === subCardStack && (
+      <SubModal
+        cards={cardsToShow}
+        onClose={() => setModalOpen(false)}
+        onCardClick={(cardImage) => {
+          handleModalSubCardClick(cardImage);
+        }}
+      />
+    )}
+    {cardsToShow === jobCardStack && (
+      <JobModal
+        cards={cardsToShow}
+        onClose={() => setModalOpen(false)}
+        onCardClick={(cardImage) => {
+          handleModalJobCardClick(cardImage);
+        }}
         />
       )}
+    {cardsToShow === majorCards && (
+      <MajorModal
+        cards={cardsToShow}
+        onClose={() => setModalOpen(false)}
+        onCardClick={(cardImage) => {
+          handleModalMajorCardClick(cardImage);
+        }}
+        onEnableButtonClick={handleEnableButtonClick}
+      />
+    )}
+    {cardsToShow === subCards && (
+      <SubModal
+        cards={cardsToShow}
+        onClose={() => setModalOpen(false)}
+        onCardClick={(cardImage) => {
+          handleModalSubCardClick(cardImage);
+        }}
+      />
+    )}
+    {cardsToShow === jobCards && (
+      <JobModal
+        cards={cardsToShow}
+        onClose={() => setModalOpen(false)}
+        onCardClick={(cardImage) => {
+          handleModalJobCardClick(cardImage);
+        }}
+        />
+      )}
+        </>
+)}
+
       {hwaroModalOpen && (
         <HwaroModal
           cards={hwaroCardStack}
