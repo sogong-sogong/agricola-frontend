@@ -2,32 +2,26 @@
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
 }
 
 .grid {
-  width: 90%;
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-gap: 5px;
+  grid-gap: 3px;
   align-items: start;
 
 }
 
-.card {
+.button {
   position: relative;
-  width: auto;
-  height: auto;
   padding: 0;
   background: transparent; /* Remove background color */
   border: none; /* Remove border */
   cursor: pointer;
 }
 
-.card img {
-  width: 80%;
-  object-fit: cover;
-}
 
 .userMark {
   position: absolute;
@@ -39,7 +33,7 @@
 
 .resources {
   position: absolute;
-  top: 88%;
-  left: 28%;
+  top: 90%;
+  left: 27%;
 
 }
