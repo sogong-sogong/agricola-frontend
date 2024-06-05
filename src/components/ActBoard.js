@@ -2,9 +2,8 @@
 import React, { useState } from 'react';
 
 import styles from './ActBoard.module.css';
-import { initialGameResources, initialUserResources } from './resources.js';
 import ResourceDisplay from './ResourceDisplay';
-
+import { useResources } from "../context/ResourceContext";
 
 import bush1 from '../assets/image/1_bush.png';
 import farmEx2 from '../assets/image/2_farm_expending.png';
@@ -68,9 +67,10 @@ import begIcon from '../assets/image/beg.png';
 import mark from '../assets/image/farmer_blue.png';
 
 const ActBoard = () => {
-  const [userResources, setUserResources] = useState(initialUserResources);
-  const [gameResources, setGameResources] = useState(initialGameResources);
-  const [selectedCards, setSelectedCards] = useState([]);
+  const [selectedButton, setSelectedButton] = useState(false);
+  const {gameResources, userResources, updateGameResources,updateUserResources,} = useResources();
+  const [showButtons, setShowButtons] = useState(false); // State to manage button visibility
+
 
   const resourceIcons = {
     branch: branchIcon,
@@ -87,126 +87,333 @@ const ActBoard = () => {
     cow: cowIcon,
   };
 
-  /*동현님
-  const UserresourceIcons = {
-    branch: branchIcon,
-    clay: clayIcon,
-    rock: rockIcon,
-    reed: reedIcon,
-    seed: seedIcon,
-    vegetable: vegetableIcon,
-    food: foodIcon,
-    beg: begIcon
+  //덤불
+  const handleButton16 = () => {
+    updateGameResources({ wood: gameResources.wood - 1 });
+    updateUserResources({ wood: userResources.wood + 1 });
+     setSelectedButton(true);
   };
 
-  const animalresourceIcons = {
-    pig: pigIcon,
-    cow: cowIcon,
+  //농장확장
+  const handleButton22 = () => {
+    updateGameResources({ wood: gameResources.wood + 5 , weed: gameResources.weed + 2});
+    updateUserResources({ wood: userResources.wood - 5 , weed: userResources.weed - 2});
   };
-  */
 
-  const cards = [
-    { id: 1, image: bush1, resources: { branch: 1 } },
-
-
-    { id: 2, image: farmEx2, resources: { branch: -2, barn :1 } },
-    { id: 3, image: round1a},
-    { id: 4, image: round1b},
-    { id: 5, image: round1c},
-    { id: 6, image: round1d},
-    { id: 7, image: forest7, resources: { branch: 2 } },
-    { id: 8, image: get8, resources: { turn: 1, card: 1 } },
-    { id: 9, image: forest9, resources: { branch: 3 } },
-    { id: 10, image: round2a},
-    { id: 11, image: round2b},
-    { id: 12, image: round2c},
-    { id: 13, image: rsc13, resources: { reed: 1, rock: 1, food: 1 } },
-    { id: 14, image: grain14, resources: { seed :1 } },
-    { id: 15, },
-    { id: 16, image: round3a},
-    { id: 17, image: round3b},
-
-    { id: 18 },
-    { id: 19, image: clay19, resources: { clay: 2 } },
-    { id: 20, image: farmGet20, resources: { reed: 1, rock: 1, food: 1 } },
-
-    { id: 21, image: clay21, resources: { seed :1,  } },
-    { id: 22, image: round4a},
-    { id: 23, image: round4b},
-
-    { id: 24 },
-    { id: 25, image: study25, resources: {food: -2, card: 1} },
-    { id: 26, image: studay26, resources: {food: -1, card: 1} },
-    { id: 27, image: reed27, resources: {reed: 1}},
-
-    { id: 28, image: round5a},
-    { id: 29, image: round5b},
-    { id: 30, image: round6a },
-
-    { id: 31, image: show31, resources: {food: 1}},
-    { id: 32, image: sell32, resources: {food: 2}},
-    { id: 33, image: fish33, resources: {food: 1}},
-
-    // Add more cards if needed
-  ];
-
-  const handleCardClick = (card) => {
-    if (!selectedCards.includes(card.id)) {
-      setSelectedCards([...selectedCards, card.id]);
-
-  
-      // Update user resources
-      const updatedUserResources = { ...userResources };
-      const updatedGameResources = { ...gameResources };
-  
-      Object.keys(card.resources).forEach(resource => {
-        // Update user resources
-        updatedUserResources[resource] = (updatedUserResources[resource] || 0) + card.resources[resource];
-        
-        // Update game resources
-        updatedGameResources[resource] = (updatedGameResources[resource] || 0) - card.resources[resource];
-      });
-  
-      setUserResources(updatedUserResources);
-      setGameResources(updatedGameResources);
-
-      console.log("Updated User Resources:", updatedUserResources);
-      console.log("Updated Game Resources:", updatedGameResources);
-
-    }
+  //양시장
+  const handleButton32 = () => {
+    updateGameResources({ sheep: gameResources.sheep - 1 });
+    updateUserResources({ sheep: userResources.sheep + 1 });
   };
+
+  //울타리 
+  //+ 개수 선택 모달 + 농장판 선택 연결필요
+  const handleButton33 = () => {
+    updateGameResources({ wood: gameResources.wood + 1 });
+    updateUserResources({ fence: userResources.fence - 1 });
+  };
+
+  //곡식활용
+  //+ 농장판 선택 연결필요
+  const handleButton34 = () => {
+    updateGameResources({ wood: gameResources.wood - 1 });
+  };
+
+  //주요설비
+  // + 카드 모달창 연결 필요
+  const handleButton35 = () => {
+    updateGameResources({ wood: gameResources.wood - 1 });
+  };
+
+  //수풀
+  const handleButton17 = () => {
+    updateGameResources({ wood: gameResources.wood - 2 });
+    updateUserResources({ wood: userResources.wood + 2 });
+  };
+
+  //회합장소
+  //+ 설비 카드 모달 창, 선턴 얻는 거 추가 필요 
+  const handleButton23 = () => {
+    updateGameResources({ wood: gameResources.wood - 1 });
+  };
+
+  //숲
+  const handleButton28 = () => {
+    updateGameResources({ wood: gameResources.wood - 3 });
+    updateUserResources({ wood: userResources.wood + 3 });
+  };
+
+  //가족늘리기
+  const handleButton36 = () => {
+    //+ 추가하기,만약 farmID 1~15중에 type 이 0인 방이 있다면 
+    updateUserResources({ family: userResources.family + 1 });
+  };
+
+  //서부채석장
+  const handleButton37 = () => {
+    updateGameResources({ stone: gameResources.stone - 1 });
+    updateUserResources({ stone: userResources.stone + 1 });
+  };
+
+  //집개조
+  const handleButton38 = () => {
+    //+ 추가하기, 만약 farmID 1~15중에 type 이 2인 방이 있다면 (돌집)
+    updateGameResources({ weed: gameResources.weed + 1, clay: gameResources.clay +1 });
+    updateUserResources({ weed: userResources.weed - 1, clay: userResources.clay - 1 });
+    //+ 추가하기, 주요/설비카드 모달
+  };
+
+  //자원시장
+  const handleButton18 = () => {
+    
+    updateGameResources({ weed: gameResources.weed - 1, clay: gameResources.clay - 1, food: gameResources.food - 1});
+    updateUserResources({ weed: userResources.weed + 1, clay: userResources.clay + 1, food: userResources.food +1 });
+
+  };
+
+  //곡식종자
+  const handleButton24 = () => {
+    updateGameResources({ grain: gameResources.grain - 1 });
+    updateUserResources({ grain: userResources.grain + 1 });
+
+  };
+
+  //흙 채굴장
+  const handleButton29 = () => {
+    updateGameResources({ clay: gameResources.clay - 1 });
+    updateUserResources({ clay: userResources.clay + 1 });
+  };
+
+  //돼지시장
+  const handleButton39 = () => {
+    updateGameResources({ pig: gameResources.pig - 1 });
+    updateUserResources({ pig: userResources.pig + 1 });
+  };
+
+  //채소종자
+  const handleButton40 = () => {
+    updateGameResources({ vegetable: gameResources.vegetable - 1 });
+    updateUserResources({ vegetable: userResources.vegetable + 1 });
+  };
+
+  //점토채굴장
+  const handleButton19 = () => {
+    updateGameResources({ clay: gameResources.clay - 2 });
+    updateUserResources({ clay: userResources.clay + 2 });
+  };
+
+  //농지
+  const handleButton25 = () => {
+    //추가하기, farm id 하나를 선택하게 하고, 그걸 type 2 (농지)로 바꿔주기
+
+  };
+
+  //갈대밭
+  const handleButton30 = () => {
+    updateGameResources({ weed: gameResources.weed - 1 });
+    updateUserResources({ weed: userResources.weed + 1 });
+  };
+  
+  //소시장
+  const handleButton41 = () => {
+    updateGameResources({ cow: gameResources.cow - 1 });
+    updateUserResources({ cow: userResources.cow + 1 });
+  };
+
+  //동부채석장
+  const handleButton42 = () => {
+    updateGameResources({ stone: gameResources.stone - 1 });
+    updateUserResources({ stone: userResources.stone + 1 });
+  };
+
+  //교습1
+  const handleButton20 = () => {
+    updateGameResources({ food: gameResources.food + 2 });
+    updateUserResources({ food: userResources.food - 2 });
+    //추가하기, + 직업카드 모달열고 1개 선택
+  };
+
+  //교습2
+  const handleButton26 = () => {
+    updateGameResources({ food: gameResources.food + 2 });
+    updateUserResources({ food: userResources.food - 1 });
+    //추가하기, + 직업카드 모달열고 1개 선택
+  };
+
+  //낚시
+  const handleButton31 = () => {
+    updateGameResources({ food: gameResources.food - 1 });
+    updateUserResources({ food: userResources.food + 1 });
+  };
+
+  //급한가족늘리기
+  const handleButton43 = () => {
+    updateUserResources({ family: userResources.family + 1 });
+  };
+
+  //밭농사
+  const handleButton44 = () => {
+    //추가하기, farm id 하나를 선택하게 하고, 그걸 type 2 (농지)로 바꿔주기
+    //그리고 또는 farm id 하나를 선택하게 하고, grain, vegetable 씨뿌리기
+    updateGameResources({ wood: gameResources.wood - 1 });
+  };
+
+  //농장개조
+  const handleButton45 = () => {
+    //+ 추가하기, 만약 farmID 1~15중에 type 이 2인 방이 있다면 (돌집), 
+    updateGameResources({ weed: gameResources.weed + 1, clay: gameResources.clay +1 });
+    updateUserResources({ weed: userResources.weed - 1, clay: userResources.clay - 1 });
+    // wood 개수 선택해서 펜스 구매하는 모달
+    updateGameResources({ wood: gameResources.wood + 1 });
+    updateUserResources({ fence: userResources.fence - 1 });
+  };
+
+  //유랑극단
+  const handleButton21 = () => {
+    updateGameResources({ food: gameResources.food - 1 });
+    updateUserResources({ food: userResources.food + 1 });
+  };
+
+  //날품팔이
+  const handleButton27 = () => {
+    updateGameResources({ food: gameResources.food - 2 });
+    updateUserResources({ food: userResources.food + 2 });
+  };
+
+  //데모 라운드5 점프 버튼
+  //자원 조정, 라운드 카드 가려놨던 거 5라운드카드까지 다 뒤집기
+  const Lound5 = () => {
+    setShowButtons(true);
+  };
+
+  //데모 라운드6 점프 버튼
+  //자원 조정, 라운드 카드 가려놨던 거 6라운드카드까지 다 뒤집기
+  const Lound6 = () => {
+    updateGameResources({ food: gameResources.food - 2 });
+    updateUserResources({ food: userResources.food + 2 });
+  };
+  
+  //데모 수확 점프 버튼
+  //자원 조정, 라운드 카드 가려놨던 거 6라운드카드까지 다 뒤집기
+  const harvest = () => {
+    updateGameResources({ food: gameResources.food - 2 });
+    updateUserResources({ food: userResources.food + 2 });
+  };
+
+
 
   return (
     <div className={styles.container}>
       <div className={styles.grid}>
-        {cards.map((card) => (
-          <button
-
-          key={card.id}
-          className={styles.card}
-          onClick={() => handleCardClick(card)}
-        >
-          {card.image && <img src={card.image} alt={`Card ${card.id}`} />}
-          {selectedCards.includes(card.id) && (
-            <div className={styles.userMark}><img src={mark} alt="User Mark" /></div>
-          )}
+        <button className={styles.button} id="16" onClick={handleButton16}>
+          <img src={bush1} alt="bush1" />
+                      {selectedButton && (
+              <div className={styles.userMark}><img src={mark} alt="User Mark" /></div>
+            )}
         </button>
-        ))}
+        <button className={styles.button} id="22" onClick={handleButton22}>
+          <img src={farmEx2} alt="farmEx2" />
+        </button>
+        <button className={styles.button} id="32" onClick={handleButton32}>
+          <img src={round1a} alt="round1a" />
+        </button>
+        <button className={styles.button} id="33" onClick={handleButton33}>
+          <img src={round1b} alt="round1b" />
+        </button>
+        <button className={styles.button} id="34" onClick={handleButton34}>
+          <img src={round1c} alt="round1c" />
+        </button>
+        <button className={styles.button} id="35" onClick={handleButton35}>
+          <img src={round1d} alt="round1d" />
+        </button>
+        <button className={styles.button} id="17" onClick={handleButton17}>
+          <img src={forest7} alt="forest7" />
+        </button>
+        <button className={styles.button} id="23" onClick={handleButton23}>
+          <img src={get8} alt="get8" />
+        </button>
+        <button className={styles.button} id="28" onClick={handleButton28}>
+          <img src={forest9} alt="forest9" />
+        </button>
+        <button className={styles.button} id="36" onClick={handleButton36}>
+          <img src={round2a} alt="round2a" />
+        </button>
+        <button className={styles.button} id="37" onClick={handleButton37}>
+          <img src={round2b} alt="round2b" />
+        </button>
+        <button className={styles.button} id="38" onClick={handleButton38}>
+          <img src={round2c} alt="round2c" />
+        </button>
+        <button className={styles.button} id="18" onClick={handleButton18}>
+          <img src={rsc13} alt="rsc13" />
+        </button>
+        <button className={styles.button} id="24" onClick={handleButton24}>
+          <img src={grain14} alt="grain14" />
+        </button>
+        <button className={styles.button} id="29" onClick={handleButton29}>
+          <img src={clay21} alt="clay21" />
+        </button>
+        <button className={styles.button} id="39" onClick={handleButton39}>
+          <img src={round3a} alt="round3a" />
+        </button>
+        <button className={styles.button} id="40" onClick={handleButton40}>
+          <img src={round3b} alt="round3b" />
+        </button>
+        <div></div>
+        <button className={styles.button} id="19" onClick={handleButton19}>
+          <img src={clay19} alt="clay19" />
+        </button>
+        <button className={styles.button} id="25" onClick={handleButton25}>
+          <img src={farmGet20} alt="farmGet20" />
+        </button>
+        <button className={styles.button} id="30" onClick={handleButton30}>
+          <img src={reed27} alt="reed27" />
+        </button>
+        <button className={styles.button} id="41" onClick={handleButton41}>
+          <img src={round4a} alt="round4a" />
+        </button>
+        <button className={styles.button} id="42" onClick={handleButton42}>
+          <img src={round4b} alt="round4b" />
+        </button>
+        <div></div>
+        <button className={styles.button} id="20" onClick={handleButton20}>
+          <img src={study25} alt="study25" />
+        </button>
+        <button className={styles.button} id="26" onClick={handleButton26}>
+          <img src={studay26} alt="studay26" />
+        </button>
+        <button className={styles.button} id="31" onClick={handleButton31}>
+          <img src={fish33} alt="fish33" />
+          </button>
+        <button className={styles.button} id="43" onClick={handleButton43}>
+          <img src={round5a} alt="round5a" />
+        </button>
+        <button className={styles.button} id="44" onClick={handleButton44}>
+          <img src={round5b} alt="round5b" />
+        </button>
+        <button className={styles.button} id="45" onClick={handleButton45}>
+          <img src={round6a} alt="round6a" />
+        </button>
+        <button className={styles.button} id="21" onClick={handleButton21}>
+          <img src={show31} alt="show31" />
+        </button>
+        <button className={styles.button} id="27" onClick={handleButton27}>
+          <img src={sell32} alt="sell32" />
+        </button>
+        <div></div>
+        <div></div>
+        <div></div>
       </div>
       <div className={styles.resources}>
         <ResourceDisplay resources={gameResources} resourceIcons={resourceIcons} />
-        {/* 동현님
-        <h3>User Resources</h3>
-
-        <ResourceDisplay resources={userResources} resourceIcons={UserresourceIcons} />
-        <h3>animal Resources</h3>
-        <ResourceDisplay resources={userResources} resourceIcons={animalresourceIcons} />
-        */}
+      </div>
+      <div className={styles.right}>
+        <button onClick={Lound5}>Lound 5-2</button>
+        <button onClick={Lound6}>Lound 6-1</button>
+        <button onClick={harvest}>수확</button>
       </div>
     </div>
   );
-
-  
 };
 
 export default ActBoard;
