@@ -341,7 +341,7 @@ const ActBoard = ({
   // 테스트 함수
   const test = async (id) => {
     console.log(`Button with id ${id} clicked`);
-    console.log(familyPosition[0].family[0].xy);
+    //console.log(familyPosition[0].family[0].xy);
   };
 
   // 행동판 버튼 정보 저장

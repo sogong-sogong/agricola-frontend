@@ -31,6 +31,7 @@ function Main() {
     stompClient.current = Stomp.over(
       () => new WebSocket("ws://localhost:8080/ws-stomp")
     );
+
     // 디버그 출력을 비활성화하는 빈 함수 설정
     stompClient.current.debug = () => {};
 
@@ -55,15 +56,16 @@ function Main() {
           ) {
             console.log("메시지 경로", `/pub/room/${roomnumber}`);
             setUserInfos(newMessage);
+
+            //inquiryFamilyPosition();
           } else if (newMessage.id !== undefined) {
             console.log("메시지 경로", `/pub/room/${roomnumber}/common/update`);
-            updateGameResources(newMessage); // 공동자원 업데이트
+            updateGameResources(newMessage);
           } else {
             console.log("undefined message....");
           }
         });
-        // 연결되면 send
-        sendData();
+        sendData(); // 연결되면 sendData 호출
       },
       (error) => {
         console.error("연결 실패:", error);
@@ -176,8 +178,12 @@ function Main() {
 
     const data = await fetchData();
     if (data) {
-      console.log(data); // 전송받은 데이터 콘솔 출력
+      //console.log(data); // 전송받은 데이터 콘솔 출력
       setFamilyPosition(data);
+      // 빈 배열이 리턴되면 재귀적으로 함수를 다시 호출한다.
+      if (Array.isArray(data) && data.length === 0) {
+        inquiryFamilyPosition();
+      }
     }
   };
 
@@ -301,9 +307,11 @@ function Main() {
 
   // 테스트 함수
   const test = () => {
+    // 가족 초기 위치 가져오기
+    inquiryFamilyPosition();
     //inquiryFarm();
     //inquiryHouse();
-    inquiryCage();
+    console.log(familyPosition);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -325,7 +333,7 @@ function Main() {
   // 가족 초기 위치가 안 가져와져서 test 한번 실행해줘야함,,
   useEffect(() => {
     if (roomnumber) {
-      connect();
+      connect(); // connect가 프로미스를 반환한다고 가정
       inquiryCommonstorage();
       inquiryFamilyPosition();
     }
@@ -333,6 +341,12 @@ function Main() {
     // 컴포넌트 언마운트 시 웹소켓 연결 해제
     return () => disconnect();
   }, [roomnumber]);
+
+  useEffect(() => {
+    if (roomnumber) {
+      inquiryFamilyPosition();
+    }
+  }, [userInfos]);
 
   return (
     <div className={styles.container}>
@@ -368,6 +382,7 @@ function Main() {
           memberId={Number(memberIdRef.current)}
           userInfos={userInfos}
           inquiryScore={inquiryScore}
+          familyPosition={familyPosition}
         />
       </div>
     </div>
