@@ -27,11 +27,9 @@ function Main() {
 
   // 웹소켓 구독 함수
   const connect = () => {
-    // Stomp.over에 WebSocket을 생성하는 공장 함수 전달
     stompClient.current = Stomp.over(
       () => new WebSocket("ws://localhost:8080/ws-stomp")
     );
-    // 디버그 출력을 비활성화하는 빈 함수 설정
     stompClient.current.debug = () => {};
 
     stompClient.current.connect(
@@ -42,7 +40,6 @@ function Main() {
           const newMessage = JSON.parse(message.body);
           console.log("메시지 도착:", newMessage);
 
-          // 어떤 메시지인지 구분하여 다음 실행을 수행한다.
           if (Array.isArray(newMessage) && newMessage[0].family) {
             console.log(
               "메시지 경로",
@@ -55,15 +52,16 @@ function Main() {
           ) {
             console.log("메시지 경로", `/pub/room/${roomnumber}`);
             setUserInfos(newMessage);
+
+            //inquiryFamilyPosition();
           } else if (newMessage.id !== undefined) {
             console.log("메시지 경로", `/pub/room/${roomnumber}/common/update`);
-            updateGameResources(newMessage); // 공동자원 업데이트
+            updateGameResources(newMessage);
           } else {
             console.log("undefined message....");
           }
         });
-        // 연결되면 send
-        sendData();
+        sendData(); // 연결되면 sendData 호출
       },
       (error) => {
         console.error("연결 실패:", error);
@@ -331,7 +329,7 @@ function Main() {
   // 가족 초기 위치가 안 가져와져서 test 한번 실행해줘야함,,
   useEffect(() => {
     if (roomnumber) {
-      connect();
+      connect(); // connect가 프로미스를 반환한다고 가정
       inquiryCommonstorage();
       inquiryFamilyPosition();
     }
@@ -339,6 +337,12 @@ function Main() {
     // 컴포넌트 언마운트 시 웹소켓 연결 해제
     return () => disconnect();
   }, [roomnumber]);
+
+  useEffect(() => {
+    if (roomnumber) {
+      inquiryFamilyPosition();
+    }
+  }, [userInfos]);
 
   return (
     <div className={styles.container}>
