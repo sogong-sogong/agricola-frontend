@@ -27,9 +27,12 @@ function Main() {
 
   // 웹소켓 구독 함수
   const connect = () => {
+    // Stomp.over에 WebSocket을 생성하는 공장 함수 전달
     stompClient.current = Stomp.over(
       () => new WebSocket("ws://localhost:8080/ws-stomp")
     );
+
+    // 디버그 출력을 비활성화하는 빈 함수 설정
     stompClient.current.debug = () => {};
 
     stompClient.current.connect(
@@ -40,6 +43,7 @@ function Main() {
           const newMessage = JSON.parse(message.body);
           console.log("메시지 도착:", newMessage);
 
+          // 어떤 메시지인지 구분하여 다음 실행을 수행한다.
           if (Array.isArray(newMessage) && newMessage[0].family) {
             console.log(
               "메시지 경로",
