@@ -3,7 +3,7 @@ import { ResourceContext } from "../context/ResourceContext";
 import { initialUserResources } from "./resources.js";
 import ResourceDisplay2 from "./ResourceDisplay2";
 import styles from "./HomeBoard.module.css";
-import resources from '../components/resources'
+import resources from "../components/resources";
 import ActBoard from "./ActBoard";
 
 import emptyImg from "../assets/objects/empty.png";
@@ -32,6 +32,17 @@ import sheepIcon from "../assets/image/sheep.png";
 import beggingIcon from "../assets/image/begging.png";
 import farmerIcon from "../assets/image/farmer.png";
 
+import familyBlueImg from "../assets/objects/family-blue.png";
+import familyGreenImg from "../assets/objects/family-green.png";
+import familyPurpleImg from "../assets/objects/family-purple.png";
+import familyRedImg from "../assets/objects/family-red.png";
+
+const familyImages = [
+  familyBlueImg,
+  familyGreenImg,
+  familyPurpleImg,
+  familyRedImg,
+];
 
 function HomeBoard() {
   //const { setResourceData1 } = useContext(ResourceContext);
@@ -82,30 +93,27 @@ function HomeBoard() {
     fence: fenceIcon,
     house: houseIcon,
   };
-  
+
   // const resourceData1 = Object.entries(UserresourceIcons).map(([key, value]) => ({
   //   img: [value],
   //   number: [initialUserResources[key]]
   // }));
-  
+
   // const resourceData2 = Object.entries(animalresourceIcons).map(([key, value]) => ({
   //   img: [value],
   //   number: [initialUserResources[key]]
   // }));
-  
+
   // const resourceData3 = Object.entries(farmresourceIcons).map(([key, value]) => ({
   //   img: [value],
   //   number: [initialUserResources[key]]
   // }));
-  
-  
 
   const handleFenceInstallation = (index) => {
     const updatedFarm = [...data.farm];
     if (index === 6) {
-      updatedFarm[index] = "plow"
-    }
-    else if (updatedFarm[index] === "empty") {
+      updatedFarm[index] = "plow";
+    } else if (updatedFarm[index] === "empty") {
       let requiredResources = 4;
       if (clickCount > 0) {
         requiredResources = 3;
@@ -152,44 +160,66 @@ function HomeBoard() {
     switch (slot) {
       case "empty":
         return (
-          <img
-            key={index}
-            src={emptyImg}
-            alt="Empty"
-            className={styles.pointerCursor}
-            onClick={() => handleFenceInstallation(index)}
-          />
+          <div key={index} className={styles.image}>
+            <img
+              src={emptyImg}
+              alt="Empty"
+              className={styles.pointerCursor}
+              onClick={() => handleFenceInstallation(index)}
+            />
+          </div>
         );
       case "wood_home":
         return (
-          <img
-            key={index}
-            src={woodHomeImg}
-            alt="WoodHome"
-            className={styles.pointerCursor}
-            onClick={() => upgradeHome(index)}
-          />
+          <div key={index} className={styles.image}>
+            <img src={familyBlueImg} alt="family" class={styles.overlay} />
+            <img
+              key={index}
+              src={woodHomeImg}
+              alt="WoodHome"
+              className={styles.pointerCursor}
+              onClick={() => upgradeHome(index)}
+            />
+          </div>
         );
       case "soil_home":
         return (
-          <img
-            key={index}
-            src={soilHomeImg}
-            alt="SoilHome"
-            className={styles.pointerCursor}
-            onClick={() => upgradeHome(index)}
-          />
+          <div key={index} className={styles.image}>
+            <img
+              key={index}
+              src={soilHomeImg}
+              alt="SoilHome"
+              className={styles.pointerCursor}
+              onClick={() => upgradeHome(index)}
+            />
+          </div>
         );
-      case "wood_home":
-        return <img src={woodHomeImg} alt="WoodHome" />;
-      case "soil_home":
-        return <img src={soilHomeImg} alt="SoilHome" />;
       case "stone_home":
-        return <img src={stoneHomeImg} alt="StoneHome" />;
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={stoneHomeImg}
+              alt="StoneHome"
+              className={styles.pointerCursor}
+            />
+          </div>
+        );
       case "fence2":
-        return <img src={fence2Img} alt="Fence2" />;
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={fence2Img}
+              alt="Fence2"
+              className={styles.pointerCursor}
+            />
+          </div>
+        );
       case "plow":
-        return <img src={plowImg} alt="Plow" />;
+        return (
+          <div key={index} className={styles.image}>
+            <img src={plowImg} alt="Plow" className={styles.pointerCursor} />
+          </div>
+        );
       default:
         return null;
     }
@@ -206,7 +236,14 @@ function HomeBoard() {
       </div>
       <div className={styles.bottomSection}>
         <div className={styles.farm}>
-          {data.farm.map((slot, index) => renderFarm(slot, index))}
+          {[...Array(3)].map((_, rowIndex) => (
+            <div key={rowIndex} className={styles.row}>
+              {[...Array(5)].map((_, colIndex) => {
+                const index = rowIndex * 5 + colIndex;
+                return renderFarm(data.farm[index], index);
+              })}
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -214,4 +251,3 @@ function HomeBoard() {
 }
 
 export default HomeBoard;
-
