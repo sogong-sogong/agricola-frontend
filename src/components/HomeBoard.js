@@ -1,4 +1,4 @@
-import React, { useState, useContext,useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ResourceContext } from "../context/ResourceContext";
 import { initialUserResources } from "./resources.js";
 import ResourceDisplay2 from "./ResourceDisplay2";
@@ -45,7 +45,15 @@ const familyImages = [
   familyRedImg,
 ];
 
-function HomeBoard({ farmData, houseData, cageData,inquiryFarm,familyPosition }) {
+function HomeBoard({
+  farmData,
+  houseData,
+  cageData,
+  inquiryFarm,
+  familyPosition,
+  currentShowUser,
+  myID,
+}) {
   //const { setResourceData1 } = useContext(ResourceContext);
   const [userResources, setUserResources] = useState(initialUserResources);
   const [updatedUserResources, setUpdatedUserResources] =
@@ -164,10 +172,6 @@ function HomeBoard({ farmData, houseData, cageData,inquiryFarm,familyPosition })
     setData({ farm: updatedFarm });
   };
 
-  const test = () => {
-    console.log(familyPosition[0].family[0].xy);
-  };
-
   const updateFarmData = (farmData) => {
     const updatedFarm = data.farm.map((field, index) => {
       const matchingField = farmData.find((item) => item.xy === index);
@@ -186,128 +190,148 @@ function HomeBoard({ farmData, houseData, cageData,inquiryFarm,familyPosition })
     });
     setData((prevData) => ({ ...prevData, farm: updatedFarm }));
   };
-  
-    
-    
-    
-    const updateHouseData = (houseData) => {
-      const updatedFarm = [...data.farm];
-      houseData.forEach(({ xy, type }) => {
-        switch (type) {
-          case "wood":
-            updatedFarm[xy] = "wood";
-            break;
-          case "mud":
-            updatedFarm[xy] = "mud";
-            break;
-          case "stone":
-            updatedFarm[xy] = "stone";
-            break;
-          default:
-            break;
-        }
-      });
-      setData((prevData) => ({ ...prevData, farm: updatedFarm }));
-    };
-    
-    const updateCageData = (cageData) => {
-      const updatedFarm = [...data.farm];
-      cageData.forEach(({ xy, type }) => {
-        switch (type) {
-          case 0:
-            updatedFarm[xy] = "fence2";
-            break;
-          default:
-            break;
-        }
-      });
-      setData((prevData) => ({ ...prevData, farm: updatedFarm }));
-    };
-  
-    const renderFarm = (slot, index) => {
-      switch (slot) {
-        case "empty":
-          return (
-            <div key={index} className={styles.image}>
-              <img
-                src={emptyImg}
-                alt="Empty"
-                className={styles.pointerCursor}
-                onClick={() => {
-                  handleFenceInstallation(index);
-                  test();
-                }}
-              />
-            </div>
-          );
-        case "wood_home":
-          return (
-            <div key={index} className={styles.image}>
-              {familyPosition[0] &&
-              (familyPosition[0].family[0].xy === index ||
-                familyPosition[0].family[1].xy === index) ? (
-                <img src={familyBlueImg} alt="family" class={styles.overlay} />
-              ) : (
-                ""
-              )}
-              <img
-                key={index}
-                src={woodHomeImg}
-                alt="WoodHome"
-                className={styles.pointerCursor}
-                onClick={() => upgradeHome(index)}
-              />
-            </div>
-          );
-        case "soil_home":
-          return (
-            <div key={index} className={styles.image}>
-              <img
-                key={index}
-                src={soilHomeImg}
-                alt="SoilHome"
-                className={styles.pointerCursor}
-                onClick={() => upgradeHome(index)}
-              />
-            </div>
-          );
-        case "stone_home":
-          return (
-            <div key={index} className={styles.image}>
-              <img
-                src={stoneHomeImg}
-                alt="StoneHome"
-                className={styles.pointerCursor}
-              />
-            </div>
-          );
-        case "fence2":
-          return (
-            <div key={index} className={styles.image}>
-              <img
-                src={fence2Img}
-                alt="Fence2"
-                className={styles.pointerCursor}
-              />
-            </div>
-          );
-        case "plow":
-          return (
-            <div key={index} className={styles.image}>
-              <img src={plowImg} alt="Plow" className={styles.pointerCursor} />
-            </div>
-          );
-          case "plow_grain_1":
-            return (
-              <div key={index} className={styles.image}>
-                <img src={plowGrain1Img} alt="PlowGrain1" className={styles.pointerCursor} />
-              </div>
-            );
+
+  const updateHouseData = (houseData) => {
+    const updatedFarm = [...data.farm];
+    houseData.forEach(({ xy, type }) => {
+      switch (type) {
+        case "wood":
+          updatedFarm[xy] = "wood";
+          break;
+        case "mud":
+          updatedFarm[xy] = "mud";
+          break;
+        case "stone":
+          updatedFarm[xy] = "stone";
+          break;
         default:
-          return null;
+          break;
       }
-    };
-  
+    });
+    setData((prevData) => ({ ...prevData, farm: updatedFarm }));
+  };
+
+  const updateCageData = (cageData) => {
+    const updatedFarm = [...data.farm];
+    cageData.forEach(({ xy, type }) => {
+      switch (type) {
+        case 0:
+          updatedFarm[xy] = "fence2";
+          break;
+        default:
+          break;
+      }
+    });
+    setData((prevData) => ({ ...prevData, farm: updatedFarm }));
+  };
+
+  const test = () => {
+    console.log(familyPosition[myID - 1].family);
+    console.log(currentShowUser);
+  };
+
+  const renderFarm = (slot, index) => {
+    switch (slot) {
+      case "empty":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={emptyImg}
+              alt="Empty"
+              className={styles.pointerCursor}
+              onClick={() => {
+                handleFenceInstallation(index);
+                test();
+              }}
+            />
+          </div>
+        );
+      case "wood_home":
+        return (
+          <div key={index} className={styles.image}>
+            {familyPosition[currentShowUser - 1] &&
+            (familyPosition[currentShowUser - 1].family[0].xy === index ||
+              familyPosition[currentShowUser - 1].family[1].xy === index) ? (
+              <img
+                src={familyImages[currentShowUser - 1]}
+                alt="family"
+                className={styles.overlay}
+              />
+            ) : familyPosition[myID - 1] &&
+              (familyPosition[myID - 1].family[0].xy === index ||
+                familyPosition[myID - 1].family[1].xy === index) ? (
+              <div>
+                dd
+                <img
+                  src={familyImages[myID - 1]}
+                  alt="family"
+                  className={styles.overlay}
+                />
+              </div>
+            ) : (
+              ""
+            )}
+            <img
+              key={index}
+              src={woodHomeImg}
+              alt="WoodHome"
+              className={styles.pointerCursor}
+              onClick={() => upgradeHome(index)}
+            />
+          </div>
+        );
+      case "soil_home":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              key={index}
+              src={soilHomeImg}
+              alt="SoilHome"
+              className={styles.pointerCursor}
+              onClick={() => upgradeHome(index)}
+            />
+          </div>
+        );
+      case "stone_home":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={stoneHomeImg}
+              alt="StoneHome"
+              className={styles.pointerCursor}
+            />
+          </div>
+        );
+      case "fence2":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={fence2Img}
+              alt="Fence2"
+              className={styles.pointerCursor}
+            />
+          </div>
+        );
+      case "plow":
+        return (
+          <div key={index} className={styles.image}>
+            <img src={plowImg} alt="Plow" className={styles.pointerCursor} />
+          </div>
+        );
+      case "plow_grain_1":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={plowGrain1Img}
+              alt="PlowGrain1"
+              className={styles.pointerCursor}
+            />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className={styles.container}>

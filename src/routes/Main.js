@@ -16,18 +16,29 @@ function Main() {
   const [farmData, setFarmData] = useState(null);
   const [houseData, setHouseData] = useState(null);
   const [cageData, setCageData] = useState(null);
-  
+
   const [roomnumber, setRoomnumber] = useState(); // 방 번호
   const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
-  const [familyPosition, setFamilyPosition] = useState([]);
+  const [familyPosition, setFamilyPosition] = useState([]); // 플레이어 4명의 위치 저장
+
+  const [currentShowUser, setCurrentShowUser] = useState(0);
 
   // 멤버 ID를 저장하는 Ref
   const memberIdRef = useRef();
+
+  const myID = findMemberInfo(Number(memberIdRef.current)).number; // 자신의 number
 
   // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
   const stompClient = useRef(null);
 
   const { updateGameResources, setScore } = useResources();
+
+  function findMemberInfo(memberId) {
+    const memberInfo = userInfos.find((member) => member.memberId === memberId);
+    return memberInfo
+      ? memberInfo
+      : `Member with memberId ${memberId} not found`;
+  }
 
   // 웹소켓 구독 함수
   const connect = () => {
@@ -107,14 +118,6 @@ function Main() {
       JSON.stringify(dataToSend)
     );
   };
-  /*
-  function findMemberInfo(memberId) {
-    const memberInfo = userInfos.find((member) => member.memberId === memberId);
-    return memberInfo
-      ? memberInfo
-      : `Member with memberId ${memberId} not found`;
-  }
-  */
 
   // 공동창고를 조회하고 데이터를 업데이트 하는 함수
   const inquiryCommonstorage = async () => {
@@ -316,9 +319,10 @@ function Main() {
   const test = () => {
     // 가족 초기 위치 가져오기
     //inquiryFamilyPosition();
-    inquiryFarm();
+    //inquiryFarm();
     //inquiryHouse();
-    console.log(farmData);
+    console.log(userInfos);
+    console.log(familyPosition);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -335,21 +339,21 @@ function Main() {
   }, []);
 
   // roomnumber가 설정될 때 connect 함수 호출
-  // roomnumber가 설정될 때 공동창고 자원을 업데이트 한다.
+  // roomnumber가 설정될 때 공동창고 자원 초기화
   // roomnumber가 설정될 때 가족 초기 위치를 가져온다.
-  // 가족 초기 위치가 안 가져와져서 test 한번 실행해줘야함,,
   useEffect(() => {
     if (roomnumber) {
       connect(); // connect가 프로미스를 반환한다고 가정
       inquiryCommonstorage();
       inquiryFamilyPosition();
-      inquiryFarm();
+      //inquiryFarm();
     }
 
     // 컴포넌트 언마운트 시 웹소켓 연결 해제
     return () => disconnect();
   }, [roomnumber]);
 
+  // 가족 위치 초기화
   useEffect(() => {
     if (roomnumber) {
       inquiryFamilyPosition();
@@ -373,7 +377,6 @@ function Main() {
               updateFamilyPosition={updateFamilyPosition}
               userInfos={userInfos}
               familyPosition={familyPosition}
-              
             />
           </div>
           <div className={styles.rightBoard}>
@@ -384,9 +387,11 @@ function Main() {
                 cageData={cageData}
                 inquiryFarm={inquiryFarm}
                 familyPosition={familyPosition}
+                currentShowUser={currentShowUser}
+                myID={myID}
               />
             </div>
-          
+
             <div className={styles.cardBoard}>
               <CardBoard />
             </div>
@@ -399,6 +404,8 @@ function Main() {
           userInfos={userInfos}
           inquiryScore={inquiryScore}
           familyPosition={familyPosition}
+          setCurrentShowUser={setCurrentShowUser}
+          myID={myID}
         />
       </div>
     </div>

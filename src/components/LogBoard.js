@@ -57,7 +57,14 @@ const scorecardStyles = {
 
 Modal.setAppElement("#root");
 
-function LogBoard({ memberId, userInfos, inquiryScore, familyPosition }) {
+function LogBoard({
+  memberId,
+  userInfos,
+  inquiryScore,
+  familyPosition,
+  setCurrentShowUser,
+  myID,
+}) {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
   const [foodExchangeIsOpen, setFoodExchangeIsOpen] = useState(false);
@@ -66,8 +73,6 @@ function LogBoard({ memberId, userInfos, inquiryScore, familyPosition }) {
   const [familyCount, setFamilyCount] = useState([2, 2, 2, 2]);
 
   const starter = findStarterNumber() - 1; // 자신의 선턴 상태
-
-  const myID = findMemberInfo(memberId).number; // 자신의 number
 
   const closeScorecard = () => {
     setScorecardIsOpen(false);
@@ -87,7 +92,8 @@ function LogBoard({ memberId, userInfos, inquiryScore, familyPosition }) {
   };
 
   const clickProfile = (id) => {
-    console.log("click profile " + memberId);
+    console.log("click profile " + (id + 1));
+    setCurrentShowUser(id + 1);
   };
 
   const clickTurnOff = () => {
@@ -101,14 +107,6 @@ function LogBoard({ memberId, userInfos, inquiryScore, familyPosition }) {
   const closeFoodExchange = () => {
     setFoodExchangeIsOpen(false);
   };
-
-  // 멤버 ID로 number, sterter 정보를 찾는다.
-  function findMemberInfo(memberId) {
-    const memberInfo = userInfos.find((member) => member.memberId === memberId);
-    return memberInfo
-      ? memberInfo
-      : `Member with memberId ${memberId} not found`;
-  }
 
   // starter 멤버를 찾는다.
   function findStarterNumber() {
