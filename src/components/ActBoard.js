@@ -76,6 +76,7 @@ const ActBoard = ({
   updateFamilyPosition,
   userInfos,
   familyPosition,
+  sendCommonstorageData,
 }) => {
   const [selectedButton, setSelectedButton] = useState(false);
   const {
@@ -105,9 +106,13 @@ const ActBoard = ({
 
   //덤불
   const handleButton16 = () => {
-    updateGameResources({ wood: gameResources.wood - 1 });
-    updateUserResources({ wood: userResources.wood + 1 });
+    //updateGameResources({ wood: gameResources.wood - 1 });
+    //updateUserResources({ wood: userResources.wood + 1 });
     setSelectedButton(true);
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      wood: gameResources.wood - 1,
+    });
   };
 
   //농장확장
