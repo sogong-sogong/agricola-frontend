@@ -135,7 +135,7 @@ function Main() {
   };
 
   // 웹소켓 공동 창고 업데이트
-  const sendCommonstorageData = () => {
+  const sendCommonstorageData = (dataToSend) => {
     if (!stompClient.current || !stompClient.current.connected) {
       console.error("STOMP 연결이 설정되지 않았습니다.");
       return;
@@ -143,7 +143,7 @@ function Main() {
 
     // 디버그 출력을 비활성화하는 빈 함수 설정
     stompClient.current.debug = () => {};
-
+    /*
     const dataToSend = {
       roomId: {
         id: roomnumber,
@@ -151,6 +151,7 @@ function Main() {
       wood: 47,
       clay: 18,
     };
+    */
 
     // 데이터 전송
     console.log("데이터 전송:", dataToSend);
@@ -365,6 +366,7 @@ function Main() {
               updateFamilyPosition={updateFamilyPosition}
               userInfos={userInfos}
               familyPosition={familyPosition}
+              sendCommonstorageData={sendCommonstorageData}
             />
           </div>
           <div className={styles.rightBoard}>
