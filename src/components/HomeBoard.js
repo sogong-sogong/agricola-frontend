@@ -11,6 +11,7 @@ import woodHomeImg from "../assets/objects/wood_home.jpg";
 import soilHomeImg from "../assets/objects/soil_home.jpg";
 import stoneHomeImg from "../assets/objects/stone_home.jpg";
 import plowImg from "../assets/objects/plow.png";
+import plowGrain1Img from "../assets/image/plow_grain1.png";
 
 import fence2Img from "../assets/objects/fence2.png";
 
@@ -175,7 +176,7 @@ function HomeBoard({ farmData, houseData, cageData,inquiryFarm,familyPosition })
           case 0:
             return "plow";
           case 1:
-            return "plow";
+            return "plow_grain_1";
           default:
             return field;
         }
@@ -296,6 +297,12 @@ function HomeBoard({ farmData, houseData, cageData,inquiryFarm,familyPosition })
               <img src={plowImg} alt="Plow" className={styles.pointerCursor} />
             </div>
           );
+          case "plow_grain_1":
+            return (
+              <div key={index} className={styles.image}>
+                <img src={plowGrain1Img} alt="PlowGrain1" className={styles.pointerCursor} />
+              </div>
+            );
         default:
           return null;
       }
