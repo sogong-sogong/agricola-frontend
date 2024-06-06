@@ -309,10 +309,10 @@ function Main() {
   // 테스트 함수
   const test = () => {
     // 가족 초기 위치 가져오기
-    inquiryFamilyPosition();
-    //inquiryFarm();
+    //inquiryFamilyPosition();
+    inquiryFarm();
     //inquiryHouse();
-    console.log(familyPosition);
+    //console.log(familyPosition);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -371,7 +371,7 @@ function Main() {
           </div>
           <div className={styles.rightBoard}>
             <div className={styles.homeBoard}>
-              <HomeBoard />
+              <HomeBoard familyPosition={familyPosition} />
             </div>
             <div className={styles.cardBoard}>
               <CardBoard />

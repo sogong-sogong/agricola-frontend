@@ -44,13 +44,14 @@ const familyImages = [
   familyRedImg,
 ];
 
-function HomeBoard() {
+function HomeBoard({ familyPosition }) {
   //const { setResourceData1 } = useContext(ResourceContext);
   const [userResources, setUserResources] = useState(initialUserResources);
   const [updatedUserResources, setUpdatedUserResources] =
     useState(initialUserResources);
   const [data, setData] = useState({
     farm: [
+      "0",
       "empty",
       "empty",
       "empty",
@@ -156,6 +157,10 @@ function HomeBoard() {
     setData({ farm: updatedFarm });
   };
 
+  const test = () => {
+    console.log(familyPosition[0].family[0].xy);
+  };
+
   const renderFarm = (slot, index) => {
     switch (slot) {
       case "empty":
@@ -165,14 +170,23 @@ function HomeBoard() {
               src={emptyImg}
               alt="Empty"
               className={styles.pointerCursor}
-              onClick={() => handleFenceInstallation(index)}
+              onClick={() => {
+                handleFenceInstallation(index);
+                test();
+              }}
             />
           </div>
         );
       case "wood_home":
         return (
           <div key={index} className={styles.image}>
-            <img src={familyBlueImg} alt="family" class={styles.overlay} />
+            {familyPosition[0] &&
+            (familyPosition[0].family[0].xy === index ||
+              familyPosition[0].family[1].xy === index) ? (
+              <img src={familyBlueImg} alt="family" class={styles.overlay} />
+            ) : (
+              ""
+            )}
             <img
               key={index}
               src={woodHomeImg}
@@ -239,7 +253,7 @@ function HomeBoard() {
           {[...Array(3)].map((_, rowIndex) => (
             <div key={rowIndex} className={styles.row}>
               {[...Array(5)].map((_, colIndex) => {
-                const index = rowIndex * 5 + colIndex;
+                const index = rowIndex * 5 + colIndex + 1;
                 return renderFarm(data.farm[index], index);
               })}
             </div>
