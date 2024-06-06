@@ -13,6 +13,10 @@ import LogBoard from "../components/LogBoard";
 import { useResources } from "../context/ResourceContext";
 
 function Main() {
+  const [farmData, setFarmData] = useState(null);
+  const [houseData, setHouseData] = useState(null);
+  const [cageData, setCageData] = useState(null);
+  
   const [roomnumber, setRoomnumber] = useState(); // 방 번호
   const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
   const [familyPosition, setFamilyPosition] = useState([]);
@@ -135,7 +139,7 @@ function Main() {
   };
 
   // 웹소켓 공동 창고 업데이트
-  const sendCommonstorageData = (dataToSend) => {
+  const sendCommonstorageData = () => {
     if (!stompClient.current || !stompClient.current.connected) {
       console.error("STOMP 연결이 설정되지 않았습니다.");
       return;
@@ -143,7 +147,7 @@ function Main() {
 
     // 디버그 출력을 비활성화하는 빈 함수 설정
     stompClient.current.debug = () => {};
-    /*
+
     const dataToSend = {
       roomId: {
         id: roomnumber,
@@ -151,7 +155,6 @@ function Main() {
       wood: 47,
       clay: 18,
     };
-    */
 
     // 데이터 전송
     console.log("데이터 전송:", dataToSend);
@@ -261,6 +264,7 @@ function Main() {
     const data = await fetchData();
     if (data) {
       console.log(data); // 전송받은 데이터 콘솔 출력
+      setFarmData(data);
     }
   };
 
@@ -282,6 +286,7 @@ function Main() {
     const data = await fetchData();
     if (data) {
       console.log(data); // 전송받은 데이터 콘솔 출력
+      setHouseData(data);
     }
   };
 
@@ -303,6 +308,7 @@ function Main() {
     const data = await fetchData();
     if (data) {
       console.log(data); // 전송받은 데이터 콘솔 출력
+      setCageData(data);
     }
   };
 
@@ -312,7 +318,7 @@ function Main() {
     //inquiryFamilyPosition();
     inquiryFarm();
     //inquiryHouse();
-    //console.log(familyPosition);
+    console.log(farmData);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -337,6 +343,7 @@ function Main() {
       connect(); // connect가 프로미스를 반환한다고 가정
       inquiryCommonstorage();
       inquiryFamilyPosition();
+      inquiryFarm();
     }
 
     // 컴포넌트 언마운트 시 웹소켓 연결 해제
@@ -366,13 +373,20 @@ function Main() {
               updateFamilyPosition={updateFamilyPosition}
               userInfos={userInfos}
               familyPosition={familyPosition}
-              sendCommonstorageData={sendCommonstorageData}
+              
             />
           </div>
           <div className={styles.rightBoard}>
             <div className={styles.homeBoard}>
-              <HomeBoard familyPosition={familyPosition} />
+              <HomeBoard
+                farmData={farmData}
+                houseData={houseData}
+                cageData={cageData}
+                inquiryFarm={inquiryFarm}
+                familyPosition={familyPosition}
+              />
             </div>
+          
             <div className={styles.cardBoard}>
               <CardBoard />
             </div>
