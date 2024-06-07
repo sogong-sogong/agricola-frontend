@@ -266,7 +266,7 @@ function Main() {
 
     const data = await fetchData();
     if (data) {
-      console.log(data); // 전송받은 데이터 콘솔 출력
+      console.log("fatm", data); // 전송받은 데이터 콘솔 출력
       setFarmData(data);
     }
   };
@@ -315,14 +315,111 @@ function Main() {
     }
   };
 
+  // 농장 데이터 업데이트 함수
+  const updateFarmData = async (data) => {
+    // 예시 데이터 형식
+    const farmData = {
+      farmId: 1,
+      type: 0,
+      xy: 3,
+      crop: 0,
+    };
+
+    // PUT 요청을 보내는 내부 함수
+    const sendData = async () => {
+      try {
+        const res = await axios.put(
+          `http://localhost:8080/farm/member/${Number(memberIdRef.current)}`,
+          farmData
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const response = await sendData();
+    if (response) {
+      console.log("Updated farm data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
+      // 필요에 따라 추가 작업 수행 (예: 상태 업데이트 등)
+    }
+  };
+
+  // 집 데이터 업데이트 함수
+  const updateHouseData = async (data) => {
+    // 예시 데이터 형식
+    const houseData = {
+      id: 1,
+      type: 0,
+      xy: 8,
+      stock_type: 0,
+    };
+
+    // PUT 요청을 보내는 내부 함수
+    const sendData = async () => {
+      try {
+        const res = await axios.put(
+          `http://localhost:8080/house/member/${Number(memberIdRef.current)}`,
+          houseData
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const response = await sendData();
+    if (response) {
+      console.log("Updated house data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
+      // 필요에 따라 추가 작업 수행 (예: 상태 업데이트 등)
+    }
+  };
+
+  // 우리 데이터 업데이트 함수
+  const updateCageData = async (data) => {
+    // 예시 데이터 형식
+    const cageData = {
+      id: 1,
+      type: 0,
+      stock: 0,
+      xy: 8,
+      stock_cnt: 0,
+    };
+
+    // PUT 요청을 보내는 내부 함수
+    const sendData = async () => {
+      try {
+        const res = await axios.put(
+          `http://localhost:8080/cage/member/${Number(memberIdRef.current)}`,
+          cageData
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const response = await sendData();
+    if (response) {
+      console.log("Updated cage data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
+      // 필요에 따라 추가 작업 수행 (예: 상태 업데이트 등)
+    }
+  };
+
   // 테스트 함수
   const test = () => {
     // 가족 초기 위치 가져오기
     //inquiryFamilyPosition();
     //inquiryFarm();
+    updateHouseData();
     //inquiryHouse();
-    console.log(userInfos);
-    console.log(familyPosition);
+    updateFarmData();
+    updateCageData();
+    //console.log(userInfos);
+    //console.log(familyPosition);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
