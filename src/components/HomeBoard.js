@@ -130,8 +130,9 @@ function HomeBoard({
 
   const handleFenceInstallation = (index) => {
     const updatedFarm = [...data.farm];
-
-    if (updatedFarm[index] === "empty") {
+    if (index ===7)
+      updatedFarm[index] = "plow";
+    else if (updatedFarm[index] === "empty") {
       let requiredResources = 4;
       if (clickCount > 0) {
         requiredResources = 3;
