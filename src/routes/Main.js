@@ -416,10 +416,9 @@ function Main() {
     //inquiryFarm();
     updateHouseData();
     //inquiryHouse();
-    updateFarmData();
-    updateCageData();
-    //console.log(userInfos);
-    //console.log(familyPosition);
+    console.log(inquiryFarm);
+    console.log(userInfos);
+    console.log(familyPosition);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
