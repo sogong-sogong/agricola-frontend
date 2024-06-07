@@ -230,6 +230,30 @@ function HomeBoard({
     console.log(currentShowUser);
   };
 
+  const renderFamilyImage = (index) => {
+    return familyPosition[currentShowUser - 1] &&
+      (familyPosition[currentShowUser - 1].family[0].xy === index ||
+        familyPosition[currentShowUser - 1].family[1].xy === index) ? (
+      <img
+        src={familyImages[currentShowUser - 1]}
+        alt="family"
+        className={styles.overlay}
+      />
+    ) : familyPosition[myID - 1] &&
+      (familyPosition[myID - 1].family[0].xy === index ||
+        familyPosition[myID - 1].family[1].xy === index) ? (
+      <div>
+        <img
+          src={familyImages[myID - 1]}
+          alt="family"
+          className={styles.overlay}
+        />
+      </div>
+    ) : (
+      ""
+    );
+  };
+
   const renderFarm = (slot, index) => {
     switch (slot) {
       case "empty":
@@ -249,28 +273,7 @@ function HomeBoard({
       case "wood_home":
         return (
           <div key={index} className={styles.image}>
-            {familyPosition[currentShowUser - 1] &&
-            (familyPosition[currentShowUser - 1].family[0].xy === index ||
-              familyPosition[currentShowUser - 1].family[1].xy === index) ? (
-              <img
-                src={familyImages[currentShowUser - 1]}
-                alt="family"
-                className={styles.overlay}
-              />
-            ) : familyPosition[myID - 1] &&
-              (familyPosition[myID - 1].family[0].xy === index ||
-                familyPosition[myID - 1].family[1].xy === index) ? (
-              <div>
-                dd
-                <img
-                  src={familyImages[myID - 1]}
-                  alt="family"
-                  className={styles.overlay}
-                />
-              </div>
-            ) : (
-              ""
-            )}
+            {renderFamilyImage(index)}
             <img
               key={index}
               src={woodHomeImg}
@@ -283,6 +286,7 @@ function HomeBoard({
       case "soil_home":
         return (
           <div key={index} className={styles.image}>
+            {renderFamilyImage(index)}
             <img
               key={index}
               src={soilHomeImg}
@@ -295,6 +299,7 @@ function HomeBoard({
       case "stone_home":
         return (
           <div key={index} className={styles.image}>
+            {renderFamilyImage(index)}
             <img
               src={stoneHomeImg}
               alt="StoneHome"
