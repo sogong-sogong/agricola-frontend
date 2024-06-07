@@ -36,7 +36,7 @@ export const ResourceProvider = ({ children }) => {
   });
 
   const [userResources, setUserResources] = useState({
-    wood: 0,
+    wood: 9,
     grain: 0,
     clay: 0,
     stone: 0,

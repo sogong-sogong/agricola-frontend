@@ -1,9 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import { ResourceContext } from "../context/ResourceContext";
-import { initialUserResources } from "./resources.js";
+// import { initialUserResources } from "./resources.js";
+import ResourceDisplay from "./ResourceDisplay";
 import ResourceDisplay2 from "./ResourceDisplay2";
+import { useResources } from "../context/ResourceContext";
 import styles from "./HomeBoard.module.css";
-import resources from "../components/resources";
+// import resources from "../components/resources";
 import ActBoard from "./ActBoard";
 
 import emptyImg from "../assets/objects/empty.png";
@@ -57,9 +59,14 @@ function HomeBoard({
   myID,
 }) {
   //const { setResourceData1 } = useContext(ResourceContext);
-  const [userResources, setUserResources] = useState(initialUserResources);
-  const [updatedUserResources, setUpdatedUserResources] =
-    useState(initialUserResources);
+  const {
+    gameResources,
+    userResources,
+    updateGameResources,
+    updateUserResources,
+  } = useResources();
+  // const [updatedUserResources, setUpdatedUserResources] =
+  //   useState(initialUserResources);
   const [data, setData] = useState({
     farm: [
       "0",
@@ -137,11 +144,19 @@ function HomeBoard({
       if (clickCount > 0) {
         requiredResources = 3;
       }
-      updatedFarm[index] = "fence2";
-      setUserResources((prevResources) => ({
-        ...prevResources,
-        branch: prevResources.branch - requiredResources,
-      }));
+      if (userResources.wood>requiredResources){
+        updatedFarm[index] = "fence2";
+        updateGameResources({
+          wood: gameResources.wood + requiredResources,
+        });
+        updateUserResources({
+          wood: userResources.wood - requiredResources,
+        });
+      }
+      // setUserResources((prevResources) => ({
+      //   ...prevResources,
+      //   branch: prevResources.branch - requiredResources,
+      // }));
       setClickCount(clickCount + 1);
     }
     setData({ farm: updatedFarm });
@@ -168,30 +183,44 @@ function HomeBoard({
     let requiredReeds = 2;
 
     if (index ===6) {
-      if (userResources.branch < requiredResources) {
-        setShowModal(true);
-        return;
-      }
+      // if (userResources.rock < requiredResources) {
+      //   setShowModal(true);
+      //   return;
+      // }
       updatedFarm[index] = "stone_home";
       updatedFarm[index + 5] = "stone_home";
-      setUserResources((prevResources) => ({
-        ...prevResources,
-        rock: prevResources.rock - requiredResources,
-        reed: prevResources.reed - requiredReeds,
-      }));
+      updateGameResources({
+        rock: gameResources.rock + requiredResources
+      })
+      updateGameResources({
+        reed: gameResources.reed + requiredReeds,
+      });
+      updateUserResources({
+        rock: userResources.rock - requiredResources
+      })
+      updateUserResources({
+        reed: userResources.reed - requiredReeds,
+      });
     }
     else if (index ===11) {
-      if (userResources.branch < requiredResources) {
-        setShowModal(true);
-        return;
-      }
+      // if (userResources.rock < requiredResources) {
+      //   setShowModal(true);
+      //   return;
+      // }
       updatedFarm[index] = "stone_home";
       updatedFarm[index - 5] = "stone_home";
-      setUserResources((prevResources) => ({
-        ...prevResources,
-        rock: prevResources.rock - requiredResources,
-        reed: prevResources.reed - requiredReeds,
-      }));
+      updateGameResources({
+        rock: gameResources.rock + requiredResources
+      })
+      updateGameResources({
+        reed: gameResources.reed + requiredReeds,
+      });
+      updateUserResources({
+        rock: userResources.rock - requiredResources
+      })
+      updateUserResources({
+        reed: userResources.reed - requiredReeds,
+      });
     }
     setData({ farm: updatedFarm });
   };
@@ -393,7 +422,7 @@ function HomeBoard({
       <div className={styles.topSection}>개인 창고</div>
       <div className={styles.middleSection}>
         <ResourceDisplay2
-          resources={updatedUserResources}
+          resources={userResources}
           resourceIcons={UserresourceIcons}
         />
       </div>
