@@ -321,6 +321,7 @@ function Main() {
     //inquiryFamilyPosition();
     //inquiryFarm();
     //inquiryHouse();
+    console.log(inquiryFarm);
     console.log(userInfos);
     console.log(familyPosition);
   };

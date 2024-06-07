@@ -12,6 +12,8 @@ import soilHomeImg from "../assets/objects/soil_home.jpg";
 import stoneHomeImg from "../assets/objects/stone_home.jpg";
 import plowImg from "../assets/objects/plow.png";
 import plowGrain1Img from "../assets/image/plow_grain1.png";
+import plowGrain2Img from "../assets/image/plow_grain2.png";
+import plowGrain3Img from "../assets/image/plow_grain3.png";
 
 import fence2Img from "../assets/objects/fence2.png";
 
@@ -80,6 +82,7 @@ function HomeBoard({
   });
   const [showModal, setShowModal] = useState(false);
   const [clickCount, setClickCount] = useState(0);
+  const [click, setClick] = useState(0);
 
   const UserresourceIcons = {
     branch: branchIcon,
@@ -127,19 +130,12 @@ function HomeBoard({
 
   const handleFenceInstallation = (index) => {
     const updatedFarm = [...data.farm];
-    if (index === 6) {
-      updatedFarm[index] = "plow";
-    } else if (updatedFarm[index] === "empty") {
+
+    if (updatedFarm[index] === "empty") {
       let requiredResources = 4;
       if (clickCount > 0) {
         requiredResources = 3;
       }
-
-      if (userResources.branch < requiredResources) {
-        setShowModal(true);
-        return;
-      }
-
       updatedFarm[index] = "fence2";
       setUserResources((prevResources) => ({
         ...prevResources,
@@ -147,22 +143,49 @@ function HomeBoard({
       }));
       setClickCount(clickCount + 1);
     }
-
     setData({ farm: updatedFarm });
   };
+
+  const handleCrops = (index) =>{
+    const updatedFarm = [...data.farm];
+    if (updatedFarm[index] === "plow" ){
+      updatedFarm[index] = "plow_grain_3";
+      updatedFarm[index+1] = "plow_grain_3";
+    }
+    else if (updatedFarm[index] === "plow_grain_3" ){
+      updatedFarm[index] = "plow_grain_2";
+      updatedFarm[index+1] = "plow_grain_2";
+    }
+    setData({ farm: updatedFarm });
+    };
+
+  
 
   const upgradeHome = (index) => {
     const updatedFarm = [...data.farm];
     let requiredResources = 5;
     let requiredReeds = 2;
 
-    if (updatedFarm[index] === "wood_home") {
+    if (index ===6) {
       if (userResources.branch < requiredResources) {
         setShowModal(true);
         return;
       }
       updatedFarm[index] = "stone_home";
       updatedFarm[index + 5] = "stone_home";
+      setUserResources((prevResources) => ({
+        ...prevResources,
+        rock: prevResources.rock - requiredResources,
+        reed: prevResources.reed - requiredReeds,
+      }));
+    }
+    else if (index ===11) {
+      if (userResources.branch < requiredResources) {
+        setShowModal(true);
+        return;
+      }
+      updatedFarm[index] = "stone_home";
+      updatedFarm[index - 5] = "stone_home";
       setUserResources((prevResources) => ({
         ...prevResources,
         rock: prevResources.rock - requiredResources,
@@ -265,6 +288,7 @@ function HomeBoard({
               className={styles.pointerCursor}
               onClick={() => {
                 handleFenceInstallation(index);
+                // handleCrops(index);
                 test();
               }}
             />
@@ -320,8 +344,11 @@ function HomeBoard({
       case "plow":
         return (
           <div key={index} className={styles.image}>
-            <img src={plowImg} alt="Plow" className={styles.pointerCursor} />
+            <img src={plowImg} alt="Plow" className={styles.pointerCursor}
+            onClick={() => handleCrops(index)}
+            />
           </div>
+          
         );
       case "plow_grain_1":
         return (
@@ -330,6 +357,28 @@ function HomeBoard({
               src={plowGrain1Img}
               alt="PlowGrain1"
               className={styles.pointerCursor}
+            />
+          </div>
+        );
+      case "plow_grain_2":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={plowGrain2Img}
+              alt="PlowGrain2"
+              className={styles.pointerCursor}
+              onClick={() => handleCrops(index)}
+            />
+          </div>
+        );
+      case "plow_grain_3":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={plowGrain3Img}
+              alt="PlowGrain3"
+              className={styles.pointerCursor}
+              onClick={() => handleCrops(index)}
             />
           </div>
         );
