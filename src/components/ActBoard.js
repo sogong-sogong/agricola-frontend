@@ -98,6 +98,8 @@ const ActBoard = ({
 
   const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
 
+  const [roundState, setRoundState] = useState(0); // 라운드 상태를 관리하는 useState 훅
+
   const resourceIcons = {
     branch: branchIcon,
     seed: seedIcon,
@@ -452,24 +454,10 @@ const ActBoard = ({
     sendUserData({ data: { food: data.food + 2 }, update: doUpdate });
   };
 
-  //데모 라운드0 점프 버튼
-  const Lound1 = () => {
+  //데모 라운드 점프 버튼
+  const handleRound = () => {
     updateRound();
-  };
-
-  //데모 라운드1 점프 버튼
-  const Lound12 = () => {
-    updateRound();
-  };
-
-  //데모 라운드5 점프 버튼
-  //자원 조정, 라운드 카드 가려놨던 거 5라운드카드까지 다 뒤집기
-  const Lound52 = () => {
-    updateRound();
-  };
-
-  const Lound62 = () => {
-    updateRound();
+    setRoundState((prevState) => (prevState + 1) % 15);
   };
 
   //데모 수확 점프 버튼
@@ -520,14 +508,48 @@ const ActBoard = ({
     { id: "27", src: sell32, handler: handleButton27 },
   ];
 
+  // 상태에 따라 버튼에 표시될 텍스트를 결정하는 함수
+  const getButtonText = (state) => {
+    switch (state) {
+      case 0:
+        return "시작";
+      case 1:
+        return "Round 1";
+      case 2:
+        return "Round 1-2";
+      case 3:
+        return "Round 1-3";
+      case 4:
+        return "Round 1-4";
+      case 5:
+        return "Round 2-1";
+      case 6:
+        return "Round 2-2";
+      case 7:
+        return "Round 2-3";
+      case 8:
+        return "Round 3-1";
+      case 9:
+        return "Round 3-2";
+      case 10:
+        return "Round 4-1";
+      case 11:
+        return "Round 4-2";
+      case 12:
+        return "Round 5-1";
+      case 13:
+        return "Round 5-2";
+      case 14:
+        return "Round 6-1";
+      default:
+        return "";
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.right}>
-        <button onClick={Lound1}>Lound 1</button>
-        <button onClick={Lound12}>Lound 1-2</button>
-        <button onClick={Lound52}>Lound 5-2</button>
-        <button onClick={Lound62}>Lound 6-1</button>
-        {/* <button onClick={harvest}>수확</button> */}
+        <button onClick={handleRound}>{getButtonText(roundState)}</button>
       </div>
       <div className={styles.grid}>
         {buttonsData.map((button) => (
