@@ -14,7 +14,7 @@ import { useResources } from "../context/ResourceContext";
 
 function Main() {
   const [farmData, setFarmData] = useState([]);
-  const [houseData, setHouseData] = useState(null);
+  const [houseData, setHouseData] = useState([]);
   const [cageData, setCageData] = useState(null);
 
   const [roomnumber, setRoomnumber] = useState(); // 방 번호
@@ -272,13 +272,11 @@ function Main() {
   };
 
   // 집 조회 함수
-  const inquiryHouse = async () => {
+  const inquiryHouse = async (id) => {
     // 집 조회 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8080/house/member/${Number(memberIdRef.current)}`
-        );
+        const res = await axios.get(`http://localhost:8080/house/member/${id}`);
         return res.data;
       } catch (error) {
         console.error("Error", error);
@@ -288,7 +286,7 @@ function Main() {
 
     const data = await fetchData();
     if (data) {
-      console.log(data); // 전송받은 데이터 콘솔 출력
+      console.log("house", data); // 전송받은 데이터 콘솔 출력
       setHouseData(data);
     }
   };
@@ -360,13 +358,13 @@ function Main() {
   };
 
   // 집 데이터 업데이트 함수
-  const updateHouseData = async (data) => {
+  const updateHouseData = async (id, type, xy, stock_type) => {
     // 예시 데이터 형식
     const houseData = {
-      id: 1,
-      type: 0,
-      xy: 8,
-      stock_type: 0,
+      id: id,
+      type: type,
+      xy: xy,
+      stock_type: stock_type,
     };
 
     // PUT 요청을 보내는 내부 함수
@@ -386,7 +384,7 @@ function Main() {
     const response = await sendData();
     if (response) {
       console.log("Updated house data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      // 필요에 따라 추가 작업 수행 (예: 상태 업데이트 등)
+      inquiryHouse(Number(memberIdRef.current));
     }
   };
 
@@ -427,8 +425,7 @@ function Main() {
     // 가족 초기 위치 가져오기
     //updateFarmData(true, 2, 1, 1, 1);
     //inquiryFamilyPosition();
-    inquiryFarm();
-    //updateHouseData();
+    updateHouseData(27, "mud", 2, 0);
     //inquiryHouse();
   };
 
@@ -497,6 +494,9 @@ function Main() {
                 currentShowUser={currentShowUser}
                 myID={myID}
                 updateFarmData={updateFarmData}
+                updateHouseData={updateHouseData}
+                inquiryHouse={inquiryHouse}
+                memberId={Number(memberIdRef.current)}
               />
             </div>
 
@@ -516,6 +516,7 @@ function Main() {
           myID={myID}
           farmData={farmData}
           inquiryFarm={inquiryFarm}
+          inquiryHouse={inquiryHouse}
         />
       </div>
     </div>

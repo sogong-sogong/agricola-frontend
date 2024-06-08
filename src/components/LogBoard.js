@@ -66,6 +66,7 @@ function LogBoard({
   myID,
   farmData,
   inquiryFarm,
+  inquiryHouse,
 }) {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
@@ -98,6 +99,7 @@ function LogBoard({
     setCurrentShowUser(id + 1);
     //console.log(userInfos[id].memberId);
     inquiryFarm(userInfos[id].memberId);
+    inquiryHouse(userInfos[id].memberId);
   };
 
   const clickTurnOff = () => {

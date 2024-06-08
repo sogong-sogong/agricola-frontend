@@ -56,6 +56,9 @@ function HomeBoard({
   currentShowUser,
   myID,
   updateFarmData,
+  updateHouseData,
+  inquiryHouse,
+  memberId,
 }) {
   //const { setResourceData1 } = useContext(ResourceContext);
   const [userResources, setUserResources] = useState(initialUserResources);
@@ -206,7 +209,7 @@ function HomeBoard({
     setData((prevData) => ({ ...prevData, farm: updatedFarm }));
   };
   */
-
+  /*
   const updateHouseData = (houseData) => {
     const updatedFarm = [...data.farm];
     houseData.forEach(({ xy, type }) => {
@@ -226,7 +229,7 @@ function HomeBoard({
     });
     setData((prevData) => ({ ...prevData, farm: updatedFarm }));
   };
-
+*/
   const updateCageData = (cageData) => {
     const updatedFarm = [...data.farm];
     cageData.forEach(({ xy, type }) => {
@@ -251,6 +254,17 @@ function HomeBoard({
     } else if (index === 1) {
       console.log("울타리");
     }
+  };
+
+  const onClickWoodHome = (index) => {
+    console.log(memberId);
+    // 더블클릭 문제..
+    inquiryHouse(memberId);
+    houseData.forEach((item) => {
+      if (item.xy === index) {
+        updateHouseData(item.id, "stone", index, 0);
+      }
+    });
   };
 
   const updateBoard = () => {
@@ -283,6 +297,16 @@ function HomeBoard({
           updatedFarm[item.xy] = "plow_grain_2";
         } else if (item.crop === 3) {
           updatedFarm[item.xy] = "plow_grain_3";
+        }
+      });
+
+      houseData.forEach((item) => {
+        if (item.type === "wood") {
+          updatedFarm[item.xy] = "wood_home";
+        } else if (item.type === "mud") {
+          updatedFarm[item.xy] = "soil_home";
+        } else if (item.type === "stone") {
+          updatedFarm[item.xy] = "stone_home";
         }
       });
 
@@ -345,7 +369,10 @@ function HomeBoard({
               src={woodHomeImg}
               alt="WoodHome"
               className={styles.pointerCursor}
-              onClick={() => upgradeHome(index)}
+              onClick={() => {
+                //upgradeHome(index);
+                onClickWoodHome(index);
+              }}
             />
           </div>
         );
@@ -432,11 +459,11 @@ function HomeBoard({
   };
 
   useEffect(() => {
-    if (farmData) {
+    if (farmData && houseData) {
       console.log("변경");
       updateBoard();
     }
-  }, [farmData]);
+  }, [farmData, houseData]);
 
   return (
     <div className={styles.container}>
