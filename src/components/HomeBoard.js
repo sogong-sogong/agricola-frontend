@@ -216,9 +216,10 @@ function HomeBoard({
     console.log(memberId);
     // 더블클릭 문제..
     inquiryHouse(memberId);
+
     houseData.forEach((item) => {
-      if (item.xy === index) {
-        updateHouseData(item.id, "stone", index, 0);
+      if (item.xy) {
+        updateHouseData(item.id, "stone", item.xy, 0);
       }
     });
   };

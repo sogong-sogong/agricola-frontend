@@ -446,15 +446,24 @@ function Main() {
   };
 
   // 집 데이터 업데이트 함수
-  const updateHouseData = async (id, type, xy, stock_type) => {
-    // 예시 데이터 형식
-    const houseData = {
-      id: id,
-      type: type,
-      xy: xy,
-      stock_type: stock_type,
-    };
+  const updateHouseData = async (id, type, xy, stock_type, create = false) => {
+    let data = {};
 
+    if (create) {
+      data = {
+        type: type,
+        xy: xy,
+        stock_type: stock_type,
+      };
+    } else {
+      data = {
+        id: id,
+        type: type,
+        xy: xy,
+        stock_type: stock_type,
+      };
+    }
+    const houseData = data;
     // PUT 요청을 보내는 내부 함수
     const sendData = async () => {
       try {
