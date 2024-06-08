@@ -1,6 +1,7 @@
 # 아그리콜라 (Agricola)
 <img src="https://github.com/dslov89/Agricola/assets/71018440/ad428ee1-36a8-47a8-9d1a-46aaff1bf165"  width=150 >
 
+
 ## 소개
 팀명 : 소공소공
 
@@ -12,15 +13,16 @@
 
 보드게임 아그리콜라에 대한 웹 기반 게임
 
+
 ## 디자인 설계
 <img src="https://img.shields.io/badge/Figma-green?style=for-the-badge&logo=Figma&logoColor=white"/>
 
 ## 기술 스택
 <img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"><img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
 
-
 ## 커뮤니케이션
-<img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=Notion&logoColor=white" alt="html"><img src="https://img.shields.io/badge/jirasoftware-0052CC?style=for-the-badge&logo=jirasoftware&logoColor=white"> 
+<img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=Notion&logoColor=white" alt="html"><img src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=JiraSoftware&logoColor=white" alt="html">
+
 
 ## 실행 방법
 
@@ -38,6 +40,7 @@ $ cd agricola-frontend/
 $ npm install 
 $ npm start
 ```
+
 
 ## 주요 기능
 
@@ -59,4 +62,11 @@ $ npm start
 
 타 플레이어의 프로필을 클릭하여 각 플레이어의 개인 자원 및 농장 상태 확인 가능
 
-농장 내의 빈칸 클릭하여 울타리 설치 가능     
+농장 내의 빈칸 클릭하여 울타리 설치 가능
+
+
+## 기타 산출물
+<img src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=JiraSoftware&logoColor=white" alt="html">
+
+https://sogong-sogong.atlassian.net/jira/software/projects/SGSG/boards/1
+
