@@ -169,11 +169,13 @@ function HomeBoard({
       }
       updatedFarm[index] = "stone_home";
       updatedFarm[index + 5] = "stone_home";
+      /*
       setUserResources((prevResources) => ({
         ...prevResources,
         rock: prevResources.rock - requiredResources,
         reed: prevResources.reed - requiredReeds,
       }));
+      */
     } else if (index === 11) {
       if (userResources.branch < requiredResources) {
         setShowModal(true);
