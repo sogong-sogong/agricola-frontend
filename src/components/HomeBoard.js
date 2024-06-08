@@ -62,6 +62,10 @@ function HomeBoard({
   inquiryHouse,
   memberId,
   updateCageData,
+  inquiryUserStorage,
+  sendUserData,
+  sendCommonstorageData,
+  roomnumber,
 }) {
   //const { setResourceData1 } = useContext(ResourceContext);
   const {
@@ -206,7 +210,7 @@ function HomeBoard({
     setData({ farm: updatedFarm });
   };
 
-  const onClickEmpty = (index) => {
+  const onClickEmpty = async (index) => {
     console.log(index);
     if (index === 7 || index === 8) {
       console.log("농지");
@@ -217,6 +221,20 @@ function HomeBoard({
     } else if (index === 1) {
       console.log("울타리");
       updateCageData(true, 0, 0, 1, index, 0); // 빈 울타리 생성
+      // 나무 자원 4개 소모
+      const data = await inquiryUserStorage({ id: memberId, update: false });
+      let doUpdate = false;
+      if (currentShowUser === 0 || currentShowUser === myID) {
+        doUpdate = true;
+      }
+      sendUserData({ data: { wood: data.wood - 4 }, update: doUpdate });
+      // 공동자원
+      sendCommonstorageData({
+        roomId: {
+          id: roomnumber,
+        },
+        wood: gameResources.wood + 4,
+      });
     }
   };
 

@@ -788,6 +788,10 @@ function Main() {
                 inquiryHouse={inquiryHouse}
                 memberId={Number(memberIdRef.current)}
                 updateCageData={updateCageData}
+                inquiryUserStorage={inquiryUserStorage}
+                sendUserData={sendUserData}
+                sendCommonstorageData={sendCommonstorageData}
+                roomnumber={roomnumber}
               />
             </div>
 

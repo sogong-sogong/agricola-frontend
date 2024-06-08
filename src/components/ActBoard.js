@@ -182,6 +182,7 @@ const ActBoard = ({
   //+ 개수 선택 모달 + 농장판 선택 연결필요
   const handleButton33 = async () => {
     console.log("울타리 클릭");
+    /*
     const data = await inquiryUserStorage({ id: memberId, update: false });
     let doUpdate = false;
     if (currentShowUser === 0 || currentShowUser === myID) {
@@ -195,6 +196,7 @@ const ActBoard = ({
       },
       wood: gameResources.wood + 4,
     });
+    */
   };
 
   //곡식활용
