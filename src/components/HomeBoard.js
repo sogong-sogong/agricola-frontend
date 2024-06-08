@@ -203,7 +203,7 @@ function HomeBoard({
     console.log(index);
     if (index === 7 || index === 8) {
       console.log("농지");
-      updateFarmData(true, 1, 1, index, 3); // 곡식 3개 곡식밭 생성
+      updateFarmData(true, 1, 1, index, 0); // 곡식 0개 곡식밭 생성
     } else if (index === 12) {
       console.log("집");
       updateHouseData(true, 0, "wood", index, 0);

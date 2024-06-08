@@ -313,6 +313,39 @@ function Main() {
     //console.log(Number(memberIdRef.current));
   };
 
+  // 가족 위치 초기화 함수
+  const initializeFamilyPosition = async () => {
+    // 가족 위치 업데이트 API 호출
+    if (!stompClient.current || !stompClient.current.connected) {
+      console.error("STOMP 연결이 설정되지 않았습니다.");
+      return;
+    }
+    const dataToSend = [];
+
+    familyPosition.forEach((item) => {
+      const data = [
+        { id: item.family[0].id, xy: 6 },
+        { id: item.family[1].id, xy: 11 },
+      ];
+      dataToSend.push(...data);
+    });
+
+    console.log(dataToSend);
+
+    // 디버그 출력을 비활성화하는 빈 함수 설정
+    stompClient.current.debug = () => {};
+
+    // 데이터 전송
+    console.log("데이터 전송:", dataToSend);
+    stompClient.current.send(
+      `/pub/room/${roomnumber}/family/position/update`,
+      {},
+      JSON.stringify(dataToSend)
+    );
+
+    //console.log(Number(memberIdRef.current));
+  };
+
   // 전체 유저 점수 현황을 가져오는 함수
   const inquiryScore = async () => {
     // 점수 현황 조회 API 호출
@@ -666,8 +699,7 @@ function Main() {
     //inquiryFamilyPosition();
     //updateCageData(true, 0, 0, 0, 8, 0);
     //inquiryHouse();
-    round52();
-    console.log(myID);
+    initializeFamilyPosition();
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -738,6 +770,7 @@ function Main() {
               inquiryFarm={inquiryFarm}
               updateCageData={updateCageData}
               cageData={cageData}
+              initializeFamilyPosition={initializeFamilyPosition}
             />
           </div>
           <div className={styles.rightBoard}>

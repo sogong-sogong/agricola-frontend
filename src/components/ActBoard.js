@@ -91,6 +91,7 @@ const ActBoard = ({
   inquiryFarm,
   updateCageData,
   cageData,
+  initializeFamilyPosition,
 }) => {
   const [selectedButton, setSelectedButton] = useState(false);
   const {
@@ -496,7 +497,12 @@ const ActBoard = ({
   };
 
   const handleDemo = () => {
-    if (roundState <= 14) {
+    if (roundState === 1) {
+      console.log("1라운드 종료");
+      initializeFamilyPosition();
+      setFamilyCount(0);
+      handleRound();
+    } else if (roundState <= 14) {
       handleRound();
     } else {
       harvest();
