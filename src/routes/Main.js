@@ -15,7 +15,7 @@ import { useResources } from "../context/ResourceContext";
 function Main() {
   const [farmData, setFarmData] = useState([]);
   const [houseData, setHouseData] = useState([]);
-  const [cageData, setCageData] = useState(null);
+  const [cageData, setCageData] = useState([]);
 
   const [roomnumber, setRoomnumber] = useState(); // 방 번호
   const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
@@ -292,13 +292,11 @@ function Main() {
   };
 
   // 우리 조회 함수
-  const inquiryCage = async () => {
+  const inquiryCage = async (id) => {
     // 우리 조회 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8080/cage/member/${Number(memberIdRef.current)}`
-        );
+        const res = await axios.get(`http://localhost:8080/cage/member/${id}`);
         return res.data;
       } catch (error) {
         console.error("Error", error);
@@ -308,7 +306,7 @@ function Main() {
 
     const data = await fetchData();
     if (data) {
-      console.log(data); // 전송받은 데이터 콘솔 출력
+      console.log("cage", data); // 전송받은 데이터 콘솔 출력
       setCageData(data);
     }
   };
@@ -389,15 +387,28 @@ function Main() {
   };
 
   // 우리 데이터 업데이트 함수
-  const updateCageData = async (data) => {
-    // 예시 데이터 형식
-    const cageData = {
-      id: 1,
-      type: 0,
-      stock: 0,
-      xy: 8,
-      stock_cnt: 0,
-    };
+  const updateCageData = async (create, id, type, stock, xy, stock_cnt) => {
+    let data = {};
+
+    if (create) {
+      data = {
+        type: type,
+        stock: stock,
+        xy: xy,
+        stock_cnt: stock_cnt,
+      };
+    } else {
+      data = {
+        id: id,
+        type: type,
+        stock: stock,
+        xy: xy,
+        stock_cnt: stock_cnt,
+      };
+    }
+
+    const cageData = data;
+    console.log(cageData);
 
     // PUT 요청을 보내는 내부 함수
     const sendData = async () => {
@@ -409,6 +420,7 @@ function Main() {
         return res.data;
       } catch (error) {
         console.error("Error", error);
+        setCageData([]);
         return null;
       }
     };
@@ -416,7 +428,7 @@ function Main() {
     const response = await sendData();
     if (response) {
       console.log("Updated cage data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      // 필요에 따라 추가 작업 수행 (예: 상태 업데이트 등)
+      inquiryCage(Number(memberIdRef.current));
     }
   };
 
@@ -425,7 +437,8 @@ function Main() {
     // 가족 초기 위치 가져오기
     //updateFarmData(true, 2, 1, 1, 1);
     //inquiryFamilyPosition();
-    updateHouseData(27, "mud", 2, 0);
+    inquiryCage(Number(memberIdRef.current));
+    //updateCageData(true, 0, 0, 0, 8, 0);
     //inquiryHouse();
   };
 
@@ -481,6 +494,7 @@ function Main() {
               updateFamilyPosition={updateFamilyPosition}
               userInfos={userInfos}
               familyPosition={familyPosition}
+              sendCommonstorageData={sendCommonstorageData}
             />
           </div>
           <div className={styles.rightBoard}>
@@ -497,6 +511,7 @@ function Main() {
                 updateHouseData={updateHouseData}
                 inquiryHouse={inquiryHouse}
                 memberId={Number(memberIdRef.current)}
+                updateCageData={updateCageData}
               />
             </div>
 
@@ -517,6 +532,7 @@ function Main() {
           farmData={farmData}
           inquiryFarm={inquiryFarm}
           inquiryHouse={inquiryHouse}
+          inquiryCage={inquiryCage}
         />
       </div>
     </div>

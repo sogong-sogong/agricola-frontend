@@ -59,6 +59,7 @@ function HomeBoard({
   updateHouseData,
   inquiryHouse,
   memberId,
+  updateCageData,
 }) {
   //const { setResourceData1 } = useContext(ResourceContext);
   const [userResources, setUserResources] = useState(initialUserResources);
@@ -110,21 +111,6 @@ function HomeBoard({
     fence: fenceIcon,
     house: houseIcon,
   };
-
-  // const resourceData1 = Object.entries(UserresourceIcons).map(([key, value]) => ({
-  //   img: [value],
-  //   number: [initialUserResources[key]]
-  // }));
-
-  // const resourceData2 = Object.entries(animalresourceIcons).map(([key, value]) => ({
-  //   img: [value],
-  //   number: [initialUserResources[key]]
-  // }));
-
-  // const resourceData3 = Object.entries(farmresourceIcons).map(([key, value]) => ({
-  //   img: [value],
-  //   number: [initialUserResources[key]]
-  // }));
 
   const handleFenceInstallation = (index) => {
     const updatedFarm = [...data.farm];
@@ -189,61 +175,6 @@ function HomeBoard({
     setData({ farm: updatedFarm });
   };
 
-  /*
-  const updateFarmData = (farmData) => {
-    const updatedFarm = data.farm.map((field, index) => {
-      const matchingField = farmData.find((item) => item.xy === index);
-      if (matchingField) {
-        switch (matchingField.type) {
-          case 0:
-            return "plow";
-          case 1:
-            return "plow_grain_1";
-          default:
-            return field;
-        }
-      } else {
-        return field;
-      }
-    });
-    setData((prevData) => ({ ...prevData, farm: updatedFarm }));
-  };
-  */
-  /*
-  const updateHouseData = (houseData) => {
-    const updatedFarm = [...data.farm];
-    houseData.forEach(({ xy, type }) => {
-      switch (type) {
-        case "wood":
-          updatedFarm[xy] = "wood";
-          break;
-        case "mud":
-          updatedFarm[xy] = "mud";
-          break;
-        case "stone":
-          updatedFarm[xy] = "stone";
-          break;
-        default:
-          break;
-      }
-    });
-    setData((prevData) => ({ ...prevData, farm: updatedFarm }));
-  };
-*/
-  const updateCageData = (cageData) => {
-    const updatedFarm = [...data.farm];
-    cageData.forEach(({ xy, type }) => {
-      switch (type) {
-        case 0:
-          updatedFarm[xy] = "fence2";
-          break;
-        default:
-          break;
-      }
-    });
-    setData((prevData) => ({ ...prevData, farm: updatedFarm }));
-  };
-
   const onClickEmpty = (index) => {
     console.log(index);
     if (index === 7 || index === 8) {
@@ -253,6 +184,7 @@ function HomeBoard({
       console.log("집");
     } else if (index === 1) {
       console.log("울타리");
+      updateCageData(true, 0, 0, 1, index, 0); // 빈 울타리 생성
     }
   };
 
@@ -307,6 +239,12 @@ function HomeBoard({
           updatedFarm[item.xy] = "soil_home";
         } else if (item.type === "stone") {
           updatedFarm[item.xy] = "stone_home";
+        }
+      });
+
+      cageData.forEach((item) => {
+        if (item.type === 0) {
+          updatedFarm[item.xy] = "fence2";
         }
       });
 
@@ -459,11 +397,11 @@ function HomeBoard({
   };
 
   useEffect(() => {
-    if (farmData && houseData) {
+    if (farmData && houseData && cageData) {
       console.log("변경");
       updateBoard();
     }
-  }, [farmData, houseData]);
+  }, [farmData, houseData, cageData]);
 
   return (
     <div className={styles.container}>

@@ -67,6 +67,7 @@ function LogBoard({
   farmData,
   inquiryFarm,
   inquiryHouse,
+  inquiryCage,
 }) {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
@@ -100,6 +101,7 @@ function LogBoard({
     //console.log(userInfos[id].memberId);
     inquiryFarm(userInfos[id].memberId);
     inquiryHouse(userInfos[id].memberId);
+    inquiryCage(userInfos[id].memberId);
   };
 
   const clickTurnOff = () => {
