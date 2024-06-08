@@ -55,6 +55,7 @@ function HomeBoard({
   familyPosition,
   currentShowUser,
   myID,
+  updateFarmData,
 }) {
   //const { setResourceData1 } = useContext(ResourceContext);
   const [userResources, setUserResources] = useState(initialUserResources);
@@ -122,12 +123,6 @@ function HomeBoard({
   //   number: [initialUserResources[key]]
   // }));
 
-  useEffect(() => {
-    if (farmData) updateFarmData(farmData);
-    if (houseData) updateFarmData(houseData);
-    if (cageData) updateFarmData(cageData);
-  }, [farmData, houseData, cageData]);
-
   const handleFenceInstallation = (index) => {
     const updatedFarm = [...data.farm];
 
@@ -146,27 +141,24 @@ function HomeBoard({
     setData({ farm: updatedFarm });
   };
 
-  const handleCrops = (index) =>{
+  const handleCrops = (index) => {
     const updatedFarm = [...data.farm];
-    if (updatedFarm[index] === "plow" ){
+    if (updatedFarm[index] === "plow") {
       updatedFarm[index] = "plow_grain_3";
-      updatedFarm[index+1] = "plow_grain_3";
-    }
-    else if (updatedFarm[index] === "plow_grain_3" ){
+      updatedFarm[index + 1] = "plow_grain_3";
+    } else if (updatedFarm[index] === "plow_grain_3") {
       updatedFarm[index] = "plow_grain_2";
-      updatedFarm[index+1] = "plow_grain_2";
+      updatedFarm[index + 1] = "plow_grain_2";
     }
     setData({ farm: updatedFarm });
-    };
-
-  
+  };
 
   const upgradeHome = (index) => {
     const updatedFarm = [...data.farm];
     let requiredResources = 5;
     let requiredReeds = 2;
 
-    if (index ===6) {
+    if (index === 6) {
       if (userResources.branch < requiredResources) {
         setShowModal(true);
         return;
@@ -178,8 +170,7 @@ function HomeBoard({
         rock: prevResources.rock - requiredResources,
         reed: prevResources.reed - requiredReeds,
       }));
-    }
-    else if (index ===11) {
+    } else if (index === 11) {
       if (userResources.branch < requiredResources) {
         setShowModal(true);
         return;
@@ -195,6 +186,7 @@ function HomeBoard({
     setData({ farm: updatedFarm });
   };
 
+  /*
   const updateFarmData = (farmData) => {
     const updatedFarm = data.farm.map((field, index) => {
       const matchingField = farmData.find((item) => item.xy === index);
@@ -213,6 +205,7 @@ function HomeBoard({
     });
     setData((prevData) => ({ ...prevData, farm: updatedFarm }));
   };
+  */
 
   const updateHouseData = (houseData) => {
     const updatedFarm = [...data.farm];
@@ -248,9 +241,57 @@ function HomeBoard({
     setData((prevData) => ({ ...prevData, farm: updatedFarm }));
   };
 
+  const onClickEmpty = (index) => {
+    console.log(index);
+    if (index === 7 || index === 8) {
+      console.log("농지");
+      updateFarmData(true, 1, 1, index, 3); // 곡식 3개 곡식밭 생성
+    } else if (index === 12) {
+      console.log("집");
+    } else if (index === 1) {
+      console.log("울타리");
+    }
+  };
+
+  const updateBoard = () => {
+    setData((prevState) => {
+      const updatedFarm = [
+        "0",
+        "empty",
+        "empty",
+        "empty",
+        "empty",
+        "empty",
+        "wood_home",
+        "empty",
+        "empty",
+        "empty",
+        "empty",
+        "wood_home",
+        "empty",
+        "empty",
+        "empty",
+        "empty",
+      ];
+
+      farmData.forEach((item) => {
+        if (item.crop === 0) {
+          updatedFarm[item.xy] = "plow";
+        } else if (item.crop === 1) {
+          updatedFarm[item.xy] = "plow_grain_1";
+        } else if (item.crop === 2) {
+          updatedFarm[item.xy] = "plow_grain_2";
+        } else if (item.crop === 3) {
+          updatedFarm[item.xy] = "plow_grain_3";
+        }
+      });
+
+      return { ...prevState, farm: updatedFarm };
+    });
+  };
+
   const test = () => {
-    console.log(familyPosition[myID - 1].family);
-    console.log(currentShowUser);
+    console.log(data.farm);
   };
 
   const renderFamilyImage = (index) => {
@@ -287,8 +328,9 @@ function HomeBoard({
               alt="Empty"
               className={styles.pointerCursor}
               onClick={() => {
-                handleFenceInstallation(index);
+                // handleFenceInstallation(index);
                 // handleCrops(index);
+                onClickEmpty(index);
                 test();
               }}
             />
@@ -344,11 +386,13 @@ function HomeBoard({
       case "plow":
         return (
           <div key={index} className={styles.image}>
-            <img src={plowImg} alt="Plow" className={styles.pointerCursor}
-            onClick={() => handleCrops(index)}
+            <img
+              src={plowImg}
+              alt="Plow"
+              className={styles.pointerCursor}
+              onClick={() => handleCrops(index)}
             />
           </div>
-          
         );
       case "plow_grain_1":
         return (
@@ -386,6 +430,13 @@ function HomeBoard({
         return null;
     }
   };
+
+  useEffect(() => {
+    if (farmData) {
+      console.log("변경");
+      updateBoard();
+    }
+  }, [farmData]);
 
   return (
     <div className={styles.container}>

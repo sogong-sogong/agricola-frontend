@@ -64,6 +64,8 @@ function LogBoard({
   familyPosition,
   setCurrentShowUser,
   myID,
+  farmData,
+  inquiryFarm,
 }) {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
@@ -94,6 +96,8 @@ function LogBoard({
   const clickProfile = (id) => {
     console.log("click profile " + (id + 1));
     setCurrentShowUser(id + 1);
+    //console.log(userInfos[id].memberId);
+    inquiryFarm(userInfos[id].memberId);
   };
 
   const clickTurnOff = () => {
@@ -156,7 +160,7 @@ function LogBoard({
   };
 
   const test = () => {
-    console.log(familyCount);
+    console.log(userInfos);
   };
 
   // familyPosition가 변화하면 가족의 남은 수를 계산한다.

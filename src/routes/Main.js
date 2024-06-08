@@ -13,7 +13,7 @@ import LogBoard from "../components/LogBoard";
 import { useResources } from "../context/ResourceContext";
 
 function Main() {
-  const [farmData, setFarmData] = useState(null);
+  const [farmData, setFarmData] = useState([]);
   const [houseData, setHouseData] = useState(null);
   const [cageData, setCageData] = useState(null);
 
@@ -250,23 +250,23 @@ function Main() {
   };
 
   // 밭 조회 함수
-  const inquiryFarm = async () => {
+  const inquiryFarm = async (id) => {
     // 밭 조회 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:8080/farm/member/${Number(memberIdRef.current)}`
-        );
+        const res = await axios.get(`http://localhost:8080/farm/member/${id}`);
         return res.data;
       } catch (error) {
         console.error("Error", error);
+        // 데이터를 받지 못하면 farm data를 빈 배열로 설정한다.
+        setFarmData([]);
         return null;
       }
     };
 
     const data = await fetchData();
     if (data) {
-      console.log("fatm", data); // 전송받은 데이터 콘솔 출력
+      console.log("farm", data); // 전송받은 데이터 콘솔 출력
       setFarmData(data);
     }
   };
@@ -316,14 +316,27 @@ function Main() {
   };
 
   // 농장 데이터 업데이트 함수
-  const updateFarmData = async (data) => {
-    // 예시 데이터 형식
-    const farmData = {
-      farmId: 1,
-      type: 0,
-      xy: 3,
-      crop: 0,
-    };
+  // 업데이트 후 inquiryFarm을 실행한다.
+  const updateFarmData = async (create, id, type, xy, crop) => {
+    let data = {};
+
+    if (create) {
+      data = {
+        type: type,
+        xy: xy,
+        crop: crop,
+      };
+    } else {
+      data = {
+        id: id,
+        type: type,
+        xy: xy,
+        crop: crop,
+      };
+    }
+
+    const farmData = data;
+    console.log(farmData);
 
     // PUT 요청을 보내는 내부 함수
     const sendData = async () => {
@@ -342,7 +355,7 @@ function Main() {
     const response = await sendData();
     if (response) {
       console.log("Updated farm data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      // 필요에 따라 추가 작업 수행 (예: 상태 업데이트 등)
+      inquiryFarm(Number(memberIdRef.current));
     }
   };
 
@@ -412,13 +425,11 @@ function Main() {
   // 테스트 함수
   const test = () => {
     // 가족 초기 위치 가져오기
+    //updateFarmData(true, 2, 1, 1, 1);
     //inquiryFamilyPosition();
-    //inquiryFarm();
-    updateHouseData();
+    inquiryFarm();
+    //updateHouseData();
     //inquiryHouse();
-    console.log(inquiryFarm);
-    console.log(userInfos);
-    console.log(familyPosition);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -485,6 +496,7 @@ function Main() {
                 familyPosition={familyPosition}
                 currentShowUser={currentShowUser}
                 myID={myID}
+                updateFarmData={updateFarmData}
               />
             </div>
 
@@ -502,6 +514,8 @@ function Main() {
           familyPosition={familyPosition}
           setCurrentShowUser={setCurrentShowUser}
           myID={myID}
+          farmData={farmData}
+          inquiryFarm={inquiryFarm}
         />
       </div>
     </div>
