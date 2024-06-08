@@ -1,9 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ResourceContext } from "../context/ResourceContext";
-import { initialUserResources } from "./resources.js";
+// import { initialUserResources } from "./resources.js";
+import ResourceDisplay from "./ResourceDisplay";
 import ResourceDisplay2 from "./ResourceDisplay2";
+import { useResources } from "../context/ResourceContext";
 import styles from "./HomeBoard.module.css";
-import resources from '../components/resources'
+// import resources from "../components/resources";
 import ActBoard from "./ActBoard";
 
 import emptyImg from "../assets/objects/empty.png";
@@ -11,6 +13,9 @@ import woodHomeImg from "../assets/objects/wood_home.jpg";
 import soilHomeImg from "../assets/objects/soil_home.jpg";
 import stoneHomeImg from "../assets/objects/stone_home.jpg";
 import plowImg from "../assets/objects/plow.png";
+import plowGrain1Img from "../assets/image/plow_grain1.png";
+import plowGrain2Img from "../assets/image/plow_grain2.png";
+import plowGrain3Img from "../assets/image/plow_grain3.png";
 
 import fence2Img from "../assets/objects/fence2.png";
 
@@ -32,14 +37,44 @@ import sheepIcon from "../assets/image/sheep.png";
 import beggingIcon from "../assets/image/begging.png";
 import farmerIcon from "../assets/image/farmer.png";
 
+import familyBlueImg from "../assets/objects/family-blue.png";
+import familyGreenImg from "../assets/objects/family-green.png";
+import familyPurpleImg from "../assets/objects/family-purple.png";
+import familyRedImg from "../assets/objects/family-red.png";
 
-function HomeBoard() {
+const familyImages = [
+  familyBlueImg,
+  familyGreenImg,
+  familyPurpleImg,
+  familyRedImg,
+];
+
+function HomeBoard({
+  farmData,
+  houseData,
+  cageData,
+  inquiryFarm,
+  familyPosition,
+  currentShowUser,
+  myID,
+  updateFarmData,
+  updateHouseData,
+  inquiryHouse,
+  memberId,
+  updateCageData,
+}) {
   //const { setResourceData1 } = useContext(ResourceContext);
-  const [userResources, setUserResources] = useState(initialUserResources);
-  const [updatedUserResources, setUpdatedUserResources] =
-    useState(initialUserResources);
+  const {
+    gameResources,
+    userResources,
+    updateGameResources,
+    updateUserResources,
+  } = useResources();
+  // const [updatedUserResources, setUpdatedUserResources] =
+  //   useState(initialUserResources);
   const [data, setData] = useState({
     farm: [
+      "0",
       "empty",
       "empty",
       "empty",
@@ -59,6 +94,7 @@ function HomeBoard() {
   });
   const [showModal, setShowModal] = useState(false);
   const [clickCount, setClickCount] = useState(0);
+  const [click, setClick] = useState(0);
 
   const UserresourceIcons = {
     branch: branchIcon,
@@ -82,48 +118,42 @@ function HomeBoard() {
     fence: fenceIcon,
     house: houseIcon,
   };
-  
-  // const resourceData1 = Object.entries(UserresourceIcons).map(([key, value]) => ({
-  //   img: [value],
-  //   number: [initialUserResources[key]]
-  // }));
-  
-  // const resourceData2 = Object.entries(animalresourceIcons).map(([key, value]) => ({
-  //   img: [value],
-  //   number: [initialUserResources[key]]
-  // }));
-  
-  // const resourceData3 = Object.entries(farmresourceIcons).map(([key, value]) => ({
-  //   img: [value],
-  //   number: [initialUserResources[key]]
-  // }));
-  
-  
 
   const handleFenceInstallation = (index) => {
     const updatedFarm = [...data.farm];
-    if (index === 6) {
-      updatedFarm[index] = "plow"
-    }
+    if (index === 7) updatedFarm[index] = "plow";
     else if (updatedFarm[index] === "empty") {
       let requiredResources = 4;
       if (clickCount > 0) {
         requiredResources = 3;
       }
-
-      if (userResources.branch < requiredResources) {
-        setShowModal(true);
-        return;
+      if (userResources.wood > requiredResources) {
+        updatedFarm[index] = "fence2";
+        updateGameResources({
+          wood: gameResources.wood + requiredResources,
+        });
+        updateUserResources({
+          wood: userResources.wood - requiredResources,
+        });
       }
-
-      updatedFarm[index] = "fence2";
-      setUserResources((prevResources) => ({
-        ...prevResources,
-        branch: prevResources.branch - requiredResources,
-      }));
+      // setUserResources((prevResources) => ({
+      //   ...prevResources,
+      //   branch: prevResources.branch - requiredResources,
+      // }));
       setClickCount(clickCount + 1);
     }
+    setData({ farm: updatedFarm });
+  };
 
+  const handleCrops = (index) => {
+    const updatedFarm = [...data.farm];
+    if (updatedFarm[index] === "plow") {
+      updatedFarm[index] = "plow_grain_3";
+      updatedFarm[index + 1] = "plow_grain_3";
+    } else if (updatedFarm[index] === "plow_grain_3") {
+      updatedFarm[index] = "plow_grain_2";
+      updatedFarm[index + 1] = "plow_grain_2";
+    }
     setData({ farm: updatedFarm });
   };
 
@@ -132,7 +162,7 @@ function HomeBoard() {
     let requiredResources = 5;
     let requiredReeds = 2;
 
-    if (updatedFarm[index] === "wood_home") {
+    if (index === 6) {
       if (userResources.branch < requiredResources) {
         setShowModal(true);
         return;
@@ -144,69 +174,276 @@ function HomeBoard() {
         rock: prevResources.rock - requiredResources,
         reed: prevResources.reed - requiredReeds,
       }));
+    } else if (index === 11) {
+      if (userResources.branch < requiredResources) {
+        setShowModal(true);
+        return;
+      }
+      updatedFarm[index] = "stone_home";
+      updatedFarm[index - 5] = "stone_home";
+      updateGameResources({
+        rock: gameResources.rock + requiredResources,
+      });
+      updateGameResources({
+        reed: gameResources.reed + requiredReeds,
+      });
+      updateUserResources({
+        rock: userResources.rock - requiredResources,
+      });
+      updateUserResources({
+        reed: userResources.reed - requiredReeds,
+      });
     }
     setData({ farm: updatedFarm });
+  };
+
+  const onClickEmpty = (index) => {
+    console.log(index);
+    if (index === 7 || index === 8) {
+      console.log("농지");
+      updateFarmData(true, 1, 1, index, 3); // 곡식 3개 곡식밭 생성
+    } else if (index === 12) {
+      console.log("집");
+    } else if (index === 1) {
+      console.log("울타리");
+      updateCageData(true, 0, 0, 1, index, 0); // 빈 울타리 생성
+    }
+  };
+
+  const onClickWoodHome = (index) => {
+    console.log(memberId);
+    // 더블클릭 문제..
+    inquiryHouse(memberId);
+    houseData.forEach((item) => {
+      if (item.xy === index) {
+        updateHouseData(item.id, "stone", index, 0);
+      }
+    });
+  };
+
+  const updateBoard = () => {
+    setData((prevState) => {
+      const updatedFarm = [
+        "0",
+        "empty",
+        "empty",
+        "empty",
+        "empty",
+        "empty",
+        "wood_home",
+        "empty",
+        "empty",
+        "empty",
+        "empty",
+        "wood_home",
+        "empty",
+        "empty",
+        "empty",
+        "empty",
+      ];
+
+      farmData.forEach((item) => {
+        if (item.crop === 0) {
+          updatedFarm[item.xy] = "plow";
+        } else if (item.crop === 1) {
+          updatedFarm[item.xy] = "plow_grain_1";
+        } else if (item.crop === 2) {
+          updatedFarm[item.xy] = "plow_grain_2";
+        } else if (item.crop === 3) {
+          updatedFarm[item.xy] = "plow_grain_3";
+        }
+      });
+
+      houseData.forEach((item) => {
+        if (item.type === "wood") {
+          updatedFarm[item.xy] = "wood_home";
+        } else if (item.type === "mud") {
+          updatedFarm[item.xy] = "soil_home";
+        } else if (item.type === "stone") {
+          updatedFarm[item.xy] = "stone_home";
+        }
+      });
+
+      cageData.forEach((item) => {
+        if (item.type === 0) {
+          updatedFarm[item.xy] = "fence2";
+        }
+      });
+
+      return { ...prevState, farm: updatedFarm };
+    });
+  };
+
+  const test = () => {
+    console.log(data.farm);
+  };
+
+  const renderFamilyImage = (index) => {
+    return familyPosition[currentShowUser - 1] &&
+      (familyPosition[currentShowUser - 1].family[0].xy === index ||
+        familyPosition[currentShowUser - 1].family[1].xy === index) ? (
+      <img
+        src={familyImages[currentShowUser - 1]}
+        alt="family"
+        className={styles.overlay}
+      />
+    ) : familyPosition[myID - 1] &&
+      (familyPosition[myID - 1].family[0].xy === index ||
+        familyPosition[myID - 1].family[1].xy === index) ? (
+      <div>
+        <img
+          src={familyImages[myID - 1]}
+          alt="family"
+          className={styles.overlay}
+        />
+      </div>
+    ) : (
+      ""
+    );
   };
 
   const renderFarm = (slot, index) => {
     switch (slot) {
       case "empty":
         return (
-          <img
-            key={index}
-            src={emptyImg}
-            alt="Empty"
-            className={styles.pointerCursor}
-            onClick={() => handleFenceInstallation(index)}
-          />
+          <div key={index} className={styles.image}>
+            <img
+              src={emptyImg}
+              alt="Empty"
+              className={styles.pointerCursor}
+              onClick={() => {
+                // handleFenceInstallation(index);
+                // handleCrops(index);
+                onClickEmpty(index);
+                test();
+              }}
+            />
+          </div>
         );
       case "wood_home":
         return (
-          <img
-            key={index}
-            src={woodHomeImg}
-            alt="WoodHome"
-            className={styles.pointerCursor}
-            onClick={() => upgradeHome(index)}
-          />
+          <div key={index} className={styles.image}>
+            {renderFamilyImage(index)}
+            <img
+              key={index}
+              src={woodHomeImg}
+              alt="WoodHome"
+              className={styles.pointerCursor}
+              onClick={() => {
+                //upgradeHome(index);
+                onClickWoodHome(index);
+              }}
+            />
+          </div>
         );
       case "soil_home":
         return (
-          <img
-            key={index}
-            src={soilHomeImg}
-            alt="SoilHome"
-            className={styles.pointerCursor}
-            onClick={() => upgradeHome(index)}
-          />
+          <div key={index} className={styles.image}>
+            {renderFamilyImage(index)}
+            <img
+              key={index}
+              src={soilHomeImg}
+              alt="SoilHome"
+              className={styles.pointerCursor}
+              onClick={() => upgradeHome(index)}
+            />
+          </div>
         );
-      case "wood_home":
-        return <img src={woodHomeImg} alt="WoodHome" />;
-      case "soil_home":
-        return <img src={soilHomeImg} alt="SoilHome" />;
       case "stone_home":
-        return <img src={stoneHomeImg} alt="StoneHome" />;
+        return (
+          <div key={index} className={styles.image}>
+            {renderFamilyImage(index)}
+            <img
+              src={stoneHomeImg}
+              alt="StoneHome"
+              className={styles.pointerCursor}
+            />
+          </div>
+        );
       case "fence2":
-        return <img src={fence2Img} alt="Fence2" />;
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={fence2Img}
+              alt="Fence2"
+              className={styles.pointerCursor}
+            />
+          </div>
+        );
       case "plow":
-        return <img src={plowImg} alt="Plow" />;
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={plowImg}
+              alt="Plow"
+              className={styles.pointerCursor}
+              onClick={() => handleCrops(index)}
+            />
+          </div>
+        );
+      case "plow_grain_1":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={plowGrain1Img}
+              alt="PlowGrain1"
+              className={styles.pointerCursor}
+            />
+          </div>
+        );
+      case "plow_grain_2":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={plowGrain2Img}
+              alt="PlowGrain2"
+              className={styles.pointerCursor}
+              onClick={() => handleCrops(index)}
+            />
+          </div>
+        );
+      case "plow_grain_3":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={plowGrain3Img}
+              alt="PlowGrain3"
+              className={styles.pointerCursor}
+              onClick={() => handleCrops(index)}
+            />
+          </div>
+        );
       default:
         return null;
     }
   };
+
+  useEffect(() => {
+    if (farmData && houseData && cageData) {
+      console.log("변경");
+      updateBoard();
+    }
+  }, [farmData, houseData, cageData]);
 
   return (
     <div className={styles.container}>
       <div className={styles.topSection}>개인 창고</div>
       <div className={styles.middleSection}>
         <ResourceDisplay2
-          resources={updatedUserResources}
+          resources={userResources}
           resourceIcons={UserresourceIcons}
         />
       </div>
       <div className={styles.bottomSection}>
         <div className={styles.farm}>
-          {data.farm.map((slot, index) => renderFarm(slot, index))}
+          {[...Array(3)].map((_, rowIndex) => (
+            <div key={rowIndex} className={styles.row}>
+              {[...Array(5)].map((_, colIndex) => {
+                const index = rowIndex * 5 + colIndex + 1;
+                return renderFarm(data.farm[index], index);
+              })}
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -214,4 +451,3 @@ function HomeBoard() {
 }
 
 export default HomeBoard;
-

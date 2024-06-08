@@ -4,52 +4,52 @@
   width: 100%;
   height: 100%;
   flex-direction: column;
-  justify-content:center;
+  justify-content: center;
 }
 
-.topSection{
+.topSection {
   background-color: rgb(55, 255, 0);
   display: flex;
   width: 100%;
   height: 7%;
   flex-direction: row;
-  justify-content:center;
+  justify-content: center;
 }
 
-.middleSection{
+.middleSection {
   background-color: rgb(255, 77, 0);
   display: flex;
   width: 100%;
   height: 18%;
   flex-direction: row;
-  justify-content:center;
+  justify-content: center;
 }
 
-.box1{
+.box1 {
   background-color: rgb(255, 225, 0);
   display: flex;
   width: 40%;
   height: 100%;
   flex-direction: column;
-  justify-content:center;
+  justify-content: center;
 }
 
-.box2{
+.box2 {
   background-color: rgb(255, 0, 179);
   display: flex;
   width: 30%;
   height: 100%;
   flex-direction: column;
-  justify-content:center;
+  justify-content: center;
 }
 
-.box3{
+.box3 {
   background-color: rgb(183, 255, 0);
   display: flex;
   width: 30%;
   height: 100%;
   flex-direction: column;
-  justify-content:center;
+  justify-content: center;
 }
 
 .number {
@@ -70,7 +70,7 @@
   flex-direction: row;
 }
 
-.resource1 img{
+.resource1 img {
   width: 13%;
   height: 38%;
 }
@@ -88,8 +88,8 @@
   flex-wrap: wrap;
 }
 
-.resource2 img{
-  width:55%;
+.resource2 img {
+  width: 55%;
   height: auto;
 }
 
@@ -106,8 +106,8 @@
   flex-wrap: wrap;
 }
 
-.resource3 img{
-  width:32%;
+.resource3 img {
+  width: 32%;
   height: auto;
 }
 
@@ -137,18 +137,36 @@
 }
 
 .farm {
+  background-color: aqua;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+  height: 100%;
 }
 
-.farm img {
-  width: 18%;
-  height: auto;
-  box-sizing: border-box;
+.row {
+  background-color: blueviolet;
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  height: 40%;
 }
 
 .pointerCursor {
   cursor: pointer;
+  width: 100%;
+}
+
+.image {
+  background-color: antiquewhite;
+  position: relative;
+  width: 20%;
+}
+
+.overlay {
+  position: absolute;
+  top: 25%;
+  left: 25%;
 }

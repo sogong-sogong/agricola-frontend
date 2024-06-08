@@ -1,10 +1,23 @@
 import React from "react";
+import { useResources } from "../context/ResourceContext";
 import styles from "./HwaroModal.module.css";
 
+
 function HwaroModal({ cards, onClose, onCardClick }) {
+  const { updateGameResources, updateUserResources, userResources,gameResources } = useResources();
+
+  const handleClose = (e) => {
+    e.stopPropagation();
+    onClose();
+    updateUserResources({ grain: userResources.grain - 1 });
+    updateUserResources({ food: userResources.food + 2 });
+    updateGameResources({ grain: gameResources.grain + 1 });
+    updateGameResources({ food: gameResources.food - 2 });
+  };
+
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+    <div className={styles.overlay} onClick={handleClose}>
+      <div className={styles.modal}>
         <span className={styles.headerText}>옵션 선택</span>
         <div className={styles.cardContainer}>
           {cards.map((card, index) => (
@@ -19,10 +32,7 @@ function HwaroModal({ cards, onClose, onCardClick }) {
         </div>
         <button
           className={styles.closeButton}
-          onClick={(e) => {
-            e.stopPropagation();
-            onClose();
-          }}
+          onClick={handleClose}
         >
           사용
         </button>

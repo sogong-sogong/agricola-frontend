@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./ScoreBoard.module.css";
 
-import { initialUserResources } from "./resources";
+import { useResources } from "../context/ResourceContext";
 
 import fieldImg from "../assets/objects/field_small.png";
 import cageImg from "../assets/objects/cageland-small.png";
@@ -21,7 +21,7 @@ import familyRedImg from "../assets/objects/family-red.png";
 import beggingImg from "../assets/objects/begging.png";
 
 function ScoreBoard() {
-  // UseState변수에 데이터 저장하며 반영
+  const { score } = useResources();
 
   const column = [
     "",
@@ -42,85 +42,6 @@ function ScoreBoard() {
     "추가점수",
   ];
 
-  const data = [
-    {
-      id: 1,
-      score: 0,
-      field: 0,
-      cage: 0,
-      grain: 0,
-      vegetable: 0,
-      sheep: 0,
-      pig: 0,
-      cow: 0,
-      blank: 0,
-      fenced_cowshed: 0,
-      mud_house: 0,
-      stone_house: 0,
-      family: 0,
-      begging: 0,
-      card: 0,
-      extra: 0,
-    },
-    {
-      id: 2,
-      score: 0,
-      field: 0,
-      cage: 0,
-      grain: 0,
-      vegetable: 0,
-      sheep: 0,
-      pig: 0,
-      cow: 0,
-      blank: 0,
-      fenced_cowshed: 0,
-      mud_house: 0,
-      stone_house: 0,
-      family: 0,
-      begging: 0,
-      card: 0,
-      extra: 0,
-    },
-    {
-      id: 3,
-      score: 0,
-      field: 0,
-      cage: 0,
-      grain: 0,
-      vegetable: 0,
-      sheep: 0,
-      pig: 0,
-      cow: 0,
-      blank: 0,
-      fenced_cowshed: 0,
-      mud_house: 0,
-      stone_house: 0,
-      family: 0,
-      begging: 0,
-      card: 0,
-      extra: 0,
-    },
-    {
-      id: 4,
-      score: 0,
-      field: 0,
-      cage: 0,
-      grain: 0,
-      vegetable: 0,
-      sheep: 0,
-      pig: 0,
-      cow: 0,
-      blank: 0,
-      fenced_cowshed: 0,
-      mud_house: 0,
-      stone_house: 0,
-      family: 0,
-      begging: 0,
-      card: 0,
-      extra: 0,
-    },
-  ];
-
   const keys = [
     "field",
     "cage",
@@ -130,9 +51,9 @@ function ScoreBoard() {
     "pig",
     "cow",
     "blank",
-    "fenced_cowshed",
-    "mud_house",
-    "stone_house",
+    "fencedCowshed",
+    "mudHouse",
+    "stoneHouse",
     "family",
     "begging",
   ];
@@ -182,12 +103,12 @@ function ScoreBoard() {
           ))}
           <div className={styles.box12}>합계</div>
         </div>
-        {data.map((item, index) => {
+        {score.map((item, index) => {
           const idStyle = { color: getColorByIndex(index) };
           return (
             <div key={index} className={styles.box2}>
               <div className={styles.box21} style={idStyle}>
-                User{data[index].id}
+                User{score[index].memberId}
               </div>
               {keys.map((key, idx) => (
                 <div key={idx} className={styles.box21}>
@@ -199,7 +120,7 @@ function ScoreBoard() {
                         justifyContent: "center",
                       }}
                     >
-                      {data[index][key]}
+                      {}
                     </div>
                     <div
                       style={{
@@ -217,12 +138,12 @@ function ScoreBoard() {
                       />
                     </div>
                   </div>
-                  <div className={styles.box211}>{data[index][key]}</div>
+                  <div className={styles.box211}>{score[index][key]}</div>
                 </div>
               ))}
-              <div className={styles.box21}>{data[index].card}</div>
-              <div className={styles.box21}>{data[index].extra}</div>
-              <div className={styles.box22}>sum</div>
+              <div className={styles.box21}>{score[index].card}</div>
+              <div className={styles.box21}>{score[index].extra}</div>
+              <div className={styles.box22}>{score[index].score}</div>
             </div>
           );
         })}

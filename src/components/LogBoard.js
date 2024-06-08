@@ -5,8 +5,6 @@ import styles from "./LogBoard.module.css";
 
 import ScoreBoardComponent from "../components/ScoreBoard";
 
-import { initialUserResources } from "./resources";
-
 import calenderIcon from "../assets/icons/calendar-add.png";
 import starIcon from "../assets/icons/star.png";
 
@@ -59,14 +57,26 @@ const scorecardStyles = {
 
 Modal.setAppElement("#root");
 
-function LogBoard({ memberId, userInfos }) {
+function LogBoard({
+  memberId,
+  userInfos,
+  inquiryScore,
+  familyPosition,
+  setCurrentShowUser,
+  myID,
+  farmData,
+  inquiryFarm,
+  inquiryHouse,
+  inquiryCage,
+}) {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
   const [foodExchangeIsOpen, setFoodExchangeIsOpen] = useState(false);
 
-  const starter = findStarterNumber() - 1; // 자신의 선턴 상태
+  // 남은 가족 수
+  const [familyCount, setFamilyCount] = useState([2, 2, 2, 2]);
 
-  const myID = findMemberInfo(memberId).number; // 자신의 number
+  const starter = findStarterNumber() - 1; // 자신의 선턴 상태
 
   const closeScorecard = () => {
     setScorecardIsOpen(false);
@@ -81,11 +91,17 @@ function LogBoard({ memberId, userInfos }) {
   };
 
   const openScoreBoard = () => {
+    inquiryScore();
     setScoreBoardIsOpen(true);
   };
 
   const clickProfile = (id) => {
-    console.log("click profile " + memberId);
+    console.log("click profile " + (id + 1));
+    setCurrentShowUser(id + 1);
+    //console.log(userInfos[id].memberId);
+    inquiryFarm(userInfos[id].memberId);
+    inquiryHouse(userInfos[id].memberId);
+    inquiryCage(userInfos[id].memberId);
   };
 
   const clickTurnOff = () => {
@@ -100,14 +116,6 @@ function LogBoard({ memberId, userInfos }) {
     setFoodExchangeIsOpen(false);
   };
 
-  // 멤버 ID로 number, sterter 정보를 찾는다.
-  function findMemberInfo(memberId) {
-    const memberInfo = userInfos.find((member) => member.memberId === memberId);
-    return memberInfo
-      ? memberInfo
-      : `Member with memberId ${memberId} not found`;
-  }
-
   // starter 멤버를 찾는다.
   function findStarterNumber() {
     const starterInfo = userInfos.find((member) => member.starter === true);
@@ -120,9 +128,6 @@ function LogBoard({ memberId, userInfos }) {
     ["rgb(102, 4, 173)"],
     ["rgb(164, 5, 5)"],
   ];
-
-  // 남은 가족 수
-  const familyCount = [2, 2, 2, 2];
 
   // 로그 임시 데이터
   const logData = [
@@ -142,6 +147,30 @@ function LogBoard({ memberId, userInfos }) {
       number: [2, 3],
     },
   ];
+
+  // 집에 남은 가족의 개수를 계산하여 반환한다.
+  const countXY = async () => {
+    const count = familyPosition.map((scoreItem) => {
+      const count = scoreItem.family.reduce((acc, familyMember) => {
+        if (familyMember.xy === 6 || familyMember.xy === 11) {
+          return acc + 1;
+        }
+        return acc;
+      }, 0);
+      return count;
+    });
+    setFamilyCount(count);
+    return count;
+  };
+
+  const test = () => {
+    console.log(userInfos);
+  };
+
+  // familyPosition가 변화하면 가족의 남은 수를 계산한다.
+  useEffect(() => {
+    countXY();
+  }, [familyPosition]);
 
   return (
     <div className={styles.container}>
@@ -187,7 +216,8 @@ function LogBoard({ memberId, userInfos }) {
         </div>
       </Modal>
       <div className={styles.box1}>
-        도움판
+        <div onClick={test}>도움판</div>
+
         <div className={styles.menu}>
           <div
             className={styles.iconBox}
