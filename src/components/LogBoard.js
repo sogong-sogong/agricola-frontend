@@ -169,6 +169,28 @@ function LogBoard({
     return count;
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Tab") {
+      setScoreBoardIsOpen(true);
+    }
+  };
+
+  const handleKeyUp = (event) => {
+    if (event.key === "Tab") {
+      setScoreBoardIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
   const test = () => {
     console.log(userInfos);
   };
