@@ -31,7 +31,7 @@ function Main() {
   // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
   const stompClient = useRef(null);
 
-  const { updateGameResources, setScore } = useResources();
+  const { updateGameResources, setScore, updateUserResources } = useResources();
 
   function findMemberInfo(memberId) {
     const memberInfo = userInfos.find((member) => member.memberId === memberId);
@@ -432,12 +432,49 @@ function Main() {
     }
   };
 
+  // 내 자원창고 put 업데이트
+  const sendUserData = async (data) => {
+    //console.log(data);
+
+    // 쿼리 문자열 생성
+    const queryParams = Object.entries(data)
+      .map(
+        ([key, value]) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+      )
+      .join("&");
+
+    // PUT 요청을 보내는 내부 함수
+    const sendData = async () => {
+      const url = `http://localhost:8080/storage/update/${Number(
+        memberIdRef.current
+      )}?${queryParams}`;
+
+      try {
+        const res = await axios.put(url);
+        console.log("데이터 전송:", res.data);
+        // 응답 데이터가 유효하다면 다음 단계를 수행합니다.
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const response = await sendData();
+    if (response) {
+      console.log("Updated data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
+
+      updateUserResources(response);
+    }
+  };
+
   // 테스트 함수
   const test = () => {
     // 가족 초기 위치 가져오기
     //updateFarmData(true, 2, 1, 1, 1);
     //inquiryFamilyPosition();
-    inquiryCage(Number(memberIdRef.current));
+    sendUserData({ pig: 1 });
     //updateCageData(true, 0, 0, 0, 8, 0);
     //inquiryHouse();
   };
@@ -495,6 +532,7 @@ function Main() {
               userInfos={userInfos}
               familyPosition={familyPosition}
               sendCommonstorageData={sendCommonstorageData}
+              sendUserData={sendUserData}
             />
           </div>
           <div className={styles.rightBoard}>

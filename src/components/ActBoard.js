@@ -77,6 +77,7 @@ const ActBoard = ({
   userInfos,
   familyPosition,
   sendCommonstorageData,
+  sendUserData,
 }) => {
   const [selectedButton, setSelectedButton] = useState(false);
   const {
@@ -109,9 +110,9 @@ const ActBoard = ({
     //updateGameResources({ wood: gameResources.wood - 1 });
     //updateUserResources({ wood: userResources.wood + 1 });
     setSelectedButton(true);
-    sendCommonstorageData({
+    sendUserData({
       roomId: { id: roomnumber },
-      wood: gameResources.wood - 1,
+      wood: userResources.wood - 1,
     });
   };
 
