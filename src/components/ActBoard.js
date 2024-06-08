@@ -92,6 +92,9 @@ const ActBoard = ({
   updateCageData,
   cageData,
   initializeFamilyPosition,
+  familyCount,
+  setFamilyCount,
+  findMemberInfo,
 }) => {
   const [selectedButton, setSelectedButton] = useState(false);
   const {
@@ -100,8 +103,6 @@ const ActBoard = ({
     updateGameResources,
     updateUserResources,
   } = useResources();
-
-  const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
 
   const [roundState, setRoundState] = useState(0); // 라운드 상태를 관리하는 useState 훅
 
@@ -526,6 +527,7 @@ const ActBoard = ({
   //교습1
   const handleButton20 = async () => {
     console.log("교습1 클릭");
+
     const data = await inquiryUserStorage({ id: memberId, update: false });
     let doUpdate = false;
     if (currentShowUser === 0 || currentShowUser === myID) {
@@ -543,8 +545,10 @@ const ActBoard = ({
   };
 
   //교습2
+  // 처음에는 무료
   const handleButton26 = async () => {
     console.log("교습2 클릭");
+    /*
     const data = await inquiryUserStorage({ id: memberId, update: false });
     let doUpdate = false;
     if (currentShowUser === 0 || currentShowUser === myID) {
@@ -558,6 +562,7 @@ const ActBoard = ({
       },
       food: gameResources.food + 1,
     });
+    */
     //추가하기, + 직업카드 모달열고 1개 선택
   };
 
@@ -661,8 +666,15 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({
-      data: { food: data.food - data.family * 2 },
+      data: { food: data.food - 4 },
       update: doUpdate,
+    });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      food: gameResources.food + 4,
     });
     // 번식
     if (myID === 1) {
@@ -674,12 +686,69 @@ const ActBoard = ({
     if (roundState === 1) {
       console.log("1라운드 종료");
       initializeFamilyPosition();
-      setFamilyCount(0);
+
       handleRound();
     } else if (roundState <= 14) {
+      initializeFamilyPosition();
       handleRound();
     } else {
       harvest();
+    }
+  };
+
+  const round52 = () => {
+    let doUpdate = false;
+    if (
+      currentShowUser === 0 ||
+      currentShowUser === findMemberInfo(Number(memberId)).number
+    ) {
+      doUpdate = true;
+    }
+    let data = {
+      wood: 0,
+    };
+    if (findMemberInfo(Number(memberId)).number === 1) {
+      data = {
+        wood: 10,
+        clay: 3,
+        stone: 2,
+        weed: 2,
+        food: 5,
+      };
+    } else if (findMemberInfo(Number(memberId)).number === 2) {
+      data = {
+        wood: 2,
+        clay: 3,
+        stone: 2,
+        weed: 2,
+        food: 3,
+      };
+    } else if (findMemberInfo(Number(memberId)).number === 3) {
+      data = {
+        wood: 8,
+        grain: 6,
+        clay: 3,
+        stone: 2,
+        weed: 2,
+        food: 5,
+      };
+    } else if (findMemberInfo(Number(memberId)).number === 4) {
+      data = {
+        wood: 15,
+        clay: 3,
+        stone: 2,
+        weed: 4,
+        food: 2,
+      };
+    }
+
+    sendUserData({
+      data: data,
+      update: doUpdate,
+    });
+
+    if (findMemberInfo(Number(memberId)).number === 1) {
+      updateCageData(true, 0, 0, 1, 9, 0);
     }
   };
 
@@ -769,6 +838,7 @@ const ActBoard = ({
     <div className={styles.container}>
       <div className={styles.right}>
         <button onClick={handleDemo}>{getButtonText(roundState)}</button>
+        <button onClick={round52}>5-2</button>
       </div>
       <div className={styles.grid}>
         {buttonsData.map((button) => (

@@ -27,12 +27,12 @@ function Main() {
   const [visibleButtons, setVisibleButtons] = useState(
     new Set([32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
   );
+  const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
 
   // 멤버 ID를 저장하는 Ref
   const memberIdRef = useRef();
 
   const myID = findMemberInfo(Number(memberIdRef.current)).number; // 자신의 number
-
   // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
   const stompClient = useRef(null);
 
@@ -44,59 +44,6 @@ function Main() {
       ? memberInfo
       : `Member with memberId ${memberId} not found`;
   }
-
-  const round52 = () => {
-    let doUpdate = false;
-    if (currentShowUser === 0 || currentShowUser === myID) {
-      doUpdate = true;
-    }
-    let data = {
-      wood: 0,
-    };
-    if (myID === 1) {
-      data = {
-        wood: 10,
-        clay: 3,
-        stone: 2,
-        weed: 2,
-        food: 5,
-      };
-    } else if (myID === 2) {
-      data = {
-        wood: 2,
-        clay: 3,
-        stone: 2,
-        weed: 2,
-        food: 3,
-      };
-    } else if (myID === 3) {
-      data = {
-        wood: 8,
-        grain: 6,
-        clay: 3,
-        stone: 2,
-        weed: 2,
-        food: 5,
-      };
-    } else if (myID === 4) {
-      data = {
-        wood: 15,
-        clay: 3,
-        stone: 2,
-        weed: 4,
-        food: 2,
-      };
-    }
-
-    sendUserData({
-      data: data,
-      update: doUpdate,
-    });
-
-    if (myID === 1) {
-      updateCageData(true, 0, 0, 1, 9, 0);
-    }
-  };
 
   // 웹소켓 구독 함수
   const connect = () => {
@@ -140,20 +87,24 @@ function Main() {
             console.log(newMessage[0].length);
             if (newMessage[0].length === 1) {
               console.log("1라운드 시작");
+              setFamilyCount(0);
               setVisibleButtons(
                 new Set([33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
               );
             } else if (newMessage[0].length === 2) {
               console.log("1-1라운드 시작");
+
+              setFamilyCount(0);
               setVisibleButtons(
                 new Set([34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
               );
             } else if (newMessage[0].length === 13) {
               console.log("5-2라운드 시작");
+              setFamilyCount(0);
               setVisibleButtons(new Set([45]));
-              round52();
             } else if (newMessage[0].length === 14) {
               console.log("6-1라운드 시작");
+              setFamilyCount(0);
               setVisibleButtons(new Set([]));
             }
           } else if (newMessage.id !== undefined) {
@@ -699,7 +650,6 @@ function Main() {
     //inquiryFamilyPosition();
     //updateCageData(true, 0, 0, 0, 8, 0);
     //inquiryHouse();
-    initializeFamilyPosition();
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -771,6 +721,9 @@ function Main() {
               updateCageData={updateCageData}
               cageData={cageData}
               initializeFamilyPosition={initializeFamilyPosition}
+              familyCount={familyCount}
+              setFamilyCount={setFamilyCount}
+              findMemberInfo={findMemberInfo}
             />
           </div>
           <div className={styles.rightBoard}>

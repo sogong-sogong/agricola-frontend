@@ -325,7 +325,8 @@ function HomeBoard({
         alt="family"
         className={styles.overlay}
       />
-    ) : familyPosition[myID - 1] &&
+    ) : currentShowUser === 0 &&
+      familyPosition[myID - 1] &&
       (familyPosition[myID - 1].family[0].xy === index ||
         familyPosition[myID - 1].family[1].xy === index) ? (
       <div>
