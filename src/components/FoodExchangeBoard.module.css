@@ -79,6 +79,8 @@
   width: 90%;
   height: 15%;
   margin-top: 2%;
+  font-size: xx-large;
+  font-weight: 500;
 }
 
 .box4 {
@@ -98,4 +100,24 @@
   height: 50%;
   border-radius: 10px;
   border: 1px solid black;
+}
+
+.image {
+  height: 50%;
+  display: flex;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+.minusplus {
+  background-color: rgb(225, 225, 225);
+  width: 20%;
+  height: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10%;
+  margin-right: 10%;
+  border-radius: 20%;
+  font-weight: bolder;
 }

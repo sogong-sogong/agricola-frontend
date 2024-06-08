@@ -779,6 +779,8 @@ function Main() {
           inquiryCage={inquiryCage}
           inquiryUserStorage={inquiryUserStorage}
           gameStart={gameStart}
+          currentShowUser={currentShowUser}
+          sendUserData={sendUserData}
         />
       </div>
     </div>

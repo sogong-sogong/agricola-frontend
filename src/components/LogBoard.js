@@ -70,6 +70,8 @@ function LogBoard({
   inquiryCage,
   inquiryUserStorage,
   gameStart,
+  currentShowUser,
+  sendUserData,
 }) {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
@@ -216,7 +218,14 @@ function LogBoard({
         contentLabel="food exchange"
       >
         <div className={styles.modal}>
-          <FoodExchangeBoard />
+          <FoodExchangeBoard
+            inquiryUserStorage={inquiryUserStorage}
+            memberId={memberId}
+            closeFoodExchange={closeFoodExchange}
+            currentShowUser={currentShowUser}
+            myID={myID}
+            sendUserData={sendUserData}
+          />
         </div>
       </Modal>
       <div className={styles.box1}>
