@@ -433,7 +433,7 @@ function Main() {
   };
 
   // 내 자원창고 put 업데이트
-  const sendUserData = async (data) => {
+  const sendUserData = async ({ data, update = true }) => {
     //console.log(data);
 
     // 쿼리 문자열 생성
@@ -465,7 +465,39 @@ function Main() {
     if (response) {
       console.log("Updated data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
 
-      updateUserResources(response);
+      if (update) {
+        updateUserResources(response);
+      }
+    }
+  };
+
+  // 개인 자원 조회 함수
+  // update가 false이면, 조회만 한다.
+  const inquiryUserStorage = async ({ id, n = 10, update = true }) => {
+    // 개인 자원 조회 API 호출
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8080/storage/${id}`);
+        return res.data;
+      } catch (error) {
+        // 조회가 안 될 경우 최대 n의 횟수만큼 재귀적으로 호출한다.
+        if (n > 0) {
+          inquiryUserStorage({ id: id, n: n - 1, update: update });
+        } else {
+          console.error("Error", error);
+        }
+        return null;
+      }
+    };
+
+    const data = await fetchData();
+    if (data) {
+      console.log(`User ${id} storage`, data); // 전송받은 데이터 콘솔 출력
+      if (update) {
+        updateUserResources(data);
+      }
+
+      return data;
     }
   };
 
@@ -474,9 +506,9 @@ function Main() {
     // 가족 초기 위치 가져오기
     //updateFarmData(true, 2, 1, 1, 1);
     //inquiryFamilyPosition();
-    sendUserData({ pig: 1 });
     //updateCageData(true, 0, 0, 0, 8, 0);
     //inquiryHouse();
+    console.log(userInfos[currentShowUser - 1].memberId);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -489,6 +521,7 @@ function Main() {
     const savedMemberId = Cookies.get("memberId");
     if (savedMemberId) {
       memberIdRef.current = savedMemberId;
+      // memberIdRef가 설정되면 inquiryUserStorage 실행
     }
   }, []);
 
@@ -500,6 +533,8 @@ function Main() {
       connect(); // connect가 프로미스를 반환한다고 가정
       inquiryCommonstorage();
       inquiryFamilyPosition();
+      inquiryUserStorage({ id: Number(memberIdRef.current), update: true });
+
       //inquiryFarm();
     }
 
@@ -533,6 +568,9 @@ function Main() {
               familyPosition={familyPosition}
               sendCommonstorageData={sendCommonstorageData}
               sendUserData={sendUserData}
+              inquiryUserStorage={inquiryUserStorage}
+              currentShowUser={currentShowUser}
+              myID={myID}
             />
           </div>
           <div className={styles.rightBoard}>
@@ -571,6 +609,7 @@ function Main() {
           inquiryFarm={inquiryFarm}
           inquiryHouse={inquiryHouse}
           inquiryCage={inquiryCage}
+          inquiryUserStorage={inquiryUserStorage}
         />
       </div>
     </div>

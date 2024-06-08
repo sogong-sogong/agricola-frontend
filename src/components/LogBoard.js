@@ -68,6 +68,7 @@ function LogBoard({
   inquiryFarm,
   inquiryHouse,
   inquiryCage,
+  inquiryUserStorage,
 }) {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
@@ -98,10 +99,12 @@ function LogBoard({
   const clickProfile = (id) => {
     console.log("click profile " + (id + 1));
     setCurrentShowUser(id + 1);
-    //console.log(userInfos[id].memberId);
+    console.log(userInfos[id].memberId);
     inquiryFarm(userInfos[id].memberId);
     inquiryHouse(userInfos[id].memberId);
     inquiryCage(userInfos[id].memberId);
+
+    inquiryUserStorage({ id: userInfos[id].memberId, update: true });
   };
 
   const clickTurnOff = () => {
