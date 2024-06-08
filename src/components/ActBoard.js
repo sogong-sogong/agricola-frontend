@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
+import { isDisabled, wait } from '@testing-library/user-event/dist/utils';
 import styles from "./ActBoard.module.css";
 import ResourceDisplay from "./ResourceDisplay";
 import { useResources } from "../context/ResourceContext";
@@ -69,58 +69,73 @@ import mark_red from "../assets/objects/family-red.png";
 
 const familyImages = [mark_blue, mark_green, mark_purple, mark_red];
 
-const ActBoard = ({
-  roomnumber,
-  memberId,
-  inquiryFamilyPosition,
-  updateFamilyPosition,
-  userInfos,
-  familyPosition,
-  sendCommonstorageData,
-}) => {
-  const [selectedButton, setSelectedButton] = useState(false);
-  const {
-    gameResources,
-    userResources,
-    updateGameResources,
-    updateUserResources,
-  } = useResources();
-  const [showButtons, setShowButtons] = useState(false); // State to manage button visibility
+  const ActBoard = ({
+    roomnumber,
+    memberId,
+    inquiryFamilyPosition,
+    updateFamilyPosition,
+    userInfos,
+    familyPosition,
+    sendCommonstorageData,
+    updateRound,
+    roundMessage,
+    sendUserData,
+  }) => {
+    const {
+      gameResources,
+      userResources,
+      updateGameResources,
+      updateUserResources,
+    } = useResources();
+    const [showButtons, setShowButtons] = useState(false); // State to manage button visibility
+    const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
+    const [visibleButtons, setVisibleButtons] = useState(new Set([32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])); // Initial buttons covered
 
-  const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
+    const resourceIcons = {
+      branch: branchIcon,
+      seed: seedIcon,
+      clay: clayIcon,
+      rock: rockIcon,
+      reed: reedIcon,
+      sheep: sheepIcon,
+      turn: turnIcon,
+      card: cardIcon,
+      food: foodIcon,
+      vegetable: vegetableIcon,
+      pig: pigIcon,
+      cow: cowIcon,
+    };
 
-  const resourceIcons = {
-    branch: branchIcon,
-    seed: seedIcon,
-    clay: clayIcon,
-    rock: rockIcon,
-    reed: reedIcon,
-    sheep: sheepIcon,
-    turn: turnIcon,
-    card: cardIcon,
-    food: foodIcon,
-    vegetable: vegetableIcon,
-    pig: pigIcon,
-    cow: cowIcon,
-  };
+    
+    //덤불
+    const handleButton16 = () => {
+      //updateUserResources({ wood: userResources.wood + 1 });
+      sendCommonstorageData({
+        roomId: { id: roomnumber },
+        wood: gameResources.wood - 1,
+      });
 
-  //덤불
-  const handleButton16 = () => {
-    //updateGameResources({ wood: gameResources.wood - 1 });
-    //updateUserResources({ wood: userResources.wood + 1 });
-    setSelectedButton(true);
+      console.log("now user resources:", userResources)
+
+      sendUserData({
+        wood: userResources.wood -20,
+        weed: userResources.weed -20,
+      })
+      
+
+      // Log the current and updated user resources
+      console.log("Updated user resources:", userResources)
+
+    };
+
+    //농장확장
+  const handleButton22 = () => {
     sendCommonstorageData({
       roomId: { id: roomnumber },
-      wood: gameResources.wood - 1,
-    });
-  };
-
-  //농장확장
-  const handleButton22 = () => {
-    updateGameResources({
       wood: gameResources.wood + 5,
-      weed: gameResources.weed + 2,
+      weed: gameResources.wood + 2,
     });
+
     updateUserResources({
       wood: userResources.wood - 5,
       weed: userResources.weed - 2,
@@ -129,44 +144,62 @@ const ActBoard = ({
 
   //양시장
   const handleButton32 = () => {
-    updateGameResources({ sheep: gameResources.sheep - 1 });
+
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      sheep: gameResources.sheep - 1,
+    });
+
     updateUserResources({ sheep: userResources.sheep + 1 });
   };
 
   //울타리
   //+ 개수 선택 모달 + 농장판 선택 연결필요
   const handleButton33 = () => {
-    updateGameResources({ wood: gameResources.wood + 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      wood: gameResources.wood + 1,
+    });
     updateUserResources({ fence: userResources.fence - 1 });
   };
 
   //곡식활용
   //+ 농장판 선택 연결필요
   const handleButton34 = () => {
-    updateGameResources({ wood: gameResources.wood - 1 });
+  
   };
 
   //주요설비
   // + 카드 모달창 연결 필요
   const handleButton35 = () => {
-    updateGameResources({ wood: gameResources.wood - 1 });
+
   };
 
   //수풀
   const handleButton17 = () => {
-    updateGameResources({ wood: gameResources.wood - 2 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      wood: gameResources.wood -2,
+    });
+
     updateUserResources({ wood: userResources.wood + 2 });
   };
 
   //회합장소
   //+ 설비 카드 모달 창, 선턴 얻는 거 추가 필요
   const handleButton23 = () => {
-    updateGameResources({ wood: gameResources.wood - 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      wood: gameResources.wood - 1,
+    });
   };
 
   //숲
   const handleButton28 = () => {
-    updateGameResources({ wood: gameResources.wood - 3 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      wood: gameResources.wood - 3,
+    });
     updateUserResources({ wood: userResources.wood + 3 });
   };
 
@@ -178,17 +211,22 @@ const ActBoard = ({
 
   //서부채석장
   const handleButton37 = () => {
-    updateGameResources({ stone: gameResources.stone - 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      stone: gameResources.stone - 1,
+    });
     updateUserResources({ stone: userResources.stone + 1 });
   };
 
   //집개조
   const handleButton38 = () => {
     //+ 추가하기, 만약 farmID 1~15중에 type 이 2인 방이 있다면 (돌집)
-    updateGameResources({
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
       weed: gameResources.weed + 1,
       clay: gameResources.clay + 1,
     });
+
     updateUserResources({
       weed: userResources.weed - 1,
       clay: userResources.clay - 1,
@@ -198,7 +236,7 @@ const ActBoard = ({
 
   //자원시장
   const handleButton18 = () => {
-    updateGameResources({
+    sendCommonstorageData({
       weed: gameResources.weed - 1,
       clay: gameResources.clay - 1,
       food: gameResources.food - 1,
@@ -212,31 +250,46 @@ const ActBoard = ({
 
   //곡식종자
   const handleButton24 = () => {
-    updateGameResources({ grain: gameResources.grain - 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      grain: gameResources.grain - 1
+    });
     updateUserResources({ grain: userResources.grain + 1 });
   };
 
   //흙 채굴장
   const handleButton29 = () => {
-    updateGameResources({ clay: gameResources.clay - 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      clay: gameResources.clay - 1
+    });
     updateUserResources({ clay: userResources.clay + 1 });
   };
 
   //돼지시장
   const handleButton39 = () => {
-    updateGameResources({ pig: gameResources.pig - 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      pig: gameResources.pig - 1
+    });
     updateUserResources({ pig: userResources.pig + 1 });
   };
 
   //채소종자
   const handleButton40 = () => {
-    updateGameResources({ vegetable: gameResources.vegetable - 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      vegetable: gameResources.vegetable - 1
+    });
     updateUserResources({ vegetable: userResources.vegetable + 1 });
   };
 
   //점토채굴장
   const handleButton19 = () => {
-    updateGameResources({ clay: gameResources.clay - 2 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      clay: gameResources.clay - 2 
+    });
     updateUserResources({ clay: userResources.clay + 2 });
   };
 
@@ -247,38 +300,57 @@ const ActBoard = ({
 
   //갈대밭
   const handleButton30 = () => {
-    updateGameResources({ weed: gameResources.weed - 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      weed: gameResources.weed - 1
+    });
     updateUserResources({ weed: userResources.weed + 1 });
   };
 
   //소시장
   const handleButton41 = () => {
-    updateGameResources({ cow: gameResources.cow - 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      cow: gameResources.cow - 1
+    });
     updateUserResources({ cow: userResources.cow + 1 });
   };
 
   //동부채석장
   const handleButton42 = () => {
-    updateGameResources({ stone: gameResources.stone - 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      stone: gameResources.stone - 1
+    });
     updateUserResources({ stone: userResources.stone + 1 });
   };
 
   //교습1
   const handleButton20 = () => {
-    updateGameResources({ food: gameResources.food + 2 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      food: gameResources.food + 2 
+    });
     updateUserResources({ food: userResources.food - 2 });
     //추가하기, + 직업카드 모달열고 1개 선택
   };
 
   //교습2
   const handleButton26 = () => {
-    updateGameResources({ food: gameResources.food + 2 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      food: gameResources.food + 2
+    });
     updateUserResources({ food: userResources.food - 1 });
     //추가하기, + 직업카드 모달열고 1개 선택
   };
 
   //낚시
   const handleButton31 = () => {
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      grain: gameResources.grain - 1
+    });
     updateGameResources({ food: gameResources.food - 1 });
     updateUserResources({ food: userResources.food + 1 });
   };
@@ -290,50 +362,120 @@ const ActBoard = ({
 
   //밭농사
   const handleButton44 = () => {
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      grain: gameResources.grain - 2
+    });
     //추가하기, farm id 하나를 선택하게 하고, 그걸 type 2 (농지)로 바꿔주기
     //그리고 또는 farm id 하나를 선택하게 하고, grain, vegetable 씨뿌리기
-    updateGameResources({ wood: gameResources.wood - 1 });
+
   };
 
   //농장개조
   const handleButton45 = () => {
     //+ 추가하기, 만약 farmID 1~15중에 type 이 2인 방이 있다면 (돌집),
-    updateGameResources({
+    sendCommonstorageData({
       weed: gameResources.weed + 1,
       clay: gameResources.clay + 1,
     });
+
     updateUserResources({
       weed: userResources.weed - 1,
       clay: userResources.clay - 1,
     });
+
     // wood 개수 선택해서 펜스 구매하는 모달
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      grain: gameResources.grain - 1
+    });
     updateGameResources({ wood: gameResources.wood + 1 });
     updateUserResources({ fence: userResources.fence - 1 });
   };
 
   //유랑극단
   const handleButton21 = () => {
-    updateGameResources({ food: gameResources.food - 1 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      food: gameResources.food - 1
+    });
     updateUserResources({ food: userResources.food + 1 });
   };
 
   //날품팔이
   const handleButton27 = () => {
-    updateGameResources({ food: gameResources.food - 2 });
+    sendCommonstorageData({
+      roomId: { id: roomnumber },
+      food: gameResources.food - 2
+    });
     updateUserResources({ food: userResources.food + 2 });
+  };
+
+  // round0 useEffect
+  useEffect(() => {
+    if (Array.isArray(roundMessage) && roundMessage[0][0] !== undefined) {
+      setVisibleButtons(new Set([33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]));
+    }
+  }, [roundMessage]);
+
+// round1 useEffect
+  useEffect(() => {
+    if (Array.isArray(roundMessage) && roundMessage[0][1] !== undefined) {
+      setVisibleButtons(new Set([34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]));
+    }
+  }, [roundMessage]);
+
+
+  // round5 useEffect
+  useEffect(() => {
+    if (Array.isArray(roundMessage) && roundMessage[0][2] !== undefined) {
+      setVisibleButtons(new Set([45])); 
+    }
+  }, [roundMessage]);
+
+  // round6 useEffect
+  useEffect(() => {
+    if (Array.isArray(roundMessage) && roundMessage[0][3] !== undefined) {
+      setVisibleButtons(new Set([])); 
+    }
+  }, [roundMessage]);
+
+  
+  //데모 라운드0 점프 버튼
+  const round0 = () => {
+    updateRound()
+    if (Array.isArray(roundMessage) && roundMessage[0][0] !== undefined) {
+      setVisibleButtons(new Set([33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]));
+    }
+    console.log(roundMessage);
+  };
+
+
+  //데모 라운드1 점프 버튼
+  const round1 = () => {
+    updateRound()
+    if (Array.isArray(roundMessage) && roundMessage[0][1] !== undefined) {
+      setVisibleButtons(new Set([34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]));
+    }
+    console.log(roundMessage);
   };
 
   //데모 라운드5 점프 버튼
   //자원 조정, 라운드 카드 가려놨던 거 5라운드카드까지 다 뒤집기
-  const Lound5 = () => {
-    setShowButtons(true);
+  const round5 = () => {
+    updateRound()
+    if (Array.isArray(roundMessage) && roundMessage[0][2] !== undefined) {
+      setVisibleButtons(new Set([45])); 
+    }
+    console.log(roundMessage);
   };
 
-  //데모 라운드6 점프 버튼
-  //자원 조정, 라운드 카드 가려놨던 거 6라운드카드까지 다 뒤집기
-  const Lound6 = () => {
-    updateGameResources({ food: gameResources.food - 2 });
-    updateUserResources({ food: userResources.food + 2 });
+  const round6 = () => {
+    updateRound()
+    if (Array.isArray(roundMessage) && roundMessage[0][3] !== undefined) {
+      setVisibleButtons(new Set([])); 
+    }
+    console.log(roundMessage);
   };
 
   //데모 수확 점프 버튼
@@ -346,9 +488,9 @@ const ActBoard = ({
   // 테스트 함수
   const test = async (id) => {
     console.log(`Button with id ${id} clicked`);
-    //console.log(familyPosition[0].family[0].xy);
+    console.log(familyPosition[0].family[0].xy);
   };
-
+  
   // 행동판 버튼 정보 저장
   const buttonsData = [
     { id: "16", src: bush1, handler: handleButton16 },
@@ -368,11 +510,13 @@ const ActBoard = ({
     { id: "29", src: clay21, handler: handleButton29 },
     { id: "39", src: round3a, handler: handleButton39 },
     { id: "40", src: round3b, handler: handleButton40 },
+    { handler : isDisabled}, 
     { id: "19", src: clay19, handler: handleButton19 },
     { id: "25", src: farmGet20, handler: handleButton25 },
     { id: "30", src: reed27, handler: handleButton30 },
     { id: "41", src: round4a, handler: handleButton41 },
     { id: "42", src: round4b, handler: handleButton42 },
+    { handler : isDisabled}, 
     { id: "20", src: study25, handler: handleButton20 },
     { id: "26", src: studay26, handler: handleButton26 },
     { id: "31", src: fish33, handler: handleButton31 },
@@ -385,6 +529,13 @@ const ActBoard = ({
 
   return (
     <div className={styles.container}>
+      <div className={styles.right}>
+        <button onClick={round0} if updateRound>Lound 1</button>
+        <button onClick={round1}>Lound 1-2</button>
+        <button onClick={round5}>Lound 5-2</button>
+        <button onClick={round6}>Lound 6-1</button>
+        {/* <button onClick={harvest}>수확</button> */}
+      </div>
       <div className={styles.grid}>
         {buttonsData.map((button) => (
           <button
@@ -400,7 +551,8 @@ const ActBoard = ({
               test(button.id);
             }}
           >
-            <img src={button.src} alt={button.id} />
+            {button.src && <img src={button.src} alt={button.id} />} {/* Only render img if src exists */}
+          {visibleButtons.has(parseInt(button.id)) && <div className={styles.overlay} />}
             {familyPosition[0] &&
               (familyPosition[0].family[0].xy === Number(button.id) ||
                 familyPosition[0].family[1].xy === Number(button.id)) && (
@@ -440,11 +592,6 @@ const ActBoard = ({
           resources={gameResources}
           resourceIcons={resourceIcons}
         />
-      </div>
-      <div className={styles.right}>
-        <button onClick={Lound5}>Lound 5-2</button>
-        <button onClick={Lound6}>Lound 6-1</button>
-        <button onClick={harvest}>수확</button>
       </div>
     </div>
   );

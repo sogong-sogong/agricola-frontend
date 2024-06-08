@@ -32,6 +32,8 @@ function Main() {
   const stompClient = useRef(null);
 
   const { updateGameResources, setScore } = useResources();
+  const { updateUserResources, setUserResources } = useResources();
+  const [roundMessage, setroundMessage] = useState(); 
 
   function findMemberInfo(memberId) {
     const memberInfo = userInfos.find((member) => member.memberId === memberId);
@@ -71,11 +73,16 @@ function Main() {
           ) {
             console.log("메시지 경로", `/pub/room/${roomnumber}`);
             setUserInfos(newMessage);
-
             //inquiryFamilyPosition();
           } else if (newMessage.id !== undefined) {
             console.log("메시지 경로", `/pub/room/${roomnumber}/common/update`);
             updateGameResources(newMessage);
+          } else if (
+            Array.isArray(newMessage)
+          ) {
+            console.log("메시지 경로", `/pub/room/${roomnumber}/round/update`);
+            setroundMessage(newMessage)
+
           } else {
             console.log("undefined message....");
           }
@@ -142,7 +149,7 @@ function Main() {
   };
 
   // 웹소켓 공동 창고 업데이트
-  const sendCommonstorageData = () => {
+  const sendCommonstorageData = (dataToSend) => {
     if (!stompClient.current || !stompClient.current.connected) {
       console.error("STOMP 연결이 설정되지 않았습니다.");
       return;
@@ -151,13 +158,13 @@ function Main() {
     // 디버그 출력을 비활성화하는 빈 함수 설정
     stompClient.current.debug = () => {};
 
-    const dataToSend = {
-      roomId: {
-        id: roomnumber,
-      },
-      wood: 47,
-      clay: 18,
-    };
+    // const dataToSend = {
+    //   roomId: {
+    //     id: roomnumber,
+    //   },
+    //   wood: 47,
+    //   clay: 18,
+    // };
 
     // 데이터 전송
     console.log("데이터 전송:", dataToSend);
@@ -167,6 +174,63 @@ function Main() {
       JSON.stringify(dataToSend)
     );
   };
+
+
+    // 내 자원창고 put 업데이트
+    const sendUserData = async (data) => {
+      console.log(data);
+  
+      // 쿼리 문자열 생성
+      const queryParams = Object.entries(data)
+        .map(
+          ([key, value]) =>
+            `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+        )
+        .join("&");
+  
+      // PUT 요청을 보내는 내부 함수
+      const sendData = async () => {
+        const url = `http://localhost:8080/storage/update/${Number(
+          memberIdRef.current
+        )}?${queryParams}`;
+  
+        try {
+          const res = await axios.put(url);
+          console.log("데이터 전송:", res.data);
+          // 응답 데이터가 유효하다면 다음 단계를 수행합니다.
+          return res.data;
+        } catch (error) {
+          console.error("Error", error);
+          return null;
+        }
+      };
+  
+      const response = await sendData();
+      if (response) {
+        console.log("Updated data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
+        console.log({queryParams});
+        // 필요에 따라 추가 작업 수행 (예: 상태 업데이트 등)
+      }
+    };
+
+  // 라운드 업데이트
+  const updateRound = async () => {
+    // 라운드 업데이트 API 호출
+    if (!stompClient.current || !stompClient.current.connected) {
+      console.error("STOMP 연결이 설정되지 않았습니다.");
+      return;
+    }
+
+    // 디버그 출력을 비활성화하는 빈 함수 설정
+    stompClient.current.debug = () => {};
+
+    // 데이터 전송
+    console.log("라운드 업데이트 호출");
+    stompClient.current.send(`/pub/room/${roomnumber}/round/update`, {});
+
+    //console.log(Number(memberIdRef.current));
+  };
+
 
   // 가족 위치를 가져오는 함수
   const inquiryFamilyPosition = async () => {
@@ -414,10 +478,11 @@ function Main() {
     // 가족 초기 위치 가져오기
     //inquiryFamilyPosition();
     //inquiryFarm();
-    updateHouseData();
-    //inquiryHouse();
-    updateFarmData();
-    updateCageData();
+    // updateHouseData();
+    // //inquiryHouse();
+    // updateFarmData();
+    // updateCageData();
+    updateRound();
     //console.log(userInfos);
     //console.log(familyPosition);
   };
@@ -474,6 +539,10 @@ function Main() {
               updateFamilyPosition={updateFamilyPosition}
               userInfos={userInfos}
               familyPosition={familyPosition}
+              sendCommonstorageData={sendCommonstorageData}
+              updateRound={updateRound}
+              roundMessage={roundMessage}
+              sendUserData={sendUserData}
             />
           </div>
           <div className={styles.rightBoard}>
@@ -486,6 +555,7 @@ function Main() {
                 familyPosition={familyPosition}
                 currentShowUser={currentShowUser}
                 myID={myID}
+                sendUserData={sendUserData}
               />
             </div>
 

@@ -37,18 +37,18 @@ export const ResourceProvider = ({ children }) => {
 
   const [userResources, setUserResources] = useState({
     wood: 0,
-    grain: 0,
-    clay: 0,
-    stone: 0,
+    grain: 3,
+    clay: 4,
+    stone: 5,
     weed: 0,
     vegetable: 0,
     sheep: 0,
     pig: 0,
     cow: 0,
-    food: 0,
+    food: 4,
     family: 2,
-    fence: 0,
-    cowshed: 0,
+    fence: 15,
+    cowshed: 4,
   });
 
   // 점수판 초기화

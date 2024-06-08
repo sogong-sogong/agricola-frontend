@@ -20,7 +20,6 @@
   cursor: pointer;
 }
 
-
 .userMark {
   position: absolute;
   top: 10%;
@@ -31,6 +30,23 @@
 
 .resources {
   position: absolute;
-  top: 88%;
+  top: 90%;
   left: 28%;
+}
+
+.right {
+  position: absolute;
+  display: grid;
+  top: 10%;
+  left: 50%;
+
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  background-color: rgb(218, 218, 218); /* Semi-transparent grey */
 }
