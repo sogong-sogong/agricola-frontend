@@ -129,6 +129,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { wood: data.wood + 1 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      wood: gameResources.wood - 1,
+    });
   };
 
   //농장확장
@@ -143,6 +150,14 @@ const ActBoard = ({
       data: { stone: data.stone - 5, weed: data.weed - 2 },
       update: doUpdate,
     });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      stone: data.stone + 5,
+      weed: data.weed + 2,
+    });
   };
 
   //양시장
@@ -154,6 +169,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { sheep: data.sheep + 1 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      sheep: data.sheep - 1,
+    });
   };
 
   //울타리
@@ -166,6 +188,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { wood: data.wood - 4 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      wood: data.wood + 4,
+    });
   };
 
   //곡식활용
@@ -178,6 +207,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { grain: data.grain - 1 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      grain: data.grain + 1,
+    });
   };
 
   //주요설비
@@ -190,6 +226,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { clay: data.clay - 2 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      clay: data.clay + 2,
+    });
   };
 
   //수풀
@@ -201,6 +244,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { wood: data.wood + 2 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      wood: data.wood - 2,
+    });
   };
 
   //회합장소
@@ -219,6 +269,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { wood: data.wood + 3 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      wood: data.wood - 3,
+    });
   };
 
   //가족늘리기
@@ -235,6 +292,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { stone: data.stone + 1 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      stone: data.stone - 1,
+    });
   };
 
   //집개조
@@ -248,6 +312,14 @@ const ActBoard = ({
     sendUserData({
       data: { weed: data.weed - 1, stone: data.stone - 2 },
       update: doUpdate,
+    });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      weed: data.weed + 1,
+      stone: data.stone + 2,
     });
     //+ 추가하기, 주요/설비카드 모달
   };
@@ -264,6 +336,15 @@ const ActBoard = ({
       data: { weed: data.weed + 1, stone: data.stone + 1, food: data.food + 1 },
       update: doUpdate,
     });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      weed: data.weed - 1,
+      stone: data.stone - 1,
+      food: data.food - 1,
+    });
   };
 
   //곡식종자
@@ -277,6 +358,13 @@ const ActBoard = ({
     sendUserData({
       data: { grain: data.grain + 1 },
       update: doUpdate,
+    });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      grain: data.grain - 1,
     });
   };
 
@@ -292,6 +380,13 @@ const ActBoard = ({
       data: { clay: data.clay + 1 },
       update: doUpdate,
     });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      clay: data.clay - 1,
+    });
   };
 
   //돼지시장
@@ -305,6 +400,13 @@ const ActBoard = ({
     sendUserData({
       data: { pig: data.pig + 1 },
       update: doUpdate,
+    });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      pig: data.pig - 1,
     });
   };
 
@@ -320,6 +422,13 @@ const ActBoard = ({
       data: { vegetable: data.vegetable + 1 },
       update: doUpdate,
     });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      vegetable: data.vegetable - 1,
+    });
   };
 
   //점토채굴장
@@ -333,6 +442,13 @@ const ActBoard = ({
     sendUserData({
       data: { clay: data.clay + 2 },
       update: doUpdate,
+    });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      clay: data.clay - 2,
     });
   };
 
@@ -354,6 +470,13 @@ const ActBoard = ({
       data: { weed: data.weed + 1 },
       update: doUpdate,
     });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      weed: data.weed - 1,
+    });
   };
 
   //소시장
@@ -367,6 +490,13 @@ const ActBoard = ({
     sendUserData({
       data: { cow: data.cow + 1 },
       update: doUpdate,
+    });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      cow: data.cow - 1,
     });
   };
 
@@ -382,6 +512,13 @@ const ActBoard = ({
       data: { stone: data.stone + 1 },
       update: doUpdate,
     });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      stone: data.stone + 1,
+    });
   };
 
   //교습1
@@ -393,6 +530,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { food: data.food - 2 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      food: data.food + 2,
+    });
     //추가하기, + 직업카드 모달열고 1개 선택
   };
 
@@ -405,6 +549,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { food: data.food - 1 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      food: data.food + 1,
+    });
     //추가하기, + 직업카드 모달열고 1개 선택
   };
 
@@ -417,6 +568,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { food: data.food + 1 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      food: data.food - 1,
+    });
   };
 
   //급한가족늘리기
@@ -446,6 +604,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { food: data.food + 1 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      food: data.food - 1,
+    });
   };
 
   //날품팔이
@@ -457,6 +622,13 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({ data: { food: data.food + 2 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      food: data.food - 2,
+    });
   };
 
   //데모 라운드 점프 버튼
