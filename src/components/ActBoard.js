@@ -84,6 +84,9 @@ const ActBoard = ({
   currentShowUser,
   myID,
   updateTurn,
+  visibleButtons,
+  setVisibleButtons,
+  updateRound,
 }) => {
   const [selectedButton, setSelectedButton] = useState(false);
   const {
@@ -92,9 +95,6 @@ const ActBoard = ({
     updateGameResources,
     updateUserResources,
   } = useResources();
-  const [visibleButtons, setVisibleButtons] = useState(
-    new Set([32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
-  ); // Initial buttons covered
 
   const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
 
@@ -454,36 +454,27 @@ const ActBoard = ({
 
   //데모 라운드0 점프 버튼
   const Lound1 = () => {
-    setVisibleButtons(
-      new Set([33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
-    );
+    updateRound();
   };
 
   //데모 라운드1 점프 버튼
   const Lound12 = () => {
-    setVisibleButtons(
-      new Set([34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
-    );
+    updateRound();
   };
 
   //데모 라운드5 점프 버튼
   //자원 조정, 라운드 카드 가려놨던 거 5라운드카드까지 다 뒤집기
   const Lound52 = () => {
-    setVisibleButtons(new Set([45]));
+    updateRound();
   };
 
   const Lound62 = () => {
-    setVisibleButtons(new Set()); // Remove overlay from all buttons
-    updateGameResources({ food: gameResources.food - 2 });
-    updateUserResources({ food: userResources.food + 2 });
+    updateRound();
   };
 
   //데모 수확 점프 버튼
   //자원 조정, 라운드 카드 가려놨던 거 6라운드카드까지 다 뒤집기
-  const harvest = () => {
-    updateGameResources({ food: gameResources.food - 2 });
-    updateUserResources({ food: userResources.food + 2 });
-  };
+  const harvest = () => {};
 
   const handleButton = () => {};
 
@@ -573,9 +564,6 @@ const ActBoard = ({
             )}
           </div>
         ))}
-        <div></div>
-        <div></div>
-        <div></div>
       </div>
       <div className={styles.resources}>
         <ResourceDisplay

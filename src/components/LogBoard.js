@@ -307,22 +307,7 @@ function LogBoard({
             <span>식량 교환</span>
           </div>
         </div>
-        <div className={styles.logBox}>
-          전체 로그
-          {logData.map((data, index) => (
-            <div key={index} className={styles.logText}>
-              <span>{data.name}님이</span>
-              {data.img.map((imgSrc, imgIndex) => (
-                <React.Fragment key={imgIndex}>
-                  <img src={imgSrc} alt="resource" />
-                  <span>{data.number[imgIndex]}</span>
-                  {imgIndex !== data.img.length - 1 && <span>, </span>}
-                </React.Fragment>
-              ))}
-              <span>을 가져갑니다.</span>
-            </div>
-          ))}
-        </div>
+        <div className={styles.logBox}></div>
       </div>
     </div>
   );

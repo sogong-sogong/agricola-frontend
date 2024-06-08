@@ -24,6 +24,10 @@ function Main() {
 
   const [currentShowUser, setCurrentShowUser] = useState(0);
 
+  const [visibleButtons, setVisibleButtons] = useState(
+    new Set([32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
+  );
+
   // 멤버 ID를 저장하는 Ref
   const memberIdRef = useRef();
 
@@ -40,6 +44,59 @@ function Main() {
       ? memberInfo
       : `Member with memberId ${memberId} not found`;
   }
+
+  const round52 = () => {
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    let data = {
+      wood: 0,
+    };
+    if (myID === 1) {
+      data = {
+        wood: 10,
+        clay: 3,
+        stone: 2,
+        weed: 2,
+        food: 5,
+      };
+    } else if (myID === 2) {
+      data = {
+        wood: 2,
+        clay: 3,
+        stone: 2,
+        weed: 2,
+        food: 3,
+      };
+    } else if (myID === 3) {
+      data = {
+        wood: 8,
+        grain: 6,
+        clay: 3,
+        stone: 2,
+        weed: 2,
+        food: 5,
+      };
+    } else if (myID === 4) {
+      data = {
+        wood: 15,
+        clay: 3,
+        stone: 2,
+        weed: 4,
+        food: 2,
+      };
+    }
+
+    sendUserData({
+      data: data,
+      update: doUpdate,
+    });
+
+    if (myID === 1) {
+      updateCageData(true, 0, 0, 1, 9, 0);
+    }
+  };
 
   // 웹소켓 구독 함수
   const connect = () => {
@@ -74,6 +131,30 @@ function Main() {
             setUserInfos(newMessage);
             if (newMessage.length > 3) {
               setGameStart(true);
+            }
+          } else if (
+            Array.isArray(newMessage) &&
+            Array.isArray(newMessage[0])
+          ) {
+            console.log("메시지 경로", `/pub/room/${roomnumber}/round/update`);
+            console.log(newMessage[0].length);
+            if (newMessage[0].length === 1) {
+              console.log("1라운드 시작");
+              setVisibleButtons(
+                new Set([33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
+              );
+            } else if (newMessage[0].length === 2) {
+              console.log("1-1라운드 시작");
+              setVisibleButtons(
+                new Set([34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
+              );
+            } else if (newMessage[0].length === 13) {
+              console.log("5-2라운드 시작");
+              setVisibleButtons(new Set([45]));
+              round52();
+            } else if (newMessage[0].length === 14) {
+              console.log("6-1라운드 시작");
+              setVisibleButtons(new Set([]));
             }
           } else if (newMessage.id !== undefined) {
             console.log("메시지 경로", `/pub/room/${roomnumber}/common/update`);
@@ -533,6 +614,22 @@ function Main() {
     );
   };
 
+  // 라운드 업데이트 함수
+  const updateRound = async () => {
+    // 라운드 업데이트 API 호출
+    if (!stompClient.current || !stompClient.current.connected) {
+      console.error("STOMP 연결이 설정되지 않았습니다.");
+      return;
+    }
+
+    // 디버그 출력을 비활성화하는 빈 함수 설정
+    stompClient.current.debug = () => {};
+
+    // 데이터 전송
+    console.log("라운드 업데이트 전송");
+    stompClient.current.send(`/pub/room/${roomnumber}/round/update`, {});
+  };
+
   // number 값에 따라 starter 변경
   const updateStarter = (number) => {
     setUserInfos((prevData) => {
@@ -554,7 +651,8 @@ function Main() {
     //inquiryFamilyPosition();
     //updateCageData(true, 0, 0, 0, 8, 0);
     //inquiryHouse();
-    updateTurn(3);
+    round52();
+    console.log(myID);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -618,6 +716,9 @@ function Main() {
               currentShowUser={currentShowUser}
               myID={myID}
               updateTurn={updateTurn}
+              visibleButtons={visibleButtons}
+              setVisibleButtons={setVisibleButtons}
+              updateRound={updateRound}
             />
           </div>
           <div className={styles.rightBoard}>
