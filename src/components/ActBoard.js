@@ -83,6 +83,7 @@ const ActBoard = ({
   inquiryUserStorage,
   currentShowUser,
   myID,
+  updateTurn,
 }) => {
   const [selectedButton, setSelectedButton] = useState(false);
   const {
@@ -199,6 +200,7 @@ const ActBoard = ({
   //+ 설비 카드 모달 창, 선턴 얻는 거 추가 필요
   const handleButton23 = () => {
     console.log("회합장소 클릭");
+    updateTurn(myID);
   };
 
   //숲

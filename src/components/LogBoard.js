@@ -69,6 +69,7 @@ function LogBoard({
   inquiryHouse,
   inquiryCage,
   inquiryUserStorage,
+  gameStart,
 }) {
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
@@ -246,7 +247,7 @@ function LogBoard({
           <div className={styles.turn}>
             {[...Array(4)].map((_, index) => (
               <div className={styles.turnIcon} key={index}>
-                {starter === index && (
+                {starter === index && gameStart && (
                   <img src={turnImg} alt="turn" style={{ height: "90%" }} />
                 )}
               </div>

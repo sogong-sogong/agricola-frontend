@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, startTransition } from "react";
 import Cookies from "js-cookie";
 import { Stomp } from "@stomp/stompjs";
 import axios from "axios";
@@ -20,6 +20,7 @@ function Main() {
   const [roomnumber, setRoomnumber] = useState(); // 방 번호
   const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
   const [familyPosition, setFamilyPosition] = useState([]); // 플레이어 4명의 위치 저장
+  const [gameStart, setGameStart] = useState(false);
 
   const [currentShowUser, setCurrentShowUser] = useState(0);
 
@@ -71,11 +72,19 @@ function Main() {
           ) {
             console.log("메시지 경로", `/pub/room/${roomnumber}`);
             setUserInfos(newMessage);
-
-            //inquiryFamilyPosition();
+            if (newMessage.length > 3) {
+              setGameStart(true);
+            }
           } else if (newMessage.id !== undefined) {
             console.log("메시지 경로", `/pub/room/${roomnumber}/common/update`);
             updateGameResources(newMessage);
+          } else if (newMessage.starter !== undefined) {
+            console.log(
+              "메시지 경로",
+              `/pub/room/${roomnumber}/starter/update`
+            );
+            updateGameResources(newMessage);
+            updateStarter(newMessage.starter);
           } else {
             console.log("undefined message....");
           }
@@ -501,6 +510,43 @@ function Main() {
     }
   };
 
+  // 턴 업데이트 함수
+  const updateTurn = async (id) => {
+    // 턴 업데이트 API 호출
+    if (!stompClient.current || !stompClient.current.connected) {
+      console.error("STOMP 연결이 설정되지 않았습니다.");
+      return;
+    }
+
+    // 디버그 출력을 비활성화하는 빈 함수 설정
+    stompClient.current.debug = () => {};
+
+    const dataToSend = {
+      starter: id,
+    };
+    // 데이터 전송
+    console.log("데이터 전송:", dataToSend);
+    stompClient.current.send(
+      `/pub/room/${roomnumber}/starter/update`,
+      {},
+      JSON.stringify(dataToSend)
+    );
+  };
+
+  // number 값에 따라 starter 변경
+  const updateStarter = (number) => {
+    setUserInfos((prevData) => {
+      // 데이터를 복제하여 수정
+      const newData = prevData.map((item) => {
+        return {
+          ...item,
+          starter: item.number === number, // number와 일치하는 경우 true, 그렇지 않으면 false
+        };
+      });
+      return newData;
+    });
+  };
+
   // 테스트 함수
   const test = () => {
     // 가족 초기 위치 가져오기
@@ -508,7 +554,7 @@ function Main() {
     //inquiryFamilyPosition();
     //updateCageData(true, 0, 0, 0, 8, 0);
     //inquiryHouse();
-    console.log(userInfos[currentShowUser - 1].memberId);
+    updateTurn(3);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -554,7 +600,7 @@ function Main() {
       <div className={styles.leftBoard}>
         <div className={styles.header}>
           <div className={styles.text} onClick={test}>
-            ROOM #{roomnumber}
+            ROOM #{roomnumber} {gameStart ? "" : "대기중... "}
           </div>
         </div>
         <div className={styles.gameBoard}>
@@ -571,6 +617,7 @@ function Main() {
               inquiryUserStorage={inquiryUserStorage}
               currentShowUser={currentShowUser}
               myID={myID}
+              updateTurn={updateTurn}
             />
           </div>
           <div className={styles.rightBoard}>
@@ -610,6 +657,7 @@ function Main() {
           inquiryHouse={inquiryHouse}
           inquiryCage={inquiryCage}
           inquiryUserStorage={inquiryUserStorage}
+          gameStart={gameStart}
         />
       </div>
     </div>
