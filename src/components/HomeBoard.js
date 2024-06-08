@@ -206,6 +206,7 @@ function HomeBoard({
       updateFarmData(true, 1, 1, index, 3); // 곡식 3개 곡식밭 생성
     } else if (index === 12) {
       console.log("집");
+      updateHouseData(true, 0, "wood", index, 0);
     } else if (index === 1) {
       console.log("울타리");
       updateCageData(true, 0, 0, 1, index, 0); // 빈 울타리 생성
@@ -219,9 +220,14 @@ function HomeBoard({
 
     houseData.forEach((item) => {
       if (item.xy) {
-        updateHouseData(item.id, "stone", item.xy, 0);
+        updateHouseData(false, item.id, "stone", item.xy, 0);
       }
     });
+  };
+
+  const onClickFence = (index) => {
+    console.log(cageData[0].cageId);
+    updateCageData(false, cageData[0].cageId, 0, 1, index, 2);
   };
 
   const updateBoard = () => {
@@ -268,8 +274,10 @@ function HomeBoard({
       });
 
       cageData.forEach((item) => {
-        if (item.type === 0) {
+        if (item.type === 0 && item.stock_cnt === 0) {
           updatedFarm[item.xy] = "fence2";
+        } else if (item.stock_cnt === 2) {
+          updatedFarm[item.xy] = "pig_2";
         }
       });
 
@@ -370,6 +378,7 @@ function HomeBoard({
               src={fence2Img}
               alt="Fence2"
               className={styles.pointerCursor}
+              onClick={() => onClickFence(index)}
             />
           </div>
         );
@@ -387,8 +396,9 @@ function HomeBoard({
       case "plow_grain_1":
         return (
           <div key={index} className={styles.image}>
+            <img src={seedIcon} alt="family" className={styles.overlay} />
             <img
-              src={plowGrain1Img}
+              src={plowImg}
               alt="PlowGrain1"
               className={styles.pointerCursor}
             />
@@ -397,8 +407,10 @@ function HomeBoard({
       case "plow_grain_2":
         return (
           <div key={index} className={styles.image}>
+            <img src={seedIcon} alt="family" className={styles.overlay} />
+            <img src={seedIcon} alt="family" className={styles.overlay2} />
             <img
-              src={plowGrain2Img}
+              src={plowImg}
               alt="PlowGrain2"
               className={styles.pointerCursor}
               onClick={() => handleCrops(index)}
@@ -408,9 +420,25 @@ function HomeBoard({
       case "plow_grain_3":
         return (
           <div key={index} className={styles.image}>
+            <img src={seedIcon} alt="family" className={styles.overlay} />
+            <img src={seedIcon} alt="family" className={styles.overlay2} />
+            <img src={seedIcon} alt="family" className={styles.overlay3} />
             <img
-              src={plowGrain3Img}
+              src={plowImg}
               alt="PlowGrain3"
+              className={styles.pointerCursor}
+              onClick={() => handleCrops(index)}
+            />
+          </div>
+        );
+      case "pig_2":
+        return (
+          <div key={index} className={styles.image}>
+            <img src={pigIcon} alt="family" className={styles.overlay} />
+            <img src={pigIcon} alt="family" className={styles.overlay2} />
+            <img
+              src={fence2Img}
+              alt="Fence2"
               className={styles.pointerCursor}
               onClick={() => handleCrops(index)}
             />

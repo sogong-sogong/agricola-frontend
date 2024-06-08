@@ -160,3 +160,14 @@
   top: 25%;
   left: 25%;
 }
+
+.overlay2 {
+  position: absolute;
+  top: 15%;
+  left: 25%;
+}
+.overlay3 {
+  position: absolute;
+  top: 5%;
+  left: 25%;
+}

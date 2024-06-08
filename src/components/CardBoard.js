@@ -1,4 +1,4 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import MajorModal from "./MajorModal";
 import SubModal from "./SubModal";
 import JobModal from "./JobModal";
@@ -43,7 +43,15 @@ import hwaroOption03Image from "../assets/objects/hwaroOption03.jpg";
 import hwaroOption04Image from "../assets/objects/hwaroOption04.jpg";
 import hwaroOption05Image from "../assets/objects/hwaroOption05.jpg";
 
-function CardBoard() {
+function CardBoard({
+  inquiryUserStorage,
+  memberId,
+  currentShowUser,
+  myID,
+  sendUserData,
+  sendCommonstorageData,
+  roomnumber,
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [cardsToShow, setCardsToShow] = useState([]);
   const [hwaroModalOpen, setHwaroModalOpen] = useState(false);
@@ -58,9 +66,9 @@ function CardBoard() {
     furnitureFactoryImg,
     bowlFactoryImg,
     basketFactoryImg,
-    umulImg
+    umulImg,
   ]);
-  
+
   const [subCardStack, setSubCardStack] = useState([
     bedroomImage,
     bucketImage,
@@ -68,7 +76,7 @@ function CardBoard() {
     ceramicsImage,
     butterMakerImage,
     shelfImage,
-    shovelImage
+    shovelImage,
   ]);
 
   const [jobCardStack, setJobCardStack] = useState([
@@ -78,7 +86,7 @@ function CardBoard() {
     fenceGuardImage,
     gathererImage,
     propertyManagerImage,
-    workerImage
+    workerImage,
   ]);
 
   const [hwaroCardStack, setHwaroCardStack] = useState([
@@ -86,7 +94,7 @@ function CardBoard() {
     hwaroOption02Image,
     hwaroOption03Image,
     hwaroOption04Image,
-    hwaroOption05Image
+    hwaroOption05Image,
   ]);
 
   const [selectedCard, setSelectedCard] = useState(null);
@@ -95,11 +103,11 @@ function CardBoard() {
   const [majorCards, setMajorCards] = useState([]);
   const [subCards, setSubCards] = useState([]);
   const [jobCards, setJobCards] = useState([]);
-  
+
   const handleMajorCardClick = (index) => {
     const clickedCard = majorCardStack[index];
-    setMajorCards(prevMajorCards => [...prevMajorCards, clickedCard]);
-    setMajorCardStack(prevStack => {
+    setMajorCards((prevMajorCards) => [...prevMajorCards, clickedCard]);
+    setMajorCardStack((prevStack) => {
       const newStack = [...prevStack];
       newStack.splice(index, 1);
       return newStack;
@@ -108,8 +116,8 @@ function CardBoard() {
 
   const handleSubCardClick = (index) => {
     const clickedCard = subCardStack[index];
-    setSubCards(prevSubCards => [...prevSubCards, clickedCard]);
-    setSubCardStack(prevStack => {
+    setSubCards((prevSubCards) => [...prevSubCards, clickedCard]);
+    setSubCardStack((prevStack) => {
       const newStack = [...prevStack];
       newStack.splice(index, 1);
       return newStack;
@@ -118,8 +126,8 @@ function CardBoard() {
 
   const handleJobCardClick = (index) => {
     const clickedCard = jobCardStack[index];
-    setJobCards(prevJobCards => [...prevJobCards, clickedCard]);
-    setJobCardStack(prevStack => {
+    setJobCards((prevJobCards) => [...prevJobCards, clickedCard]);
+    setJobCardStack((prevStack) => {
       const newStack = [...prevStack];
       newStack.splice(index, 1);
       return newStack;
@@ -128,7 +136,7 @@ function CardBoard() {
 
   const handleEnableButtonClick = () => {
     setHwaroModalOpen(true);
-    setModalOpen(false); 
+    setModalOpen(false);
   };
 
   const handleMajorCardStackClick = () => {
@@ -145,7 +153,6 @@ function CardBoard() {
     setModalOpen(true);
     setCardsToShow(jobCardStack);
   };
-
 
   const handleMajorCardsClick = () => {
     setModalOpen(true);
@@ -167,73 +174,103 @@ function CardBoard() {
   };
 
   const handleModalMajorCardClick = (cardImage) => {
-    let index = majorCardStack.findIndex(card => card === cardImage);
+    let index = majorCardStack.findIndex((card) => card === cardImage);
     handleMajorCardClick(index);
   };
 
+  const handleModalSubCardClick = (cardImage) => {
+    let index = subCardStack.findIndex((card) => card === cardImage);
+    handleSubCardClick(index);
+  };
 
-const handleModalSubCardClick = (cardImage) => {
-  let index = subCardStack.findIndex(card => card === cardImage);
-  handleSubCardClick(index);
-};
+  const handleModalJobCardClick = (cardImage) => {
+    let index = jobCardStack.findIndex((card) => card === cardImage);
+    handleJobCardClick(index);
+  };
 
-const handleModalJobCardClick = (cardImage) => {
-  let index = jobCardStack.findIndex(card => card === cardImage);
-  handleJobCardClick(index);
-};
-  
-const handleUsedModalMajorCardClick = () => {
-  setHwaroModalOpen(true);
-  setCardsToShow(hwaroCardStack);
-};
+  const handleUsedModalMajorCardClick = () => {
+    setHwaroModalOpen(true);
+    setCardsToShow(hwaroCardStack);
+  };
 
   const majorCard = (
     <div className={styles.card}>
-      <div className={styles.majorText} style={{ position: "relative", top: "-50%", left:"5%" }}>
+      <div
+        className={styles.majorText}
+        style={{ position: "relative", top: "-50%", left: "5%" }}
+      >
         주요설비
       </div>
       <img
         src={majorBackImage}
         alt="major_back"
-        style={{ position: "absolute", top: "-20%", left: 0,cursor: "pointer" }}
+        style={{
+          position: "absolute",
+          top: "-20%",
+          left: 0,
+          cursor: "pointer",
+        }}
         onClick={handleMajorCardsClick}
-        />
+      />
       <img
         src={majorBackImage}
         alt="major_back"
-        style={{ position: "absolute", top: "-10%", left: 0,cursor: "pointer" }}
+        style={{
+          position: "absolute",
+          top: "-10%",
+          left: 0,
+          cursor: "pointer",
+        }}
         onClick={handleMajorCardsClick}
-        />
+      />
       <img
         src={hwaroImage01}
         alt="hwaroImage01"
         style={{ position: "absolute", top: "0%", left: 0, cursor: "pointer" }}
         onClick={handleMajorCardsClick}
-        />
+      />
     </div>
   );
 
   const subCard = (
     <div className={styles.card}>
-      <div className={styles.subText} style={{ position: "relative", top: "-50%", left:"105%" }}>
+      <div
+        className={styles.subText}
+        style={{ position: "relative", top: "-50%", left: "105%" }}
+      >
         보조설비
       </div>
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "absolute", top: "-20%", left: "100%" , cursor:"pointer"}}
+        style={{
+          position: "absolute",
+          top: "-20%",
+          left: "100%",
+          cursor: "pointer",
+        }}
         onClick={handleSubCardsClick}
-        />
+      />
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "absolute", top: "-10%", left: "100%", cursor:"pointer"}}
+        style={{
+          position: "absolute",
+          top: "-10%",
+          left: "100%",
+          cursor: "pointer",
+        }}
         onClick={handleSubCardsClick}
       />
       <img
         src={bedroomImage}
         alt="bedroomImage"
-        style={{ position: "absolute", top: "0%", left: "100%", cursor:"pointer"}}
+        style={{
+          position: "absolute",
+          top: "0%",
+          left: "100%",
+          cursor: "pointer",
+        }}
         onClick={handleSubCardsClick}
       />
     </div>
@@ -241,34 +278,55 @@ const handleUsedModalMajorCardClick = () => {
 
   const jobCard = (
     <div className={styles.card}>
-      <div className={styles.jobText} style={{ position: "relative", top: "-50%", left:"222%" }}>
+      <div
+        className={styles.jobText}
+        style={{ position: "relative", top: "-50%", left: "222%" }}
+      >
         직업
       </div>
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "absolute", top: "-20%", left: "200%", cursor:"pointer" }}
+        style={{
+          position: "absolute",
+          top: "-20%",
+          left: "200%",
+          cursor: "pointer",
+        }}
         onClick={handleJobCardsClick}
       />
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "absolute", top: "-10%", left: "200%", cursor:"pointer" }}
+        style={{
+          position: "absolute",
+          top: "-10%",
+          left: "200%",
+          cursor: "pointer",
+        }}
         onClick={handleJobCardsClick}
       />
       <img
         src={bricklayerImage}
         alt="bricklayerImage"
-        style={{ position: "absolute", top: "0%", left: "200%", cursor:"pointer" }}
+        style={{
+          position: "absolute",
+          top: "0%",
+          left: "200%",
+          cursor: "pointer",
+        }}
         onClick={handleJobCardsClick}
       />
     </div>
   );
 
   const cardPileText = (
-      <div className={styles.cardPileText} style={{ position: "relative", top: "-40%", left:"-0%" }}>
-        카드더미
-      </div>
+    <div
+      className={styles.cardPileText}
+      style={{ position: "relative", top: "-40%", left: "-0%" }}
+    >
+      카드더미
+    </div>
   );
 
   const majorCardBack = (
@@ -276,22 +334,25 @@ const handleUsedModalMajorCardClick = () => {
       <img
         src={majorBackImage}
         alt="major_back"
-        style={{ position: "absolute", top: "0%", left: 0,cursor: "pointer" }}
+        style={{ position: "absolute", top: "0%", left: 0, cursor: "pointer" }}
         onClick={handleMajorCardStackClick}
       />
       <img
         src={majorBackImage}
         alt="major_back"
-        style={{ position: "absolute", top: "10%", left: 0,cursor: "pointer" }}
+        style={{ position: "absolute", top: "10%", left: 0, cursor: "pointer" }}
         onClick={handleMajorCardStackClick}
       />
       <img
         src={majorBackImage}
         alt="major_back"
-        style={{ position: "absolute", top: "20%", left: 0,cursor: "pointer" }}
+        style={{ position: "absolute", top: "20%", left: 0, cursor: "pointer" }}
         onClick={handleMajorCardStackClick}
       />
-      <div className={styles.majorBackText} style={{ position: "relative", top: "-25%", left:"0%" }}>
+      <div
+        className={styles.majorBackText}
+        style={{ position: "relative", top: "-25%", left: "0%" }}
+      >
         주요설비
       </div>
     </div>
@@ -302,26 +363,43 @@ const handleUsedModalMajorCardClick = () => {
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "absolute", top: "0%", left: "100%" , cursor:"pointer"}}
+        style={{
+          position: "absolute",
+          top: "0%",
+          left: "100%",
+          cursor: "pointer",
+        }}
         onClick={handleSubCardStackClick}
       />
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "absolute", top: "10%", left: "100%", cursor:"pointer"}}
+        style={{
+          position: "absolute",
+          top: "10%",
+          left: "100%",
+          cursor: "pointer",
+        }}
         onClick={handleSubCardStackClick}
       />
       <img
         src={subBackImage}
         alt="sub_back"
-        style={{ position: "absolute", top: "20%", left: "100%", cursor:"pointer"}}
+        style={{
+          position: "absolute",
+          top: "20%",
+          left: "100%",
+          cursor: "pointer",
+        }}
         onClick={handleSubCardStackClick}
       />
-      <div className={styles.subBackText} style={{ position: "relative", top: "-25%", left:"105%" }}>
+      <div
+        className={styles.subBackText}
+        style={{ position: "relative", top: "-25%", left: "105%" }}
+      >
         보조설비
       </div>
     </div>
-    
   );
 
   const jobCardBack = (
@@ -329,22 +407,40 @@ const handleUsedModalMajorCardClick = () => {
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "absolute", top: "0%", left: "200%", cursor:"pointer" }}
+        style={{
+          position: "absolute",
+          top: "0%",
+          left: "200%",
+          cursor: "pointer",
+        }}
         onClick={handleJobCardStackClick}
       />
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "absolute", top: "10%", left: "200%", cursor:"pointer" }}
+        style={{
+          position: "absolute",
+          top: "10%",
+          left: "200%",
+          cursor: "pointer",
+        }}
         onClick={handleJobCardStackClick}
       />
       <img
         src={jobBackImage}
         alt="job_back"
-        style={{ position: "absolute", top: "20%", left: "200%", cursor:"pointer" }}
+        style={{
+          position: "absolute",
+          top: "20%",
+          left: "200%",
+          cursor: "pointer",
+        }}
         onClick={handleJobCardStackClick}
       />
-      <div className={styles.jobBackText} style={{ position: "relative", top: "-25%", left:"222%" }}>
+      <div
+        className={styles.jobBackText}
+        style={{ position: "relative", top: "-25%", left: "222%" }}
+      >
         직업
       </div>
     </div>
@@ -364,74 +460,81 @@ const handleUsedModalMajorCardClick = () => {
         {jobCardBack}
       </div>
       {modalOpen && (
-  <>
-      {cardsToShow === majorCardStack && (
-      <MajorModal
-        cards={cardsToShow}
-        onClose={() => setModalOpen(false)}
-        onCardClick={(cardImage) => {
-          handleModalMajorCardClick(cardImage);
-        }}
-        onEnableButtonClick={handleEnableButtonClick}
-      />
-    )}
-    {cardsToShow === subCardStack && (
-      <SubModal
-        cards={cardsToShow}
-        onClose={() => setModalOpen(false)}
-        onCardClick={(cardImage) => {
-          handleModalSubCardClick(cardImage);
-        }}
-      />
-    )}
-    {cardsToShow === jobCardStack && (
-      <JobModal
-        cards={cardsToShow}
-        onClose={() => setModalOpen(false)}
-        onCardClick={(cardImage) => {
-          handleModalJobCardClick(cardImage);
-        }}
-        />
-      )}
-    {cardsToShow === majorCards && (
-      <MajorModal
-        cards={cardsToShow}
-        onClose={() => setModalOpen(false)}
-        onCardClick={(cardImage) => {
-          handleModalMajorCardClick(cardImage);
-        }}
-        onEnableButtonClick={handleEnableButtonClick}
-      />
-    )}
-    {cardsToShow === subCards && (
-      <SubModal
-        cards={cardsToShow}
-        onClose={() => setModalOpen(false)}
-        onCardClick={(cardImage) => {
-          handleModalSubCardClick(cardImage);
-        }}
-      />
-    )}
-    {cardsToShow === jobCards && (
-      <JobModal
-        cards={cardsToShow}
-        onClose={() => setModalOpen(false)}
-        onCardClick={(cardImage) => {
-          handleModalJobCardClick(cardImage);
-        }}
-        />
-      )}
+        <>
+          {cardsToShow === majorCardStack && (
+            <MajorModal
+              cards={cardsToShow}
+              onClose={() => setModalOpen(false)}
+              onCardClick={(cardImage) => {
+                handleModalMajorCardClick(cardImage);
+              }}
+              onEnableButtonClick={handleEnableButtonClick}
+            />
+          )}
+          {cardsToShow === subCardStack && (
+            <SubModal
+              cards={cardsToShow}
+              onClose={() => setModalOpen(false)}
+              onCardClick={(cardImage) => {
+                handleModalSubCardClick(cardImage);
+              }}
+            />
+          )}
+          {cardsToShow === jobCardStack && (
+            <JobModal
+              cards={cardsToShow}
+              onClose={() => setModalOpen(false)}
+              onCardClick={(cardImage) => {
+                handleModalJobCardClick(cardImage);
+              }}
+            />
+          )}
+          {cardsToShow === majorCards && (
+            <MajorModal
+              cards={cardsToShow}
+              onClose={() => setModalOpen(false)}
+              onCardClick={(cardImage) => {
+                handleModalMajorCardClick(cardImage);
+              }}
+              onEnableButtonClick={handleEnableButtonClick}
+            />
+          )}
+          {cardsToShow === subCards && (
+            <SubModal
+              cards={cardsToShow}
+              onClose={() => setModalOpen(false)}
+              onCardClick={(cardImage) => {
+                handleModalSubCardClick(cardImage);
+              }}
+            />
+          )}
+          {cardsToShow === jobCards && (
+            <JobModal
+              cards={cardsToShow}
+              onClose={() => setModalOpen(false)}
+              onCardClick={(cardImage) => {
+                handleModalJobCardClick(cardImage);
+              }}
+            />
+          )}
         </>
-)}
+      )}
 
       {hwaroModalOpen && (
         <HwaroModal
           cards={hwaroCardStack}
           onClose={() => setHwaroModalOpen(false)}
           onCardClick={() => {}}
+          inquiryUserStorage={inquiryUserStorage}
+          memberId={memberId}
+          currentShowUser={currentShowUser}
+          myID={myID}
+          sendUserData={sendUserData}
+          sendCommonstorageData={sendCommonstorageData}
+          roomnumber={roomnumber}
         />
       )}
     </div>
-    );
-  }
+  );
+}
 export default CardBoard;

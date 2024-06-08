@@ -232,7 +232,7 @@ function Main() {
   };
 
   // 웹소켓 공동 창고 업데이트
-  const sendCommonstorageData = () => {
+  const sendCommonstorageData = (data) => {
     if (!stompClient.current || !stompClient.current.connected) {
       console.error("STOMP 연결이 설정되지 않았습니다.");
       return;
@@ -240,7 +240,7 @@ function Main() {
 
     // 디버그 출력을 비활성화하는 빈 함수 설정
     stompClient.current.debug = () => {};
-
+    /*
     const dataToSend = {
       roomId: {
         id: roomnumber,
@@ -248,13 +248,14 @@ function Main() {
       wood: 47,
       clay: 18,
     };
+    */
 
     // 데이터 전송
-    console.log("데이터 전송:", dataToSend);
+    console.log("데이터 전송:", data);
     stompClient.current.send(
       `/pub/room/${roomnumber}/common/update`,
       {},
-      JSON.stringify(dataToSend)
+      JSON.stringify(data)
     );
   };
 
@@ -390,6 +391,8 @@ function Main() {
         return res.data;
       } catch (error) {
         console.error("Error", error);
+        // 데이터를 받지 못하면 cage data를 빈 배열로 설정한다.
+        setCageData([]);
         return null;
       }
     };
@@ -446,7 +449,7 @@ function Main() {
   };
 
   // 집 데이터 업데이트 함수
-  const updateHouseData = async (id, type, xy, stock_type, create = false) => {
+  const updateHouseData = async (create, id, type, xy, stock_type) => {
     let data = {};
 
     if (create) {
@@ -749,7 +752,15 @@ function Main() {
             </div>
 
             <div className={styles.cardBoard}>
-              <CardBoard />
+              <CardBoard
+                inquiryUserStorage={inquiryUserStorage}
+                memberId={Number(memberIdRef.current)}
+                currentShowUser={currentShowUser}
+                myID={myID}
+                sendUserData={sendUserData}
+                sendCommonstorageData={sendCommonstorageData}
+                roomnumber={roomnumber}
+              />
             </div>
           </div>
         </div>
