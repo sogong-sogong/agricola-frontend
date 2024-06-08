@@ -114,220 +114,340 @@ const ActBoard = ({
 
   //덤불
   const handleButton16 = async () => {
+    console.log("덤불 클릭");
     const data = await inquiryUserStorage({ id: memberId, update: false });
     let doUpdate = false;
     if (currentShowUser === 0 || currentShowUser === myID) {
       doUpdate = true;
     }
-    sendUserData({ data: { wood: data.wood - 1 }, update: doUpdate });
+    sendUserData({ data: { wood: data.wood + 1 }, update: doUpdate });
   };
 
   //농장확장
-  const handleButton22 = () => {
-    updateGameResources({
-      wood: gameResources.wood + 5,
-      weed: gameResources.weed + 2,
-    });
-    updateUserResources({
-      wood: userResources.wood - 5,
-      weed: userResources.weed - 2,
+  const handleButton22 = async () => {
+    console.log("농장확장 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { stone: data.stone - 5, weed: data.weed - 2 },
+      update: doUpdate,
     });
   };
 
   //양시장
-  const handleButton32 = () => {
-    updateGameResources({ sheep: gameResources.sheep - 1 });
-    updateUserResources({ sheep: userResources.sheep + 1 });
+  const handleButton32 = async () => {
+    console.log("양시장 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { sheep: data.sheep + 1 }, update: doUpdate });
   };
 
   //울타리
   //+ 개수 선택 모달 + 농장판 선택 연결필요
-  const handleButton33 = () => {
-    updateGameResources({ wood: gameResources.wood + 1 });
-    updateUserResources({ fence: userResources.fence - 1 });
+  const handleButton33 = async () => {
+    console.log("울타리 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { wood: data.wood - 4 }, update: doUpdate });
   };
 
   //곡식활용
   //+ 농장판 선택 연결필요
-  const handleButton34 = () => {
-    updateGameResources({ wood: gameResources.wood - 1 });
+  const handleButton34 = async () => {
+    console.log("곡식활용 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { grain: data.grain - 1 }, update: doUpdate });
   };
 
   //주요설비
   // + 카드 모달창 연결 필요
-  const handleButton35 = () => {
-    updateGameResources({ wood: gameResources.wood - 1 });
+  const handleButton35 = async () => {
+    console.log("주요설비 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { clay: data.clay - 2 }, update: doUpdate });
   };
 
   //수풀
-  const handleButton17 = () => {
-    updateGameResources({ wood: gameResources.wood - 2 });
-    updateUserResources({ wood: userResources.wood + 2 });
+  const handleButton17 = async () => {
+    console.log("수풀 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { wood: data.wood + 2 }, update: doUpdate });
   };
 
   //회합장소
   //+ 설비 카드 모달 창, 선턴 얻는 거 추가 필요
   const handleButton23 = () => {
-    updateGameResources({ wood: gameResources.wood - 1 });
+    console.log("회합장소 클릭");
   };
 
   //숲
-  const handleButton28 = () => {
-    updateGameResources({ wood: gameResources.wood - 3 });
-    updateUserResources({ wood: userResources.wood + 3 });
+  const handleButton28 = async () => {
+    console.log("숲 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { wood: data.wood + 3 }, update: doUpdate });
   };
 
   //가족늘리기
   const handleButton36 = () => {
-    //+ 추가하기,만약 farmID 1~15중에 type 이 0인 방이 있다면
-    updateUserResources({ family: userResources.family + 1 });
+    console.log("가족늘리기 클릭");
   };
 
   //서부채석장
-  const handleButton37 = () => {
-    updateGameResources({ stone: gameResources.stone - 1 });
-    updateUserResources({ stone: userResources.stone + 1 });
+  const handleButton37 = async () => {
+    console.log("서부채석장 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { stone: data.stone + 1 }, update: doUpdate });
   };
 
   //집개조
-  const handleButton38 = () => {
-    //+ 추가하기, 만약 farmID 1~15중에 type 이 2인 방이 있다면 (돌집)
-    updateGameResources({
-      weed: gameResources.weed + 1,
-      clay: gameResources.clay + 1,
-    });
-    updateUserResources({
-      weed: userResources.weed - 1,
-      clay: userResources.clay - 1,
+  const handleButton38 = async () => {
+    console.log("집개조 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { weed: data.weed - 1, stone: data.stone - 2 },
+      update: doUpdate,
     });
     //+ 추가하기, 주요/설비카드 모달
   };
 
   //자원시장
-  const handleButton18 = () => {
-    updateGameResources({
-      weed: gameResources.weed - 1,
-      clay: gameResources.clay - 1,
-      food: gameResources.food - 1,
-    });
-    updateUserResources({
-      weed: userResources.weed + 1,
-      clay: userResources.clay + 1,
-      food: userResources.food + 1,
+  const handleButton18 = async () => {
+    console.log("자원시장 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { weed: data.weed + 1, stone: data.stone + 1, food: data.food + 1 },
+      update: doUpdate,
     });
   };
 
   //곡식종자
-  const handleButton24 = () => {
-    updateGameResources({ grain: gameResources.grain - 1 });
-    updateUserResources({ grain: userResources.grain + 1 });
+  const handleButton24 = async () => {
+    console.log("곡식종자 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { grain: data.grain + 1 },
+      update: doUpdate,
+    });
   };
 
   //흙 채굴장
-  const handleButton29 = () => {
-    updateGameResources({ clay: gameResources.clay - 1 });
-    updateUserResources({ clay: userResources.clay + 1 });
+  const handleButton29 = async () => {
+    console.log("흙 채굴장 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { clay: data.clay + 1 },
+      update: doUpdate,
+    });
   };
 
   //돼지시장
-  const handleButton39 = () => {
-    updateGameResources({ pig: gameResources.pig - 1 });
-    updateUserResources({ pig: userResources.pig + 1 });
+  const handleButton39 = async () => {
+    console.log("돼지시장 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { pig: data.pig + 1 },
+      update: doUpdate,
+    });
   };
 
   //채소종자
-  const handleButton40 = () => {
-    updateGameResources({ vegetable: gameResources.vegetable - 1 });
-    updateUserResources({ vegetable: userResources.vegetable + 1 });
+  const handleButton40 = async () => {
+    console.log("채소종자 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { vegetable: data.vegetable + 1 },
+      update: doUpdate,
+    });
   };
 
   //점토채굴장
-  const handleButton19 = () => {
-    updateGameResources({ clay: gameResources.clay - 2 });
-    updateUserResources({ clay: userResources.clay + 2 });
+  const handleButton19 = async () => {
+    console.log("점토채굴장 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { clay: data.clay + 2 },
+      update: doUpdate,
+    });
   };
 
   //농지
   const handleButton25 = () => {
+    console.log("농지 클릭");
     //추가하기, farm id 하나를 선택하게 하고, 그걸 type 2 (농지)로 바꿔주기
   };
 
   //갈대밭
-  const handleButton30 = () => {
-    updateGameResources({ weed: gameResources.weed - 1 });
-    updateUserResources({ weed: userResources.weed + 1 });
+  const handleButton30 = async () => {
+    console.log("갈대밭 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { weed: data.weed + 1 },
+      update: doUpdate,
+    });
   };
 
   //소시장
-  const handleButton41 = () => {
-    updateGameResources({ cow: gameResources.cow - 1 });
-    updateUserResources({ cow: userResources.cow + 1 });
+  const handleButton41 = async () => {
+    console.log("소시장 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { cow: data.cow + 1 },
+      update: doUpdate,
+    });
   };
 
   //동부채석장
-  const handleButton42 = () => {
-    updateGameResources({ stone: gameResources.stone - 1 });
-    updateUserResources({ stone: userResources.stone + 1 });
+  const handleButton42 = async () => {
+    console.log("동부채석장 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { stone: data.stone + 1 },
+      update: doUpdate,
+    });
   };
 
   //교습1
-  const handleButton20 = () => {
-    updateGameResources({ food: gameResources.food + 2 });
-    updateUserResources({ food: userResources.food - 2 });
+  const handleButton20 = async () => {
+    console.log("교습1 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { food: data.food - 2 }, update: doUpdate });
     //추가하기, + 직업카드 모달열고 1개 선택
   };
 
   //교습2
-  const handleButton26 = () => {
-    updateGameResources({ food: gameResources.food + 2 });
-    updateUserResources({ food: userResources.food - 1 });
+  const handleButton26 = async () => {
+    console.log("교습2 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { food: data.food - 1 }, update: doUpdate });
     //추가하기, + 직업카드 모달열고 1개 선택
   };
 
   //낚시
-  const handleButton31 = () => {
-    updateGameResources({ food: gameResources.food - 1 });
-    updateUserResources({ food: userResources.food + 1 });
+  const handleButton31 = async () => {
+    console.log("낚시 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { food: data.food + 1 }, update: doUpdate });
   };
 
   //급한가족늘리기
   const handleButton43 = () => {
-    updateUserResources({ family: userResources.family + 1 });
+    console.log("급한가족늘리기 클릭");
   };
 
   //밭농사
   const handleButton44 = () => {
     //추가하기, farm id 하나를 선택하게 하고, 그걸 type 2 (농지)로 바꿔주기
     //그리고 또는 farm id 하나를 선택하게 하고, grain, vegetable 씨뿌리기
-    updateGameResources({ wood: gameResources.wood - 1 });
+    console.log("밭농사 클릭");
   };
 
   //농장개조
   const handleButton45 = () => {
     //+ 추가하기, 만약 farmID 1~15중에 type 이 2인 방이 있다면 (돌집),
-    updateGameResources({
-      weed: gameResources.weed + 1,
-      clay: gameResources.clay + 1,
-    });
-    updateUserResources({
-      weed: userResources.weed - 1,
-      clay: userResources.clay - 1,
-    });
-    // wood 개수 선택해서 펜스 구매하는 모달
-    updateGameResources({ wood: gameResources.wood + 1 });
-    updateUserResources({ fence: userResources.fence - 1 });
+    console.log("농장개조 클릭");
   };
 
   //유랑극단
-  const handleButton21 = () => {
-    updateGameResources({ food: gameResources.food - 1 });
-    updateUserResources({ food: userResources.food + 1 });
+  const handleButton21 = async () => {
+    console.log("유랑극단 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { food: data.food + 1 }, update: doUpdate });
   };
 
   //날품팔이
-  const handleButton27 = () => {
-    updateGameResources({ food: gameResources.food - 2 });
-    updateUserResources({ food: userResources.food + 2 });
+  const handleButton27 = async () => {
+    console.log("날품팔이 클릭");
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { food: data.food + 2 }, update: doUpdate });
   };
 
   //데모 라운드0 점프 버튼
@@ -362,6 +482,8 @@ const ActBoard = ({
     updateGameResources({ food: gameResources.food - 2 });
     updateUserResources({ food: userResources.food + 2 });
   };
+
+  const handleButton = () => {};
 
   // 테스트 함수
   const test = async (id) => {
