@@ -678,7 +678,7 @@ const ActBoard = ({
     });
     // 번식
     if (myID === 1) {
-      updateCageData(false, cageData[0].cageId, 0, 1, 1, 3);
+      updateCageData(false, cageData[0].cageId, 0, 9, 1, 3);
     }
   };
 
@@ -748,7 +748,7 @@ const ActBoard = ({
     });
 
     if (findMemberInfo(Number(memberId)).number === 1) {
-      updateCageData(true, 0, 0, 1, 9, 0);
+      updateCageData(true, 0, 0, 1, 1, 0);
     }
   };
 
