@@ -119,6 +119,13 @@ function HomeBoard({
     house: houseIcon,
   };
 
+  const profileStyle = [
+    ["rgb(12, 169, 177)"],
+    ["rgb(17, 100, 37)"],
+    ["rgb(102, 4, 173)"],
+    ["rgb(164, 5, 5)"],
+  ];
+
   const handleFenceInstallation = (index) => {
     const updatedFarm = [...data.farm];
     if (index === 7) updatedFarm[index] = "plow";
@@ -472,7 +479,24 @@ function HomeBoard({
 
   return (
     <div className={styles.container}>
-      <div className={styles.topSection}>개인 창고</div>
+      <div
+        className={styles.topSection}
+        style={
+          currentShowUser === 0
+            ? {
+                backgroundColor: `${profileStyle[myID - 1]}`,
+                color: "white",
+                borderRadius: "10px",
+              }
+            : {
+                backgroundColor: `${profileStyle[currentShowUser - 1]}`,
+                color: "white",
+                borderRadius: "10px",
+              }
+        }
+      >
+        User{currentShowUser === 0 ? myID : currentShowUser}의 개인 창고
+      </div>
       <div className={styles.middleSection}>
         <ResourceDisplay2
           resources={userResources}
