@@ -155,8 +155,8 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      stone: data.stone + 5,
-      weed: data.weed + 2,
+      stone: gameResources.stone + 5,
+      weed: gameResources.weed + 2,
     });
   };
 
@@ -174,7 +174,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      sheep: data.sheep - 1,
+      sheep: gameResources.sheep - 1,
     });
   };
 
@@ -193,7 +193,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      wood: data.wood + 4,
+      wood: gameResources.wood + 4,
     });
   };
 
@@ -212,7 +212,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      grain: data.grain + 1,
+      grain: gameResources.grain + 1,
     });
   };
 
@@ -231,7 +231,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      clay: data.clay + 2,
+      clay: gameResources.clay + 2,
     });
   };
 
@@ -249,7 +249,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      wood: data.wood - 2,
+      wood: gameResources.wood - 2,
     });
   };
 
@@ -274,7 +274,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      wood: data.wood - 3,
+      wood: gameResources.wood - 3,
     });
   };
 
@@ -297,7 +297,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      stone: data.stone - 1,
+      stone: gameResources.stone - 1,
     });
   };
 
@@ -318,8 +318,8 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      weed: data.weed + 1,
-      stone: data.stone + 2,
+      weed: gameResources.weed + 1,
+      stone: gameResources.stone + 2,
     });
     //+ 추가하기, 주요/설비카드 모달
   };
@@ -341,9 +341,9 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      weed: data.weed - 1,
-      stone: data.stone - 1,
-      food: data.food - 1,
+      weed: gameResources.weed - 1,
+      stone: gameResources.stone - 1,
+      food: gameResources.food - 1,
     });
   };
 
@@ -364,7 +364,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      grain: data.grain - 1,
+      grain: gameResources.grain - 1,
     });
   };
 
@@ -385,7 +385,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      clay: data.clay - 1,
+      clay: gameResources.clay - 1,
     });
   };
 
@@ -406,7 +406,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      pig: data.pig - 1,
+      pig: gameResources.pig - 1,
     });
   };
 
@@ -427,7 +427,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      vegetable: data.vegetable - 1,
+      vegetable: gameResources.vegetable - 1,
     });
   };
 
@@ -448,7 +448,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      clay: data.clay - 2,
+      clay: gameResources.clay - 2,
     });
   };
 
@@ -475,7 +475,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      weed: data.weed - 1,
+      weed: gameResources.weed - 1,
     });
   };
 
@@ -496,7 +496,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      cow: data.cow - 1,
+      cow: gameResources.cow - 1,
     });
   };
 
@@ -517,7 +517,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      stone: data.stone + 1,
+      stone: gameResources.stone + 1,
     });
   };
 
@@ -535,7 +535,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      food: data.food + 2,
+      food: gameResources.food + 2,
     });
     //추가하기, + 직업카드 모달열고 1개 선택
   };
@@ -554,7 +554,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      food: data.food + 1,
+      food: gameResources.food + 1,
     });
     //추가하기, + 직업카드 모달열고 1개 선택
   };
@@ -573,7 +573,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      food: data.food - 1,
+      food: gameResources.food - 1,
     });
   };
 
@@ -609,7 +609,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      food: data.food - 1,
+      food: gameResources.food - 1,
     });
   };
 
@@ -627,7 +627,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      food: data.food - 2,
+      food: gameResources.food - 2,
     });
   };
 
