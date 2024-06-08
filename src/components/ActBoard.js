@@ -66,6 +66,7 @@ import mark_blue from "../assets/objects/family-blue.png";
 import mark_green from "../assets/objects/family-green.png";
 import mark_purple from "../assets/objects/family-purple.png";
 import mark_red from "../assets/objects/family-red.png";
+import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 const familyImages = [mark_blue, mark_green, mark_purple, mark_red];
 
@@ -76,9 +77,11 @@ const ActBoard = ({
   updateFamilyPosition,
   userInfos,
   familyPosition,
+  inquiryCommonstorage,
   sendCommonstorageData,
   sendUserData,
 }) => {
+
   const [selectedButton, setSelectedButton] = useState(false);
   const {
     gameResources,
@@ -86,7 +89,7 @@ const ActBoard = ({
     updateGameResources,
     updateUserResources,
   } = useResources();
-  const [showButtons, setShowButtons] = useState(false); // State to manage button visibility
+  const [visibleButtons, setVisibleButtons] = useState(new Set([32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])); // Initial buttons covered
 
   const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
 
@@ -324,15 +327,24 @@ const ActBoard = ({
     updateUserResources({ food: userResources.food + 2 });
   };
 
+  //데모 라운드0 점프 버튼
+  const Lound0 = () => {
+    setVisibleButtons(new Set([33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])); 
+  };
+
+  //데모 라운드1 점프 버튼
+  const Lound1 = () => {
+    setVisibleButtons(new Set([34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])); 
+  };
+
   //데모 라운드5 점프 버튼
   //자원 조정, 라운드 카드 가려놨던 거 5라운드카드까지 다 뒤집기
   const Lound5 = () => {
-    setShowButtons(true);
+    setVisibleButtons(new Set([45])); 
   };
 
-  //데모 라운드6 점프 버튼
-  //자원 조정, 라운드 카드 가려놨던 거 6라운드카드까지 다 뒤집기
   const Lound6 = () => {
+    setVisibleButtons(new Set()); // Remove overlay from all buttons
     updateGameResources({ food: gameResources.food - 2 });
     updateUserResources({ food: userResources.food + 2 });
   };
@@ -369,11 +381,13 @@ const ActBoard = ({
     { id: "29", src: clay21, handler: handleButton29 },
     { id: "39", src: round3a, handler: handleButton39 },
     { id: "40", src: round3b, handler: handleButton40 },
+    { handler : isDisabled}, 
     { id: "19", src: clay19, handler: handleButton19 },
     { id: "25", src: farmGet20, handler: handleButton25 },
     { id: "30", src: reed27, handler: handleButton30 },
     { id: "41", src: round4a, handler: handleButton41 },
     { id: "42", src: round4b, handler: handleButton42 },
+    { handler : isDisabled}, 
     { id: "20", src: study25, handler: handleButton20 },
     { id: "26", src: studay26, handler: handleButton26 },
     { id: "31", src: fish33, handler: handleButton31 },
@@ -386,7 +400,15 @@ const ActBoard = ({
 
   return (
     <div className={styles.container}>
+        <div className={styles.right}>
+        <button onClick={Lound0}>Lound 1</button>
+        <button onClick={Lound1}>Lound 1-2</button>
+        <button onClick={Lound5}>Lound 5-2</button>
+        <button onClick={Lound6}>Lound 6-1</button>
+        {/* <button onClick={harvest}>수확</button> */}
+      </div>
       <div className={styles.grid}>
+        
         {buttonsData.map((button) => (
           <button
             key={button.id}
@@ -394,6 +416,7 @@ const ActBoard = ({
             id={button.id}
             onClick={() => {
               button.handler();
+              
               if (familyCount < 2) {
                 updateFamilyPosition(memberId * 2 - familyCount, button.id);
                 setFamilyCount((prev) => prev + 1);
@@ -401,7 +424,15 @@ const ActBoard = ({
               test(button.id);
             }}
           >
-            <img src={button.src} alt={button.id} />
+            {button.src && <img src={button.src} alt={button.id} />} {/* Only render img if src exists */}
+          {visibleButtons.has(parseInt(button.id)) && <div className={styles.overlay} />}
+          {familyPosition[0] &&
+            (familyPosition[0].family[0].xy === Number(button.id) ||
+              familyPosition[0].family[1].xy === Number(button.id)) && (
+              <div className={styles.userMark}>
+                <img src={familyImages[0]} alt="User Mark" />
+              </div>
+            )}
             {familyPosition[0] &&
               (familyPosition[0].family[0].xy === Number(button.id) ||
                 familyPosition[0].family[1].xy === Number(button.id)) && (
@@ -441,11 +472,6 @@ const ActBoard = ({
           resources={gameResources}
           resourceIcons={resourceIcons}
         />
-      </div>
-      <div className={styles.right}>
-        <button onClick={Lound5}>Lound 5-2</button>
-        <button onClick={Lound6}>Lound 6-1</button>
-        <button onClick={harvest}>수확</button>
       </div>
     </div>
   );
