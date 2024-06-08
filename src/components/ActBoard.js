@@ -87,6 +87,10 @@ const ActBoard = ({
   visibleButtons,
   setVisibleButtons,
   updateRound,
+  updateFarmData,
+  inquiryFarm,
+  updateCageData,
+  cageData,
 }) => {
   const [selectedButton, setSelectedButton] = useState(false);
   const {
@@ -457,14 +461,47 @@ const ActBoard = ({
   //데모 라운드 점프 버튼
   const handleRound = () => {
     updateRound();
-    setRoundState((prevState) => (prevState + 1) % 15);
+    setRoundState((prevState) => (prevState + 1) % 16);
   };
 
   //데모 수확 점프 버튼
   //자원 조정, 라운드 카드 가려놨던 거 6라운드카드까지 다 뒤집기
-  const harvest = () => {};
+  const harvest = async () => {
+    console.log("수확");
+    console.log(myID);
+    // 수확 단계
+    if (myID === 3) {
+      const data = await inquiryFarm(memberId, false);
+      console.log(data);
+      data.forEach((item) => {
+        if (item.xy) {
+          updateFarmData(false, item.id, 1, item.xy, 2);
+        }
+      });
+    }
+    // 먹이기
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({
+      data: { food: data.food - data.family * 2 },
+      update: doUpdate,
+    });
+    // 번식
+    if (myID === 1) {
+      updateCageData(false, cageData[0].cageId, 0, 1, 1, 3);
+    }
+  };
 
-  const handleButton = () => {};
+  const handleDemo = () => {
+    if (roundState <= 14) {
+      handleRound();
+    } else {
+      harvest();
+    }
+  };
 
   // 테스트 함수
   const test = async (id) => {
@@ -541,6 +578,8 @@ const ActBoard = ({
         return "Round 5-2";
       case 14:
         return "Round 6-1";
+      case 15:
+        return "수확";
       default:
         return "";
     }
@@ -549,7 +588,7 @@ const ActBoard = ({
   return (
     <div className={styles.container}>
       <div className={styles.right}>
-        <button onClick={handleRound}>{getButtonText(roundState)}</button>
+        <button onClick={handleDemo}>{getButtonText(roundState)}</button>
       </div>
       <div className={styles.grid}>
         {buttonsData.map((button) => (

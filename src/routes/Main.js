@@ -341,7 +341,7 @@ function Main() {
   };
 
   // 밭 조회 함수
-  const inquiryFarm = async (id) => {
+  const inquiryFarm = async (id, update = true) => {
     // 밭 조회 API 호출
     const fetchData = async () => {
       try {
@@ -358,7 +358,10 @@ function Main() {
     const data = await fetchData();
     if (data) {
       console.log("farm", data); // 전송받은 데이터 콘솔 출력
-      setFarmData(data);
+      if (update) {
+        setFarmData(data);
+      }
+      return data;
     }
   };
 
@@ -731,6 +734,10 @@ function Main() {
               visibleButtons={visibleButtons}
               setVisibleButtons={setVisibleButtons}
               updateRound={updateRound}
+              updateFarmData={updateFarmData}
+              inquiryFarm={inquiryFarm}
+              updateCageData={updateCageData}
+              cageData={cageData}
             />
           </div>
           <div className={styles.rightBoard}>

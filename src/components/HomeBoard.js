@@ -278,6 +278,8 @@ function HomeBoard({
           updatedFarm[item.xy] = "fence2";
         } else if (item.stock_cnt === 2) {
           updatedFarm[item.xy] = "pig_2";
+        } else if (item.stock_cnt === 3) {
+          updatedFarm[item.xy] = "pig_3";
         }
       });
 
@@ -413,7 +415,6 @@ function HomeBoard({
               src={plowImg}
               alt="PlowGrain2"
               className={styles.pointerCursor}
-              onClick={() => handleCrops(index)}
             />
           </div>
         );
@@ -427,7 +428,6 @@ function HomeBoard({
               src={plowImg}
               alt="PlowGrain3"
               className={styles.pointerCursor}
-              onClick={() => handleCrops(index)}
             />
           </div>
         );
@@ -436,6 +436,20 @@ function HomeBoard({
           <div key={index} className={styles.image}>
             <img src={pigIcon} alt="family" className={styles.overlay} />
             <img src={pigIcon} alt="family" className={styles.overlay2} />
+            <img
+              src={fence2Img}
+              alt="Fence2"
+              className={styles.pointerCursor}
+              onClick={() => handleCrops(index)}
+            />
+          </div>
+        );
+      case "pig_3":
+        return (
+          <div key={index} className={styles.image}>
+            <img src={pigIcon} alt="family" className={styles.overlay} />
+            <img src={pigIcon} alt="family" className={styles.overlay2} />
+            <img src={pigIcon} alt="family" className={styles.overlay3} />
             <img
               src={fence2Img}
               alt="Fence2"
