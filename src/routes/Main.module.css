@@ -20,12 +20,13 @@
 
 /* ?? ?? ?? */
 .header {
-  background-color: rgb(107, 107, 107);
+  background-color: rgb(136, 224, 238);
   display: flex;
   justify-content: end;
   width: 100%;
   height: 10%;
   font-size: larger;
+  box-shadow: inset 0 -20px 20px rgba(8, 37, 21, 0.1); /* Add inset shadow */
 }
 
 .text {
@@ -39,16 +40,17 @@
 
 /* ???? ? ? */
 .gameBoard {
-  background-color: #c8c8c8;
+  background-color: #7fc671;
   display: flex;
   flex-direction: row;
   width: 100%;
   height: 90%;
+
+  box-shadow: inset 0 100px 100px rgba(9, 52, 58, 0.1); /* Add inset shadow */
 }
 
 /* ??? */
 .actBoard {
-  background-color: #c3c3c3;
   display: flex;
   flex-direction: row;
   width: 67%;
@@ -57,19 +59,16 @@
 
 /* ? ? */
 .rightBoard {
-  background-color: #b8b8b8;
   width: 33%;
   height: 100%;
 }
 
 .homeBoard {
-  background-color: #575757;
   width: 100%;
   height: 50%;
 }
 
 .cardBoard {
-  background-color: #c4c4c4;
   width: 100%;
   height: 50%;
 }

@@ -1,22 +1,19 @@
-.container{
-  background-color: rgb(200, 117, 200);
+.container {
   display: flex;
   width: 100%;
   height: 100%;
   flex-direction: column;
 }
 
-.topSection{
-  background-color: rgb(200, 187, 117);
+.topSection {
   display: flex;
   width: 100%;
   height: 50%;
   flex-direction: column;
-  justify-content:center;
+  justify-content: center;
 }
 
-.bottomSection{
-  background-color: rgb(240, 252, 16);
+.bottomSection {
   display: flex;
   width: 100%;
   height: 50%;
@@ -48,7 +45,6 @@
   margin: 7.5%;
 }
 
-
 .cardPileText {
   position: absolute;
   top: 0;
@@ -59,11 +55,10 @@
   box-sizing: border-box;
 }
 
-.images img{
+.images img {
   display: flex;
   position: absolute;
   width: 1%;
   height: 10%;
   margin: 0%;
 }
-

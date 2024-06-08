@@ -451,14 +451,14 @@ const ActBoard = ({
   };
 
   //데모 라운드0 점프 버튼
-  const Lound0 = () => {
+  const Lound1 = () => {
     setVisibleButtons(
       new Set([33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
     );
   };
 
   //데모 라운드1 점프 버튼
-  const Lound1 = () => {
+  const Lound12 = () => {
     setVisibleButtons(
       new Set([34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
     );
@@ -466,11 +466,11 @@ const ActBoard = ({
 
   //데모 라운드5 점프 버튼
   //자원 조정, 라운드 카드 가려놨던 거 5라운드카드까지 다 뒤집기
-  const Lound5 = () => {
+  const Lound52 = () => {
     setVisibleButtons(new Set([45]));
   };
 
-  const Lound6 = () => {
+  const Lound62 = () => {
     setVisibleButtons(new Set()); // Remove overlay from all buttons
     updateGameResources({ food: gameResources.food - 2 });
     updateUserResources({ food: userResources.food + 2 });
@@ -530,15 +530,15 @@ const ActBoard = ({
   return (
     <div className={styles.container}>
       <div className={styles.right}>
-        <button onClick={Lound0}>Lound 1</button>
-        <button onClick={Lound1}>Lound 1-2</button>
-        <button onClick={Lound5}>Lound 5-2</button>
-        <button onClick={Lound6}>Lound 6-1</button>
+        <button onClick={Lound1}>Lound 1</button>
+        <button onClick={Lound12}>Lound 1-2</button>
+        <button onClick={Lound52}>Lound 5-2</button>
+        <button onClick={Lound62}>Lound 6-1</button>
         {/* <button onClick={harvest}>수확</button> */}
       </div>
       <div className={styles.grid}>
         {buttonsData.map((button) => (
-          <button
+          <div
             key={button.id}
             className={styles.button}
             id={button.id}
@@ -552,8 +552,7 @@ const ActBoard = ({
               test(button.id);
             }}
           >
-            {button.src && <img src={button.src} alt={button.id} />}{" "}
-            {/* Only render img if src exists */}
+            {button.src && <img src={button.src} alt={button.id} />}
             {visibleButtons.has(parseInt(button.id)) && (
               <div className={styles.overlay} />
             )}
@@ -570,7 +569,7 @@ const ActBoard = ({
                   </div>
                 )
             )}
-          </button>
+          </div>
         ))}
         <div></div>
         <div></div>
