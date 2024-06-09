@@ -88,8 +88,6 @@ const ModalStyles = {
 Modal.setAppElement("#root");
 
 const ActBoard = ({
-  roomnumber,
-  memberId,
   inquiryFamilyPosition,
   updateFamilyPosition,
   userInfos,
@@ -98,34 +96,27 @@ const ActBoard = ({
   sendCommonstorageData,
   sendUserData,
   inquiryUserStorage,
-  currentShowUser,
   myID,
   updateTurn,
   visibleButtons,
   setVisibleButtons,
   updateRound,
   updateFarmData,
-  inquiryFarm,
   updateCageData,
-  cageData,
   initializeFamilyPosition,
   familyCount,
   setFamilyCount,
   findMemberInfo,
   familyID,
   farmData,
+  cageData,
+  inquiryFarm,
 }) => {
-  const [selectedButton, setSelectedButton] = useState(false);
-  const {
-    gameResources,
-    userResources,
-    updateGameResources,
-    updateUserResources,
-  } = useResources();
+  const { roomnumber, currentShowUser, memberId, gameResources } =
+    useResources();
 
   const [grainIsOpen, setGrainIsOpen] = useState(false);
   const [roundState, setRoundState] = useState(0); // 라운드 상태를 관리하는 useState 훅
-  const [pigMarketImage, setPigMarketImage] = useState(round3a2); // 바뀜
   const navigate = useNavigate();
 
   const resourceIcons = {
@@ -413,7 +404,7 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({
-      data: { pig: data.pig + 1 },
+      data: { pig: data.pig + 2 },
       update: doUpdate,
     });
     // 공동자원
@@ -421,7 +412,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      pig: gameResources.pig - 1,
+      pig: gameResources.pig - 2,
     });
   };
 
@@ -636,6 +627,7 @@ const ActBoard = ({
   const handleButton27 = async () => {
     console.log("날품팔이 클릭");
     const data = await inquiryUserStorage({ id: memberId, update: false });
+    console.log("개인 자원: ", data);
     let doUpdate = false;
     if (currentShowUser === 0 || currentShowUser === myID) {
       doUpdate = true;
@@ -695,6 +687,7 @@ const ActBoard = ({
     });
     // 번식
     if (myID === 1) {
+      console.log(cageData);
       updateCageData(false, cageData[0].cageId, 0, 9, 1, 3);
     }
   };

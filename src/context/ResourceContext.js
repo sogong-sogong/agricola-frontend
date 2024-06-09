@@ -1,30 +1,14 @@
 import React, { createContext, useState, useContext, useRef } from "react";
 
-import woodImg from "../assets/objects/wood.png";
-import soilImg from "../assets/objects/soil.png";
-import coalImg from "../assets/objects/coal.png";
-import reedImg from "../assets/objects/reed.png";
-import grainImg from "../assets/objects/grain.png";
-import vegeImg from "../assets/objects/vege.png";
-import foodImg from "../assets/objects/food.png";
-import beggingImg from "../assets/objects/begging.png";
-
-import sheepImg from "../assets/objects/sheep.png";
-import boarImg from "../assets/objects/boar.png";
-import cowImg from "../assets/objects/cow.png";
-
-import farmerImg from "../assets/objects/farmer.png";
-import fenceImg from "../assets/objects/fence.png";
-import homeImg from "../assets/objects/home.png";
-
 // Context 생성
 const ResourceContext = createContext();
 
 export const ResourceProvider = ({ children }) => {
   // API 호출 주소
-  const ipAddress = "localhost";
+  //const ipAddress = "localhost";
   //const ipAddress = "172.17.74.133";
   const portNum = "8080";
+  const ipAddress = "192.168.0.13";
 
   // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
   const stompClient = useRef(null);
