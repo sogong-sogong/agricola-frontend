@@ -18,6 +18,7 @@ import plowGrain2Img from "../assets/image/plow_grain2.png";
 import plowGrain3Img from "../assets/image/plow_grain3.png";
 
 import fence2Img from "../assets/objects/fence2.png";
+import cowshedImg from "../assets/image/cowshed.png";
 
 import branchIcon from "../assets/image/tree.png";
 import seedIcon from "../assets/image/seed.png";
@@ -215,7 +216,23 @@ function HomeBoard({
     if (index === 7 || index === 8) {
       console.log("농지");
       updateFarmData(true, 1, 1, index, 0); // 곡식 0개 곡식밭 생성
-    } else if (index === 12) {
+    } else if (index === 4 || index === 5) {
+      console.log("외양간");
+      updateCageData(true, 0, 1, 1, index, 0);
+      const data = await inquiryUserStorage({ id: memberId, update: false });
+      let doUpdate = false;
+      if (currentShowUser === 0 || currentShowUser === myID) {
+        doUpdate = true;
+      }
+      sendUserData({ data: { wood: data.wood - 2, cowshed: data.cowshed + 1 }, update: doUpdate });
+      // 공동자원
+      sendCommonstorageData({
+        roomId: {
+          id: roomnumber,
+        },
+        wood: gameResources.wood + 2
+      });
+    }else if (index === 12) {
       console.log("집");
       updateHouseData(true, 0, "wood", index, 0);
     } else if (index === 1) {
@@ -311,6 +328,8 @@ function HomeBoard({
       cageData.forEach((item) => {
         if (item.type === 0 && item.stock_cnt === 0) {
           updatedFarm[item.xy] = "fence2";
+        } else if (item.type === 1 && item.stock_cnt === 0) {
+          updatedFarm[item.xy] = "cowshed";
         } else if (item.stock_cnt === 2) {
           updatedFarm[item.xy] = "pig_2";
         } else if (item.stock_cnt === 3) {
@@ -478,20 +497,31 @@ function HomeBoard({
             />
           </div>
         );
-      case "pig_3":
-        return (
-          <div key={index} className={styles.image}>
-            <img src={pigIcon} alt="family" className={styles.overlay} />
-            <img src={pigIcon} alt="family" className={styles.overlay2} />
-            <img src={pigIcon} alt="family" className={styles.overlay3} />
-            <img
-              src={fence2Img}
-              alt="Fence2"
-              className={styles.pointerCursor}
-              onClick={() => handleCrops(index)}
-            />
-          </div>
-        );
+        case "pig_3":
+          return (
+            <div key={index} className={styles.image}>
+              <img src={pigIcon} alt="family" className={styles.overlay} />
+              <img src={pigIcon} alt="family" className={styles.overlay2} />
+              <img src={pigIcon} alt="family" className={styles.overlay3} />
+              <img
+                src={fence2Img}
+                alt="Fence2"
+                className={styles.pointerCursor}
+                onClick={() => handleCrops(index)}
+              />
+            </div>
+          );
+          case "cowshed":
+            return (
+              <div key={index} className={styles.image}>
+                <img
+                  src={cowshedImg}
+                  alt="cowshed"
+                  className={styles.pointerCursor}
+                  // onClick={() => handleCrops(index)}
+                />
+              </div>
+            );
       default:
         return null;
     }
