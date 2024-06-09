@@ -312,10 +312,9 @@ function HomeBoard({
     });
   };
 
-  const test = () => {
-    console.log(data.farm);
-  };
+  const test = () => {};
 
+  // family에 index가 있으면 표시
   const renderFamilyImage = (index) => {
     return familyPosition[currentShowUser - 1] &&
       (familyPosition[currentShowUser - 1].family[0].xy === index ||
@@ -354,7 +353,6 @@ function HomeBoard({
                 // handleFenceInstallation(index);
                 // handleCrops(index);
                 onClickEmpty(index);
-                test();
               }}
             />
           </div>
@@ -500,6 +498,7 @@ function HomeBoard({
     <div className={styles.container}>
       <div
         className={styles.topSection}
+        onClick={test}
         style={
           currentShowUser === 0
             ? {

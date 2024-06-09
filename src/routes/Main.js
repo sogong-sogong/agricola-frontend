@@ -38,6 +38,8 @@ function Main() {
 
   const { updateGameResources, setScore, updateUserResources } = useResources();
 
+  const [familyID, setFamilyID] = useState([]);
+
   const address = "localhost";
   const ipAddress = "172.17.74.133";
 
@@ -257,7 +259,7 @@ function Main() {
       },
     ];
     // 데이터 전송
-    console.log("데이터 전송:", dataToSend);
+    console.log("가족 위치 변경 데이터 전송:", dataToSend);
     stompClient.current.send(
       `/pub/room/${roomnumber}/family/position/update`,
       {},
@@ -661,6 +663,9 @@ function Main() {
     //inquiryFamilyPosition();
     //updateCageData(true, 0, 0, 0, 8, 0);
     //inquiryHouse();
+
+    console.log(Cookies.get("memberId"));
+    console.log(familyPosition);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
@@ -701,6 +706,19 @@ function Main() {
     }
   }, [userInfos]);
 
+  useEffect(() => {
+    let array = [];
+    familyPosition.forEach((item) => {
+      //console.log(item.memberId);
+      if (item.memberId === Number(memberIdRef.current)) {
+        array.push(item.family[0].id); // 배열에 아이템을 추가
+        array.push(item.family[1].id);
+      }
+    });
+    //console.log("최종", array); // 최종 배열을 출력
+    setFamilyID(array);
+  }, [familyPosition]);
+
   return (
     <div className={styles.container}>
       <div className={styles.leftBoard}>
@@ -735,6 +753,7 @@ function Main() {
               familyCount={familyCount}
               setFamilyCount={setFamilyCount}
               findMemberInfo={findMemberInfo}
+              familyID={familyID}
             />
           </div>
           <div className={styles.rightBoard}>

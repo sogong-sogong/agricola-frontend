@@ -95,6 +95,7 @@ const ActBoard = ({
   familyCount,
   setFamilyCount,
   findMemberInfo,
+  familyID,
 }) => {
   const [selectedButton, setSelectedButton] = useState(false);
   const {
@@ -755,6 +756,7 @@ const ActBoard = ({
   // 테스트 함수
   const test = async (id) => {
     console.log(`Button with id ${id} clicked`);
+    console.log(familyID);
     //console.log(familyPosition[0].family[0].xy);
   };
 
@@ -850,7 +852,7 @@ const ActBoard = ({
               button.handler();
 
               if (familyCount < 2) {
-                updateFamilyPosition(memberId * 2 - familyCount, button.id);
+                updateFamilyPosition(familyID[familyCount], button.id);
                 setFamilyCount((prev) => prev + 1);
               }
               test(button.id);
