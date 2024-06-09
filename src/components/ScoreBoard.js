@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styles from "./ScoreBoard.module.css";
 
 import { useResources } from "../context/ResourceContext";
+import { useNavigate } from "react-router-dom";  // import useNavigate
 
 import fieldImg from "../assets/objects/field_small.png";
 import cageImg from "../assets/objects/cageland-small.png";
@@ -22,6 +23,7 @@ import beggingImg from "../assets/objects/begging.png";
 
 function ScoreBoard() {
   const { score } = useResources();
+  const navigate = useNavigate(); 
 
   const column = [
     "",
@@ -90,10 +92,26 @@ function ScoreBoard() {
     beggingImg,
   ];
 
+    // 순위를 계산하는 함수
+    const calculateRanks = () => {
+      const sortedScores = [...score].sort((a, b) => b.score - a.score);
+      return score.map((s) => ({
+        ...s,
+        rank: sortedScores.findIndex((sortedScore) => sortedScore.memberId === s.memberId) + 1,
+      }));
+    };
+  
+    const rankedScores = calculateRanks();
+    
+
+  // 방의 번호를 useState와 Cookie에 저장한다.
+  const onClickLobbyroom = () => {
+    navigate('/');  // navigate to the Lobby page
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>점수 현황</div>
-
       <div className={styles.box}>
         <div className={styles.box1}>
           {column.map((col, index) => (
@@ -102,13 +120,14 @@ function ScoreBoard() {
             </div>
           ))}
           <div className={styles.box12}>합계</div>
+          <div className={styles.box12}>순위</div> {/* 순위 컬럼 추가 */}
         </div>
-        {score.map((item, index) => {
+        {rankedScores.map((item, index) => {
           const idStyle = { color: getColorByIndex(index) };
           return (
             <div key={index} className={styles.box2}>
               <div className={styles.box21} style={idStyle}>
-                User{score[index].memberId}
+                User{item.memberId}
               </div>
               {keys.map((key, idx) => (
                 <div key={idx} className={styles.box21}>
@@ -138,16 +157,19 @@ function ScoreBoard() {
                       />
                     </div>
                   </div>
-                  <div className={styles.box211}>{score[index][key]}</div>
+                  <div className={styles.box211}>{item[key]}</div>
                 </div>
               ))}
               <div className={styles.box21}>{score[index].card}</div>
               <div className={styles.box21}>{score[index].extra}</div>
               <div className={styles.box22}>{score[index].score}</div>
+              <div className={styles.box22}>{item.rank}등</div> {/* 순위 표시 */}
             </div>
+            
           );
         })}
       </div>
+      <button className={styles.close} onClick={onClickLobbyroom}>종료하기</button>
     </div>
   );
 }

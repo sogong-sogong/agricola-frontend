@@ -12,7 +12,7 @@ import LogBoard from "../components/LogBoard";
 
 import { useResources } from "../context/ResourceContext";
 
-function Main({ ipAddress, portNum }) {
+function Main() {
   const [farmData, setFarmData] = useState([]);
   const [houseData, setHouseData] = useState([]);
   const [cageData, setCageData] = useState([]);
@@ -40,6 +40,9 @@ function Main({ ipAddress, portNum }) {
 
   const [familyID, setFamilyID] = useState([]);
 
+  const address = "localhost";
+  const ipAddress = "172.17.74.133";
+
   function findMemberInfo(memberId) {
     const memberInfo = userInfos.find((member) => member.memberId === memberId);
     return memberInfo
@@ -51,7 +54,7 @@ function Main({ ipAddress, portNum }) {
   const connect = () => {
     // Stomp.over에 WebSocket을 생성하는 공장 함수 전달
     stompClient.current = Stomp.over(
-      () => new WebSocket(`ws://${ipAddress}:${portNum}/ws-stomp`)
+      () => new WebSocket(`ws://${ipAddress}:8080/ws-stomp`)
     );
 
     // 디버그 출력을 비활성화하는 빈 함수 설정
@@ -170,7 +173,7 @@ function Main({ ipAddress, portNum }) {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://${ipAddress}:${portNum}/commonstorage/${roomnumber}`
+          `http://${ipAddress}:8080/commonstorage/${roomnumber}`
         );
         return res.data;
       } catch (error) {
@@ -220,7 +223,7 @@ function Main({ ipAddress, portNum }) {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://${ipAddress}:${portNum}/family/get/${roomnumber}`
+          `http://${ipAddress}:8080/family/get/${roomnumber}`
         );
         return res.data;
       } catch (error) {
@@ -306,10 +309,10 @@ function Main({ ipAddress, portNum }) {
     // 점수 현황 조회 API 호출
     const fetchData = async () => {
       const urls = [
-        `http://${ipAddress}:${portNum}/score/member/${userInfos[0].memberId}`,
-        `http://${ipAddress}:${portNum}/score/member/${userInfos[1].memberId}`,
-        `http://${ipAddress}:${portNum}/score/member/${userInfos[2].memberId}`,
-        `http://${ipAddress}:${portNum}/score/member/${userInfos[3].memberId}`,
+        `http://${ipAddress}:8080/score/member/${userInfos[0].memberId}`,
+        `http://${ipAddress}:8080/score/member/${userInfos[1].memberId}`,
+        `http://${ipAddress}:8080/score/member/${userInfos[2].memberId}`,
+        `http://${ipAddress}:8080/score/member/${userInfos[3].memberId}`,
       ];
       try {
         const responses = await Promise.all(urls.map((url) => axios.get(url)));
@@ -334,7 +337,7 @@ function Main({ ipAddress, portNum }) {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://${ipAddress}:${portNum}/farm/member/${id}`
+          `http://${ipAddress}:8080/farm/member/${id}`
         );
         return res.data;
       } catch (error) {
@@ -361,7 +364,7 @@ function Main({ ipAddress, portNum }) {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://${ipAddress}:${portNum}/house/member/${id}`
+          `http://${ipAddress}:8080/house/member/${id}`
         );
         return res.data;
       } catch (error) {
@@ -383,7 +386,7 @@ function Main({ ipAddress, portNum }) {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://${ipAddress}:${portNum}/cage/member/${id}`
+          `http://${ipAddress}:8080/cage/member/${id}`
         );
         return res.data;
       } catch (error) {
@@ -428,9 +431,7 @@ function Main({ ipAddress, portNum }) {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://${ipAddress}:${portNum}/farm/member/${Number(
-            memberIdRef.current
-          )}`,
+          `http://${ipAddress}:8080/farm/member/${Number(memberIdRef.current)}`,
           farmData
         );
         return res.data;
@@ -470,7 +471,7 @@ function Main({ ipAddress, portNum }) {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://${ipAddress}:${portNum}/house/member/${Number(
+          `http://${ipAddress}:8080/house/member/${Number(
             memberIdRef.current
           )}`,
           houseData
@@ -517,9 +518,7 @@ function Main({ ipAddress, portNum }) {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://${ipAddress}:${portNum}/cage/member/${Number(
-            memberIdRef.current
-          )}`,
+          `http://${ipAddress}:8080/cage/member/${Number(memberIdRef.current)}`,
           cageData
         );
         return res.data;
@@ -551,7 +550,7 @@ function Main({ ipAddress, portNum }) {
 
     // PUT 요청을 보내는 내부 함수
     const sendData = async () => {
-      const url = `http://${ipAddress}:${portNum}/storage/update/${Number(
+      const url = `http://${ipAddress}:8080/storage/update/${Number(
         memberIdRef.current
       )}?${queryParams}`;
 
@@ -582,9 +581,7 @@ function Main({ ipAddress, portNum }) {
     // 개인 자원 조회 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `http://${ipAddress}:${portNum}/storage/${id}`
-        );
+        const res = await axios.get(`http://${ipAddress}:8080/storage/${id}`);
         return res.data;
       } catch (error) {
         // 조회가 안 될 경우 최대 n의 횟수만큼 재귀적으로 호출한다.
@@ -709,6 +706,7 @@ function Main({ ipAddress, portNum }) {
     if (roomnumber) {
       inquiryFamilyPosition();
     }
+    updateStarter(1)
   }, [userInfos]);
 
   useEffect(() => {

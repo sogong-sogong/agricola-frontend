@@ -5,6 +5,7 @@ import axios from "axios";
 import styles from "./ActBoard.module.css";
 import ResourceDisplay from "./ResourceDisplay";
 import { useResources } from "../context/ResourceContext";
+import { useNavigate } from "react-router-dom";  // import useNavigate
 
 import bush1 from "../assets/image/1_bush.png";
 import farmEx2 from "../assets/image/2_farm_expending.png";
@@ -44,6 +45,7 @@ import round4b from "../assets/image/4-2.png";
 import round5a from "../assets/image/5-1.png";
 import round5b from "../assets/image/5-2.png";
 import round6a from "../assets/image/6-1.png";
+import round3a2 from "../assets/image/3-12.png";
 
 import branchIcon from "../assets/image/tree.png";
 import seedIcon from "../assets/image/seed.png";
@@ -123,6 +125,8 @@ const ActBoard = ({
 
   const [grainIsOpen, setGrainIsOpen] = useState(false);
   const [roundState, setRoundState] = useState(0); // 라운드 상태를 관리하는 useState 훅
+  const [pigMarketImage, setPigMarketImage] = useState(round3a2); // 바뀜
+  const navigate = useNavigate(); 
 
   const resourceIcons = {
     branch: branchIcon,
@@ -704,7 +708,8 @@ const ActBoard = ({
     }
   };
 
-  const round52 = () => {
+  
+  const round61 = () => {
     let doUpdate = false;
     if (
       currentShowUser === 0 ||
@@ -717,7 +722,7 @@ const ActBoard = ({
     };
     if (findMemberInfo(Number(memberId)).number === 1) {
       data = {
-        wood: 10,
+        wood: 2,
         clay: 3,
         stone: 2,
         weed: 2,
@@ -733,7 +738,7 @@ const ActBoard = ({
       };
     } else if (findMemberInfo(Number(memberId)).number === 3) {
       data = {
-        wood: 8,
+        wood: 2,
         grain: 6,
         clay: 3,
         stone: 2,
@@ -744,7 +749,7 @@ const ActBoard = ({
       data = {
         wood: 15,
         clay: 3,
-        stone: 2,
+        stone: 7,
         weed: 4,
         food: 2,
       };
@@ -758,7 +763,19 @@ const ActBoard = ({
     if (findMemberInfo(Number(memberId)).number === 1) {
       updateCageData(true, 0, 0, 1, 1, 0);
     }
+
+    // Change the image of id: "45" button
+    setButtonsData(prevButtonsData =>
+      prevButtonsData.map(button =>
+        button.id === "39" ? { ...button, src: round3a2 } : button
+      )
+    ); // 바뀜
   };
+
+    // 방의 번호를 useState와 Cookie에 저장한다.
+    const onClickLobbyroom = () => {
+      navigate('/');  // navigate to the Lobby page
+    }
 
   // 테스트 함수
   const test = async (id) => {
@@ -768,7 +785,7 @@ const ActBoard = ({
   };
 
   // 행동판 버튼 정보 저장
-  const buttonsData = [
+  const [buttonsData, setButtonsData] = useState([
     { id: "16", src: bush1, handler: handleButton16 },
     { id: "22", src: farmEx2, handler: handleButton22 },
     { id: "32", src: round1a, handler: handleButton32 },
@@ -801,7 +818,7 @@ const ActBoard = ({
     { id: "45", src: round6a, handler: handleButton45 },
     { id: "21", src: show31, handler: handleButton21 },
     { id: "27", src: sell32, handler: handleButton27 },
-  ];
+  ]); // 바뀜
 
   // 상태에 따라 버튼에 표시될 텍스트를 결정하는 함수
   const getButtonText = (state) => {
@@ -902,7 +919,8 @@ const ActBoard = ({
       </Modal>
       <div className={styles.right}>
         <button onClick={handleDemo}>{getButtonText(roundState)}</button>
-        <button onClick={round52}>5-2</button>
+        <button onClick={round61}>자원 업데이트</button>
+        <button className={styles.close} onClick={onClickLobbyroom}>종료</button>
       </div>
       <div className={styles.grid}>
         {buttonsData.map((button) => (
