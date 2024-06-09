@@ -81,3 +81,9 @@
   height: 100%;
   border-right: 1px solid rgb(0, 0, 0);
 }
+
+.close{
+  display: flex;
+  align-items: center;
+
+}
