@@ -10,10 +10,11 @@ import userImage from "../assets/icons/user.png";
 import { useResources } from "../context/ResourceContext";
 
 function Lobby({ ipAddress, portNum }) {
-  const { stompClient, roomnumber, setRoomnumber, setMemberId } =
+  const { stompClient, roomnumber, setRoomnumber, memberId, setMemberId } =
     useResources();
 
   const [roomnum, setRoomnum] = useState(); // 방 번호를 저장할 임시 변수
+  const [membernum, setMembernum] = useState();
   const [rooms, setRooms] = useState([]); // 전체 방 목록을 저장할 상태
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ function Lobby({ ipAddress, portNum }) {
     const data = await fetchData();
     if (data && data.roomId) {
       setRoomnum(data.roomId);
-      Cookies.set("roomnumber", data.roomId);
+      //Cookies.set("roomnumber", data.roomId);
       createMemberId();
     }
   };
@@ -48,7 +49,7 @@ function Lobby({ ipAddress, portNum }) {
   // 방 목록에서 선택한 방에 입장한다.
   const onClickEnterGameRoom = (room) => {
     setRoomnum(room.roomId);
-    Cookies.set("roomnumber", room.roomId);
+    //Cookies.set("roomnumber", room.roomId);
     createMemberId();
   };
 
@@ -67,8 +68,8 @@ function Lobby({ ipAddress, portNum }) {
       }
     };
     const data = await fetchDataEnterRoom();
-    Cookies.set("memberId", data.memberId);
-    setMemberId(data.memberId);
+    //Cookies.set("memberId", data.memberId);
+    setMembernum(data.memberId);
   };
 
   // 컴포넌트 마운트 시 모든 방 조회하여 useState에 저장한다.
@@ -97,15 +98,17 @@ function Lobby({ ipAddress, portNum }) {
   // roomnumber 초기화
   useEffect(() => {
     setRoomnumber(null);
+    setMemberId(null);
   }, []);
 
   // roomnumber가 변경되었을 때 해당 경로로 이동한다.
   useEffect(() => {
-    if (roomnum && !roomnumber) {
+    if (roomnum && !roomnumber && membernum && !memberId) {
       setRoomnumber(roomnum);
+      setMemberId(membernum);
       navigate(`/main/${roomnum}`);
     }
-  }, [roomnum, navigate]);
+  }, [roomnum, membernum, navigate]);
 
   return (
     <div className={styles.container}>

@@ -30,7 +30,7 @@ export const ResourceProvider = ({ children }) => {
   const stompClient = useRef(null);
 
   const [roomnumber, setRoomnumber] = useState(null); // 방 번호
-  const [memberId, setMemberId] = useState(); // 멤버 아이디
+  const [memberId, setMemberId] = useState(null); // 멤버 아이디
   const [gameStart, setGameStart] = useState(false); // 게임 시작 여부
   const [currentShowUser, setCurrentShowUser] = useState(0); // 현재 행동판에 보이는 유저 번호 (1 ~ 4)
 

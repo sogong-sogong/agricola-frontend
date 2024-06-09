@@ -612,12 +612,6 @@ function Main({ ipAddress, portNum }) {
     console.log("방 번호: ", roomnumber);
 
     console.log("멤버 아이디: ", memberId);
-
-    const savedMemberId = Cookies.get("memberId");
-    if (savedMemberId) {
-      memberIdRef.current = savedMemberId;
-      // memberIdRef가 설정되면 inquiryUserStorage 실행
-    }
   }, []);
 
   // roomnumber가 설정될 때 connect 함수 호출
