@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -15,9 +14,11 @@ function Lobby() {
 
   const [messages, setMessages] = useState([]);
 
+  const ipAddress = "172.17.74.133";
+
   // Stomp.over에 WebSocket을 생성하는 공장 함수 전달
   const stompClient = Stomp.over(
-    () => new WebSocket("ws://localhost:8080/ws-stomp")
+    () => new WebSocket(`ws://${ipAddress}:8080/ws-stomp`)
   );
 
   // 방 만들기 버튼을 누르면 실행되는 함수
@@ -26,7 +27,7 @@ function Lobby() {
     // 방 생성 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/room/create");
+        const res = await axios.get(`http://${ipAddress}:8080/room/create`);
         return res.data;
       } catch (error) {
         console.error("Error creating room:", error);
@@ -54,7 +55,7 @@ function Lobby() {
     // 사용자 생성 API 호출
     const fetchDataEnterRoom = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/member/create");
+        const res = await axios.get(`http://${ipAddress}:8080/member/create`);
         return res.data;
       } catch (error) {
         console.error("Error", error);
@@ -70,7 +71,7 @@ function Lobby() {
     // 모든 방 조회 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/room/all");
+        const res = await axios.get(`http://${ipAddress}:8080/room/all`);
         return res.data;
       } catch (error) {
         console.error("Error fetching all rooms:", error);

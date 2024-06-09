@@ -38,6 +38,9 @@ function Main() {
 
   const { updateGameResources, setScore, updateUserResources } = useResources();
 
+  const address = "localhost";
+  const ipAddress = "172.17.74.133";
+
   function findMemberInfo(memberId) {
     const memberInfo = userInfos.find((member) => member.memberId === memberId);
     return memberInfo
@@ -49,7 +52,7 @@ function Main() {
   const connect = () => {
     // Stomp.over에 WebSocket을 생성하는 공장 함수 전달
     stompClient.current = Stomp.over(
-      () => new WebSocket("ws://localhost:8080/ws-stomp")
+      () => new WebSocket(`ws://${ipAddress}:8080/ws-stomp`)
     );
 
     // 디버그 출력을 비활성화하는 빈 함수 설정
@@ -166,7 +169,7 @@ function Main() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8080/commonstorage/${roomnumber}`
+          `http://${ipAddress}:8080/commonstorage/${roomnumber}`
         );
         return res.data;
       } catch (error) {
@@ -216,7 +219,7 @@ function Main() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8080/family/get/${roomnumber}`
+          `http://${ipAddress}:8080/family/get/${roomnumber}`
         );
         return res.data;
       } catch (error) {
@@ -302,10 +305,10 @@ function Main() {
     // 점수 현황 조회 API 호출
     const fetchData = async () => {
       const urls = [
-        `http://localhost:8080/score/member/${userInfos[0].memberId}`,
-        `http://localhost:8080/score/member/${userInfos[1].memberId}`,
-        `http://localhost:8080/score/member/${userInfos[2].memberId}`,
-        `http://localhost:8080/score/member/${userInfos[3].memberId}`,
+        `http://${ipAddress}:8080/score/member/${userInfos[0].memberId}`,
+        `http://${ipAddress}:8080/score/member/${userInfos[1].memberId}`,
+        `http://${ipAddress}:8080/score/member/${userInfos[2].memberId}`,
+        `http://${ipAddress}:8080/score/member/${userInfos[3].memberId}`,
       ];
       try {
         const responses = await Promise.all(urls.map((url) => axios.get(url)));
@@ -329,7 +332,9 @@ function Main() {
     // 밭 조회 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/farm/member/${id}`);
+        const res = await axios.get(
+          `http://${ipAddress}:8080/farm/member/${id}`
+        );
         return res.data;
       } catch (error) {
         console.error("Error", error);
@@ -354,7 +359,9 @@ function Main() {
     // 집 조회 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/house/member/${id}`);
+        const res = await axios.get(
+          `http://${ipAddress}:8080/house/member/${id}`
+        );
         return res.data;
       } catch (error) {
         console.error("Error", error);
@@ -374,7 +381,9 @@ function Main() {
     // 우리 조회 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/cage/member/${id}`);
+        const res = await axios.get(
+          `http://${ipAddress}:8080/cage/member/${id}`
+        );
         return res.data;
       } catch (error) {
         console.error("Error", error);
@@ -418,7 +427,7 @@ function Main() {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://localhost:8080/farm/member/${Number(memberIdRef.current)}`,
+          `http://${ipAddress}:8080/farm/member/${Number(memberIdRef.current)}`,
           farmData
         );
         return res.data;
@@ -458,7 +467,9 @@ function Main() {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://localhost:8080/house/member/${Number(memberIdRef.current)}`,
+          `http://${ipAddress}:8080/house/member/${Number(
+            memberIdRef.current
+          )}`,
           houseData
         );
         return res.data;
@@ -503,7 +514,7 @@ function Main() {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://localhost:8080/cage/member/${Number(memberIdRef.current)}`,
+          `http://${ipAddress}:8080/cage/member/${Number(memberIdRef.current)}`,
           cageData
         );
         return res.data;
@@ -535,7 +546,7 @@ function Main() {
 
     // PUT 요청을 보내는 내부 함수
     const sendData = async () => {
-      const url = `http://localhost:8080/storage/update/${Number(
+      const url = `http://${ipAddress}:8080/storage/update/${Number(
         memberIdRef.current
       )}?${queryParams}`;
 
@@ -566,7 +577,7 @@ function Main() {
     // 개인 자원 조회 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/storage/${id}`);
+        const res = await axios.get(`http://${ipAddress}:8080/storage/${id}`);
         return res.data;
       } catch (error) {
         // 조회가 안 될 경우 최대 n의 횟수만큼 재귀적으로 호출한다.
