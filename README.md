@@ -24,35 +24,24 @@
 <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=Notion&logoColor=white" alt="html"><img src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=JiraSoftware&logoColor=white" alt="html">
 
 ## 프론트엔드 아키텍처
-![image](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/34a69822-19e8-44eb-b85f-365c3c101d8d)
+![image](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/548b53c3-4518-4a92-b929-9540043101ed)
 
+![image](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/37d3073c-ffa4-4276-afb6-f48e74285ad4)
 
-![image](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/85d343c3-b971-4577-9d46-1b8edaed4c3c)
+## 화면 구성
+### 로비
+![스크린샷 2024-06-09 020111](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/051c06e5-aa1e-4d2d-a38a-473e6b1e22dd)
 
+### 인게임
+![스크린샷 2024-06-09 140009](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/e69fa44e-9fd4-4b54-82a2-d48225721a86)
 
-## :art: 화면 구성
-<div align="center">
-  <table>
-    <tr align="center">
-      <th>로비</th>
-      <th>인게임</th>
-    </tr>
-    <tr>
-      <td>![스크린샷 2024-06-09 020111](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/8c6f2ca3-441d-436b-acdc-846f37ccccda)</td>
-      <td></td>
-    </tr>
-    <tr align="center">
-      <th>농장</th>
-      <th>카드</th>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-    </tr>
-  </table>
-</div>
+### 카드
+![스크린샷 2024-06-09 140050](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/905e48c5-1f25-41bf-93bc-ae838485a07d)
+![스크린샷 2024-06-09 140156](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/f924db30-5f4d-40a1-83af-872894b38575)
 
-<br/>
+### 식량 교환
+![스크린샷 2024-06-09 194950](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/9932d94c-2893-4ae8-83c3-6cfdf8781908)
+
 
 ## 실행 방법
 
