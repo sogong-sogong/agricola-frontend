@@ -43,6 +43,8 @@ import hwaroOption03Image from "../assets/objects/hwaroOption03.jpg";
 import hwaroOption04Image from "../assets/objects/hwaroOption04.jpg";
 import hwaroOption05Image from "../assets/objects/hwaroOption05.jpg";
 
+import { useResources } from "../context/ResourceContext";
+
 function CardBoard({
   inquiryUserStorage,
   memberId,
@@ -52,6 +54,8 @@ function CardBoard({
   sendCommonstorageData,
   roomnumber,
 }) {
+  const { gameResources } = useResources();
+
   const [modalOpen, setModalOpen] = useState(false);
   const [cardsToShow, setCardsToShow] = useState([]);
   const [hwaroModalOpen, setHwaroModalOpen] = useState(false);
@@ -87,6 +91,7 @@ function CardBoard({
     gathererImage,
     propertyManagerImage,
     workerImage,
+    sendUserData,
   ]);
 
   const [hwaroCardStack, setHwaroCardStack] = useState([
@@ -446,6 +451,22 @@ function CardBoard({
     </div>
   );
 
+  const selectCard = async () => {
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { clay: data.clay - 2 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      clay: gameResources.clay + 2,
+    });
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.topSection}>
@@ -469,6 +490,7 @@ function CardBoard({
                 handleModalMajorCardClick(cardImage);
               }}
               onEnableButtonClick={handleEnableButtonClick}
+              selectCard={selectCard}
             />
           )}
           {cardsToShow === subCardStack && (
@@ -497,6 +519,7 @@ function CardBoard({
                 handleModalMajorCardClick(cardImage);
               }}
               onEnableButtonClick={handleEnableButtonClick}
+              selectCard={selectCard}
             />
           )}
           {cardsToShow === subCards && (

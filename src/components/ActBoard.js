@@ -224,6 +224,7 @@ const ActBoard = ({
   // + 카드 모달창 연결 필요
   const handleButton35 = async () => {
     console.log("주요설비 클릭");
+    /*
     const data = await inquiryUserStorage({ id: memberId, update: false });
     let doUpdate = false;
     if (currentShowUser === 0 || currentShowUser === myID) {
@@ -237,6 +238,7 @@ const ActBoard = ({
       },
       clay: gameResources.clay + 2,
     });
+    */
   };
 
   //수풀
