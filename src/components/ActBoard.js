@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 import styles from "./ActBoard.module.css";
 import ResourceDisplay from "./ResourceDisplay";
 import { useResources } from "../context/ResourceContext";
+import useWebSocket from "../hook/useWebSocket";
+import useInquiryData from "../hook/useInquiryData";
+import useSendData from "../hook/useSendData";
 
 import bush1 from "../assets/image/1_bush.png";
 import farmEx2 from "../assets/image/2_farm_expending.png";
@@ -23,13 +26,6 @@ import reed27 from "../assets/image/27_reed_yard.png";
 import show31 from "../assets/image/31_show.png";
 import sell32 from "../assets/image/32_selling.png";
 import fish33 from "../assets/image/33_fishing.png";
-
-import round1 from "../assets/image/number1.png";
-import round2 from "../assets/image/number2.png";
-import round3 from "../assets/image/number3.png";
-import round4 from "../assets/image/number4.png";
-import round5 from "../assets/image/number5.png";
-import round6 from "../assets/image/number6.png";
 
 import round1a from "../assets/image/1-1.png";
 import round1b from "../assets/image/1-2.png";
@@ -64,7 +60,6 @@ import cowIcon from "../assets/image/cow.png";
 import sheepIcon from "../assets/image/sheep.png";
 import begIcon from "../assets/image/beg.png";
 
-import mark from "../assets/image/farmer_blue.png";
 import mark_blue from "../assets/objects/family-blue.png";
 import mark_green from "../assets/objects/family-green.png";
 import mark_purple from "../assets/objects/family-purple.png";
@@ -88,40 +83,74 @@ const ModalStyles = {
 Modal.setAppElement("#root");
 
 const ActBoard = ({
-  roomnumber,
-  memberId,
-  inquiryFamilyPosition,
-  updateFamilyPosition,
-  userInfos,
-  familyPosition,
-  inquiryCommonstorage,
-  sendCommonstorageData,
-  sendUserData,
-  inquiryUserStorage,
-  currentShowUser,
   myID,
-  updateTurn,
-  visibleButtons,
-  setVisibleButtons,
-  updateRound,
-  updateFarmData,
-  inquiryFarm,
-  updateCageData,
-  cageData,
-  initializeFamilyPosition,
-  familyCount,
-  setFamilyCount,
   findMemberInfo,
+  familyCount,
   familyID,
-  farmData,
+  setFamilyCount,
+  visibleButtons,
 }) => {
-  const [selectedButton, setSelectedButton] = useState(false);
   const {
-    gameResources,
-    userResources,
+    ipAddress,
+    portNum,
     updateGameResources,
+    gameResources,
+    setScore,
     updateUserResources,
+    stompClient,
+    roomnumber,
+    memberId,
+    currentShowUser,
+    userInfos,
+    familyPosition,
+    setFamilyPosition,
   } = useResources();
+
+  const {
+    sendCommonstorageData,
+    updateFamilyPosition,
+    initializeFamilyPosition,
+    updateTurn,
+    updateRound,
+  } = useWebSocket({
+    stompClient,
+    roomnumber,
+    memberId,
+    familyPosition,
+  });
+
+  const {
+    farmData,
+    cageData,
+    setCageData,
+    inquiryFarm,
+    inquiryHouse,
+    inquiryCage,
+    inquiryUserStorage,
+  } = useInquiryData({
+    ipAddress,
+    portNum,
+    roomnumber,
+    updateUserResources,
+    updateGameResources,
+    setScore,
+    userInfos,
+    familyPosition,
+    setFamilyPosition,
+  });
+
+  const { updateFarmData, updateCageData, sendUserData } = useSendData({
+    ipAddress,
+    portNum,
+    memberId,
+    inquiryFarm,
+    inquiryHouse,
+    setCageData,
+    inquiryCage,
+    updateUserResources,
+  });
+
+  const [selectedButton, setSelectedButton] = useState(false);
 
   const [grainIsOpen, setGrainIsOpen] = useState(false);
   const [roundState, setRoundState] = useState(0); // 라운드 상태를 관리하는 useState 훅
