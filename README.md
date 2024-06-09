@@ -23,6 +23,36 @@
 ## 커뮤니케이션
 <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=Notion&logoColor=white" alt="html"><img src="https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=JiraSoftware&logoColor=white" alt="html">
 
+## 프론트엔드 아키텍처
+![image](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/34a69822-19e8-44eb-b85f-365c3c101d8d)
+
+
+![image](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/85d343c3-b971-4577-9d46-1b8edaed4c3c)
+
+
+## :art: 화면 구성
+<div align="center">
+  <table>
+    <tr align="center">
+      <th>로비</th>
+      <th>인게임</th>
+    </tr>
+    <tr>
+      <td>![스크린샷 2024-06-09 020111](https://github.com/sogong-sogong/agricola-frontend/assets/55482976/8c6f2ca3-441d-436b-acdc-846f37ccccda)</td>
+      <td></td>
+    </tr>
+    <tr align="center">
+      <th>농장</th>
+      <th>카드</th>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+</div>
+
+<br/>
 
 ## 실행 방법
 
