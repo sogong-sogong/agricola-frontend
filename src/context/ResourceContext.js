@@ -33,6 +33,7 @@ export const ResourceProvider = ({ children }) => {
   const [memberId, setMemberId] = useState(null); // 멤버 아이디
   const [gameStart, setGameStart] = useState(false); // 게임 시작 여부
   const [currentShowUser, setCurrentShowUser] = useState(0); // 현재 행동판에 보이는 유저 번호 (1 ~ 4)
+  const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
 
   // 공동창고 자원
   const [gameResources, setGameResources] = useState({
@@ -142,6 +143,8 @@ export const ResourceProvider = ({ children }) => {
         setCurrentShowUser,
         memberId,
         setMemberId,
+        userInfos,
+        setUserInfos,
       }}
     >
       {children}

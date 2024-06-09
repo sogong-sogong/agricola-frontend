@@ -12,6 +12,7 @@ import CardBoard from "../components/CardBoard";
 import LogBoard from "../components/LogBoard";
 
 import { useResources } from "../context/ResourceContext";
+import useWebSocket from "../hook/useWebSocket";
 import useInquiryData from "../hook/useInquiryData";
 
 function Main({ ipAddress, portNum }) {
@@ -21,30 +22,47 @@ function Main({ ipAddress, portNum }) {
     updateUserResources,
     stompClient,
     roomnumber,
-    setRoomnumber,
+    memberId,
     gameStart,
     setGameStart,
     currentShowUser,
     setCurrentShowUser,
-    memberId,
+    userInfos,
+    setUserInfos,
   } = useResources();
+
+  const { disconnect, sendData, sendCommonstorageData, updateFamilyPosition } =
+    useWebSocket({
+      stompClient,
+      roomnumber,
+      memberId,
+    });
+
   const {
     farmData,
     houseData,
     cageData,
     setCageData,
+    familyPosition,
+    setFamilyPosition,
     inquiryFarm,
     inquiryHouse,
     inquiryCage,
-  } = useInquiryData();
-
-  const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
-  const [familyPosition, setFamilyPosition] = useState([]); // 플레이어 4명의 위치 저장
+    inquiryFamilyPosition,
+    inquiryUserStorage,
+    inquiryCommonstorage,
+    inquiryScore,
+  } = useInquiryData({
+    roomnumber,
+    updateUserResources,
+    updateGameResources,
+    setScore,
+    userInfos,
+  });
 
   // 테스트 함수
   const test = () => {
-    inquiryCage(1);
-    console.log(houseData);
+    console.log(userInfos);
   };
 
   const [visibleButtons, setVisibleButtons] = useState(
@@ -52,10 +70,7 @@ function Main({ ipAddress, portNum }) {
   );
   const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
 
-  // 멤버 ID를 저장하는 Ref
-  const memberIdRef = useRef();
-
-  const myID = findMemberInfo(Number(memberIdRef.current)).number; // 자신의 number
+  const myID = findMemberInfo(Number(memberId)).number; // 자신의 number
 
   const [familyID, setFamilyID] = useState([]);
 
@@ -66,7 +81,7 @@ function Main({ ipAddress, portNum }) {
       : `Member with memberId ${memberId} not found`;
   }
 
-  // 웹소켓 구독 함수
+  // 웹소켓 구독 함수 - main
   const connect = () => {
     // Stomp.over에 WebSocket을 생성하는 공장 함수 전달
     stompClient.current = Stomp.over(
@@ -152,141 +167,6 @@ function Main({ ipAddress, portNum }) {
     );
   };
 
-  // 웹소켓 연결 해제
-  const disconnect = () => {
-    if (stompClient.current) {
-      stompClient.current.disconnect();
-      console.log("연결 해제됨");
-    }
-  };
-
-  // 웹소켓 방 입장 데이터 전송 코드
-  const sendData = () => {
-    if (!stompClient.current || !stompClient.current.connected) {
-      console.error("STOMP 연결이 설정되지 않았습니다.");
-      return;
-    }
-
-    // 디버그 출력을 비활성화하는 빈 함수 설정
-    stompClient.current.debug = () => {};
-
-    const dataToSend = {
-      memberId: memberIdRef.current,
-    };
-
-    // 데이터 전송
-    console.log("데이터 전송:", dataToSend);
-    stompClient.current.send(
-      `/pub/room/${roomnumber}`,
-      {},
-      JSON.stringify(dataToSend)
-    );
-  };
-
-  // 공동창고를 조회하고 데이터를 업데이트 하는 함수
-  const inquiryCommonstorage = async () => {
-    // 공동창고 조회 API 호출
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          `http://${ipAddress}:${portNum}/commonstorage/${roomnumber}`
-        );
-        return res.data;
-      } catch (error) {
-        console.error("Error", error);
-        return null;
-      }
-    };
-
-    const data = await fetchData();
-    if (data) {
-      //console.log(data); // 전송받은 데이터 콘솔 출력
-      updateGameResources(data);
-    }
-  };
-
-  // 웹소켓 공동 창고 업데이트
-  const sendCommonstorageData = (data) => {
-    if (!stompClient.current || !stompClient.current.connected) {
-      console.error("STOMP 연결이 설정되지 않았습니다.");
-      return;
-    }
-
-    // 디버그 출력을 비활성화하는 빈 함수 설정
-    stompClient.current.debug = () => {};
-    /*
-    const dataToSend = {
-      roomId: {
-        id: roomnumber,
-      },
-      wood: 47,
-      clay: 18,
-    };
-    */
-
-    // 데이터 전송
-    console.log("데이터 전송:", data);
-    stompClient.current.send(
-      `/pub/room/${roomnumber}/common/update`,
-      {},
-      JSON.stringify(data)
-    );
-  };
-
-  // 가족 위치를 가져오는 함수
-  const inquiryFamilyPosition = async () => {
-    // 가족 위치 조회 API 호출
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          `http://${ipAddress}:${portNum}/family/get/${roomnumber}`
-        );
-        return res.data;
-      } catch (error) {
-        console.error("Error", error);
-        return null;
-      }
-    };
-
-    const data = await fetchData();
-    if (data) {
-      //console.log(data); // 전송받은 데이터 콘솔 출력
-      setFamilyPosition(data);
-      // 빈 배열이 리턴되면 재귀적으로 함수를 다시 호출한다.
-      if (Array.isArray(data) && data.length === 0) {
-        inquiryFamilyPosition();
-      }
-    }
-  };
-
-  // 가족 위치 업데이트 함수
-  const updateFamilyPosition = async (id, xy) => {
-    // 가족 위치 업데이트 API 호출
-    if (!stompClient.current || !stompClient.current.connected) {
-      console.error("STOMP 연결이 설정되지 않았습니다.");
-      return;
-    }
-
-    // 디버그 출력을 비활성화하는 빈 함수 설정
-    stompClient.current.debug = () => {};
-
-    const dataToSend = [
-      {
-        id: id, //familyId
-        xy: xy, //family 위치
-      },
-    ];
-    // 데이터 전송
-    console.log("가족 위치 변경 데이터 전송:", dataToSend);
-    stompClient.current.send(
-      `/pub/room/${roomnumber}/family/position/update`,
-      {},
-      JSON.stringify(dataToSend)
-    );
-
-    //console.log(Number(memberIdRef.current));
-  };
-
   // 가족 위치 초기화 함수
   const initializeFamilyPosition = async () => {
     // 가족 위치 업데이트 API 호출
@@ -320,33 +200,6 @@ function Main({ ipAddress, portNum }) {
     //console.log(Number(memberIdRef.current));
   };
 
-  // 전체 유저 점수 현황을 가져오는 함수
-  const inquiryScore = async () => {
-    // 점수 현황 조회 API 호출
-    const fetchData = async () => {
-      const urls = [
-        `http://${ipAddress}:${portNum}/score/member/${userInfos[0].memberId}`,
-        `http://${ipAddress}:${portNum}/score/member/${userInfos[1].memberId}`,
-        `http://${ipAddress}:${portNum}/score/member/${userInfos[2].memberId}`,
-        `http://${ipAddress}:${portNum}/score/member/${userInfos[3].memberId}`,
-      ];
-      try {
-        const responses = await Promise.all(urls.map((url) => axios.get(url)));
-        const data = responses.map((response) => response.data);
-        setScore(data.flat());
-        return data.flat();
-      } catch (error) {
-        console.error("Error", error);
-        return null;
-      }
-    };
-
-    const data = await fetchData();
-    if (data) {
-      //console.log(data); // 전송받은 데이터 콘솔 출력
-    }
-  };
-
   // 농장 데이터 업데이트 함수
   // 업데이트 후 inquiryFarm을 실행한다.
   const updateFarmData = async (create, id, type, xy, crop) => {
@@ -374,9 +227,7 @@ function Main({ ipAddress, portNum }) {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://${ipAddress}:${portNum}/farm/member/${Number(
-            memberIdRef.current
-          )}`,
+          `http://${ipAddress}:${portNum}/farm/member/${Number(memberId)}`,
           farmData
         );
         return res.data;
@@ -389,7 +240,7 @@ function Main({ ipAddress, portNum }) {
     const response = await sendData();
     if (response) {
       console.log("Updated farm data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      inquiryFarm(Number(memberIdRef.current));
+      inquiryFarm(Number(memberId));
     }
   };
 
@@ -416,9 +267,7 @@ function Main({ ipAddress, portNum }) {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://${ipAddress}:${portNum}/house/member/${Number(
-            memberIdRef.current
-          )}`,
+          `http://${ipAddress}:${portNum}/house/member/${Number(memberId)}`,
           houseData
         );
         return res.data;
@@ -431,7 +280,7 @@ function Main({ ipAddress, portNum }) {
     const response = await sendData();
     if (response) {
       console.log("Updated house data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      inquiryHouse(Number(memberIdRef.current));
+      inquiryHouse(Number(memberId));
     }
   };
 
@@ -463,9 +312,7 @@ function Main({ ipAddress, portNum }) {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://${ipAddress}:${portNum}/cage/member/${Number(
-            memberIdRef.current
-          )}`,
+          `http://${ipAddress}:${portNum}/cage/member/${Number(memberId)}`,
           cageData
         );
         return res.data;
@@ -479,7 +326,7 @@ function Main({ ipAddress, portNum }) {
     const response = await sendData();
     if (response) {
       console.log("Updated cage data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      inquiryCage(Number(memberIdRef.current));
+      inquiryCage(Number(memberId));
     }
   };
 
@@ -498,7 +345,7 @@ function Main({ ipAddress, portNum }) {
     // PUT 요청을 보내는 내부 함수
     const sendData = async () => {
       const url = `http://${ipAddress}:${portNum}/storage/update/${Number(
-        memberIdRef.current
+        memberId
       )}?${queryParams}`;
 
       try {
@@ -519,38 +366,6 @@ function Main({ ipAddress, portNum }) {
       if (update) {
         updateUserResources(response);
       }
-    }
-  };
-
-  // 개인 자원 조회 함수
-  // update가 false이면, 조회만 한다.
-  const inquiryUserStorage = async ({ id, n = 10, update = true }) => {
-    // 개인 자원 조회 API 호출
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          `http://${ipAddress}:${portNum}/storage/${id}`
-        );
-        return res.data;
-      } catch (error) {
-        // 조회가 안 될 경우 최대 n의 횟수만큼 재귀적으로 호출한다.
-        if (n > 0) {
-          inquiryUserStorage({ id: id, n: n - 1, update: update });
-        } else {
-          console.error("Error", error);
-        }
-        return null;
-      }
-    };
-
-    const data = await fetchData();
-    if (data) {
-      console.log(`User ${id} storage`, data); // 전송받은 데이터 콘솔 출력
-      if (update) {
-        updateUserResources(data);
-      }
-
-      return data;
     }
   };
 
@@ -610,8 +425,11 @@ function Main({ ipAddress, portNum }) {
   // 컴포넌트가 마운트될 때 쿠키에서 멤버 아이디를 가져온다.
   useEffect(() => {
     console.log("방 번호: ", roomnumber);
-
     console.log("멤버 아이디: ", memberId);
+    connect();
+    inquiryCommonstorage();
+    inquiryFamilyPosition();
+    inquiryUserStorage({ id: memberId, update: true });
   }, []);
 
   // roomnumber가 설정될 때 connect 함수 호출
@@ -619,11 +437,7 @@ function Main({ ipAddress, portNum }) {
   // roomnumber가 설정될 때 가족 초기 위치를 가져온다.
   useEffect(() => {
     if (roomnumber) {
-      connect(); // connect가 프로미스를 반환한다고 가정
-      inquiryCommonstorage();
-      inquiryFamilyPosition();
-      inquiryUserStorage({ id: Number(memberIdRef.current), update: true });
-
+      // connect가 프로미스를 반환한다고 가정
       //inquiryFarm();
     }
 
@@ -643,7 +457,7 @@ function Main({ ipAddress, portNum }) {
     let array = [];
     familyPosition.forEach((item) => {
       //console.log(item.memberId);
-      if (item.memberId === Number(memberIdRef.current)) {
+      if (item.memberId === Number(memberId)) {
         array.push(item.family[0].id); // 배열에 아이템을 추가
         array.push(item.family[1].id);
       }
@@ -664,7 +478,7 @@ function Main({ ipAddress, portNum }) {
           <div className={styles.actBoard}>
             <ActBoard
               roomnumber={roomnumber}
-              memberId={Number(memberIdRef.current)}
+              memberId={Number(memberId)}
               inquiryFamilyPosition={inquiryFamilyPosition}
               updateFamilyPosition={updateFamilyPosition}
               userInfos={userInfos}
@@ -703,7 +517,7 @@ function Main({ ipAddress, portNum }) {
                 updateFarmData={updateFarmData}
                 updateHouseData={updateHouseData}
                 inquiryHouse={inquiryHouse}
-                memberId={Number(memberIdRef.current)}
+                memberId={Number(memberId)}
                 updateCageData={updateCageData}
                 inquiryUserStorage={inquiryUserStorage}
                 sendUserData={sendUserData}
@@ -715,7 +529,7 @@ function Main({ ipAddress, portNum }) {
             <div className={styles.cardBoard}>
               <CardBoard
                 inquiryUserStorage={inquiryUserStorage}
-                memberId={Number(memberIdRef.current)}
+                memberId={Number(memberId)}
                 currentShowUser={currentShowUser}
                 myID={myID}
                 sendUserData={sendUserData}
@@ -728,7 +542,7 @@ function Main({ ipAddress, portNum }) {
       </div>
       <div className={styles.logBoard}>
         <LogBoard
-          memberId={Number(memberIdRef.current)}
+          memberId={Number(memberId)}
           userInfos={userInfos}
           inquiryScore={inquiryScore}
           familyPosition={familyPosition}
