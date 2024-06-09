@@ -11,7 +11,6 @@ import CardBoard from "../components/CardBoard";
 import LogBoard from "../components/LogBoard";
 
 import { useResources } from "../context/ResourceContext";
-import useInquiryData from "../hook/useInquiryData";
 
 function Main({ ipAddress, portNum }) {
   const {
@@ -27,15 +26,10 @@ function Main({ ipAddress, portNum }) {
     setCurrentShowUser,
     memberId,
   } = useResources();
-  const {
-    farmData,
-    houseData,
-    cageData,
-    setCageData,
-    inquiryFarm,
-    inquiryHouse,
-    inquiryCage,
-  } = useInquiryData();
+
+  const [farmData, setFarmData] = useState([]);
+  const [houseData, setHouseData] = useState([]);
+  const [cageData, setCageData] = useState([]);
 
   const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
   const [familyPosition, setFamilyPosition] = useState([]); // 플레이어 4명의 위치 저장
@@ -597,11 +591,85 @@ function Main({ ipAddress, portNum }) {
     });
   };
 
+  // 밭 조회 함수
+  const inquiryFarm = async (id, update = true) => {
+    // 밭 조회 API 호출
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://${ipAddress}:${portNum}/farm/member/${id}`
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        // 데이터를 받지 못하면 farm data를 빈 배열로 설정한다.
+        setFarmData([]);
+        return null;
+      }
+    };
+
+    const data = await fetchData();
+    if (data) {
+      console.log("farm", data); // 전송받은 데이터 콘솔 출력
+      if (update) {
+        setFarmData(data);
+      }
+      return data;
+    }
+  };
+
+  // 집 조회 함수
+  const inquiryHouse = async (id) => {
+    // 집 조회 API 호출
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://${ipAddress}:${portNum}/house/member/${id}`
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        return null;
+      }
+    };
+
+    const data = await fetchData();
+    if (data) {
+      console.log("house", data); // 전송받은 데이터 콘솔 출력
+      setHouseData(data);
+    }
+  };
+
+  // 우리 조회 함수
+  const inquiryCage = async (id) => {
+    // 우리 조회 API 호출
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://${ipAddress}:${portNum}/cage/member/${id}`
+        );
+        return res.data;
+      } catch (error) {
+        console.error("Error", error);
+        // 데이터를 받지 못하면 cage data를 빈 배열로 설정한다.
+        setCageData([]);
+        return null;
+      }
+    };
+
+    const data = await fetchData();
+    if (data) {
+      console.log("cage", data); // 전송받은 데이터 콘솔 출력
+      setCageData(data);
+    }
+  };
+
   // 컴포넌트가 마운트될 때 쿠키에서 멤버 아이디를 가져온다.
   useEffect(() => {
     console.log("방 번호: ", roomnumber);
 
     console.log("멤버 아이디: ", memberId);
+    //updateStarter(1);
   }, []);
 
   // roomnumber가 설정될 때 connect 함수 호출
