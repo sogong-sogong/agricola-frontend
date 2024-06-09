@@ -166,7 +166,7 @@ const ActBoard = ({
       doUpdate = true;
     }
     sendUserData({
-      data: { stone: data.stone - 5, weed: data.weed - 2 },
+      data: { wood: data.wood - 5, weed: data.weed - 2 },
       update: doUpdate,
     });
     // 공동자원
@@ -174,7 +174,7 @@ const ActBoard = ({
       roomId: {
         id: roomnumber,
       },
-      stone: gameResources.stone + 5,
+      stone: gameResources.wood + 5,
       weed: gameResources.weed + 2,
     });
   };
@@ -657,22 +657,27 @@ const ActBoard = ({
   const harvest = async () => {
     console.log("수확");
     console.log(myID);
-    // 수확 단계
-    if (myID === 3) {
-      const data = await inquiryFarm(memberId, false);
-      console.log(data);
-      data.forEach((item) => {
-        if (item.xy) {
-          updateFarmData(false, item.id, 1, item.xy, 2);
-        }
-      });
-    }
-    // 먹이기
     const data = await inquiryUserStorage({ id: memberId, update: false });
     let doUpdate = false;
     if (currentShowUser === 0 || currentShowUser === myID) {
       doUpdate = true;
     }
+    // 수확 단계
+    if (myID === 3) {
+      const fdata = await inquiryFarm(memberId, false);
+      console.log(fdata);
+      fdata.forEach((item) => {
+        if (item.xy) {
+          updateFarmData(false, item.id, 1, item.xy, 2);
+        }
+      });
+      // 곡식 증가
+      sendUserData({
+        data: { grain: data.grain + 2 },
+        update: doUpdate,
+      });
+    }
+    // 먹이기
     sendUserData({
       data: { food: data.food - 4 },
       update: doUpdate,
