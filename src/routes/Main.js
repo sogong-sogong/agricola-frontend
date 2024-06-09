@@ -14,6 +14,7 @@ import LogBoard from "../components/LogBoard";
 import { useResources } from "../context/ResourceContext";
 import useWebSocket from "../hook/useWebSocket";
 import useInquiryData from "../hook/useInquiryData";
+import useSendData from "../hook/useSendData";
 
 function Main({ ipAddress, portNum }) {
   const {
@@ -29,22 +30,30 @@ function Main({ ipAddress, portNum }) {
     setCurrentShowUser,
     userInfos,
     setUserInfos,
+    familyPosition,
+    setFamilyPosition,
   } = useResources();
 
-  const { disconnect, sendData, sendCommonstorageData, updateFamilyPosition } =
-    useWebSocket({
-      stompClient,
-      roomnumber,
-      memberId,
-    });
+  const {
+    disconnect,
+    sendData,
+    sendCommonstorageData,
+    updateFamilyPosition,
+    initializeFamilyPosition,
+    updateTurn,
+    updateRound,
+  } = useWebSocket({
+    stompClient,
+    roomnumber,
+    memberId,
+    familyPosition,
+  });
 
   const {
     farmData,
     houseData,
     cageData,
     setCageData,
-    familyPosition,
-    setFamilyPosition,
     inquiryFarm,
     inquiryHouse,
     inquiryCage,
@@ -53,12 +62,28 @@ function Main({ ipAddress, portNum }) {
     inquiryCommonstorage,
     inquiryScore,
   } = useInquiryData({
+    ipAddress,
+    portNum,
     roomnumber,
     updateUserResources,
     updateGameResources,
     setScore,
     userInfos,
+    familyPosition,
+    setFamilyPosition,
   });
+
+  const { updateFarmData, updateHouseData, updateCageData, sendUserData } =
+    useSendData({
+      ipAddress,
+      portNum,
+      memberId,
+      inquiryFarm,
+      inquiryHouse,
+      setCageData,
+      inquiryCage,
+      updateUserResources,
+    });
 
   // 테스트 함수
   const test = () => {
@@ -165,247 +190,6 @@ function Main({ ipAddress, portNum }) {
         console.error("연결 실패:", error);
       }
     );
-  };
-
-  // 가족 위치 초기화 함수
-  const initializeFamilyPosition = async () => {
-    // 가족 위치 업데이트 API 호출
-    if (!stompClient.current || !stompClient.current.connected) {
-      console.error("STOMP 연결이 설정되지 않았습니다.");
-      return;
-    }
-    const dataToSend = [];
-
-    familyPosition.forEach((item) => {
-      const data = [
-        { id: item.family[0].id, xy: 6 },
-        { id: item.family[1].id, xy: 11 },
-      ];
-      dataToSend.push(...data);
-    });
-
-    console.log(dataToSend);
-
-    // 디버그 출력을 비활성화하는 빈 함수 설정
-    stompClient.current.debug = () => {};
-
-    // 데이터 전송
-    console.log("데이터 전송:", dataToSend);
-    stompClient.current.send(
-      `/pub/room/${roomnumber}/family/position/update`,
-      {},
-      JSON.stringify(dataToSend)
-    );
-
-    //console.log(Number(memberIdRef.current));
-  };
-
-  // 농장 데이터 업데이트 함수
-  // 업데이트 후 inquiryFarm을 실행한다.
-  const updateFarmData = async (create, id, type, xy, crop) => {
-    let data = {};
-
-    if (create) {
-      data = {
-        type: type,
-        xy: xy,
-        crop: crop,
-      };
-    } else {
-      data = {
-        id: id,
-        type: type,
-        xy: xy,
-        crop: crop,
-      };
-    }
-
-    const farmData = data;
-    console.log(farmData);
-
-    // PUT 요청을 보내는 내부 함수
-    const sendData = async () => {
-      try {
-        const res = await axios.put(
-          `http://${ipAddress}:${portNum}/farm/member/${Number(memberId)}`,
-          farmData
-        );
-        return res.data;
-      } catch (error) {
-        console.error("Error", error);
-        return null;
-      }
-    };
-
-    const response = await sendData();
-    if (response) {
-      console.log("Updated farm data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      inquiryFarm(Number(memberId));
-    }
-  };
-
-  // 집 데이터 업데이트 함수
-  const updateHouseData = async (create, id, type, xy, stock_type) => {
-    let data = {};
-
-    if (create) {
-      data = {
-        type: type,
-        xy: xy,
-        stock_type: stock_type,
-      };
-    } else {
-      data = {
-        id: id,
-        type: type,
-        xy: xy,
-        stock_type: stock_type,
-      };
-    }
-    const houseData = data;
-    // PUT 요청을 보내는 내부 함수
-    const sendData = async () => {
-      try {
-        const res = await axios.put(
-          `http://${ipAddress}:${portNum}/house/member/${Number(memberId)}`,
-          houseData
-        );
-        return res.data;
-      } catch (error) {
-        console.error("Error", error);
-        return null;
-      }
-    };
-
-    const response = await sendData();
-    if (response) {
-      console.log("Updated house data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      inquiryHouse(Number(memberId));
-    }
-  };
-
-  // 우리 데이터 업데이트 함수
-  const updateCageData = async (create, id, type, stock, xy, stock_cnt) => {
-    let data = {};
-
-    if (create) {
-      data = {
-        type: type,
-        stock: stock,
-        xy: xy,
-        stock_cnt: stock_cnt,
-      };
-    } else {
-      data = {
-        id: id,
-        type: type,
-        stock: stock,
-        xy: xy,
-        stock_cnt: stock_cnt,
-      };
-    }
-
-    const cageData = data;
-    console.log(cageData);
-
-    // PUT 요청을 보내는 내부 함수
-    const sendData = async () => {
-      try {
-        const res = await axios.put(
-          `http://${ipAddress}:${portNum}/cage/member/${Number(memberId)}`,
-          cageData
-        );
-        return res.data;
-      } catch (error) {
-        console.error("Error", error);
-        setCageData([]);
-        return null;
-      }
-    };
-
-    const response = await sendData();
-    if (response) {
-      console.log("Updated cage data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      inquiryCage(Number(memberId));
-    }
-  };
-
-  // 내 자원창고 put 업데이트
-  const sendUserData = async ({ data, update = true }) => {
-    //console.log(data);
-
-    // 쿼리 문자열 생성
-    const queryParams = Object.entries(data)
-      .map(
-        ([key, value]) =>
-          `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
-      )
-      .join("&");
-
-    // PUT 요청을 보내는 내부 함수
-    const sendData = async () => {
-      const url = `http://${ipAddress}:${portNum}/storage/update/${Number(
-        memberId
-      )}?${queryParams}`;
-
-      try {
-        const res = await axios.put(url);
-        console.log("데이터 전송:", res.data);
-        // 응답 데이터가 유효하다면 다음 단계를 수행합니다.
-        return res.data;
-      } catch (error) {
-        console.error("Error", error);
-        return null;
-      }
-    };
-
-    const response = await sendData();
-    if (response) {
-      console.log("Updated data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-
-      if (update) {
-        updateUserResources(response);
-      }
-    }
-  };
-
-  // 턴 업데이트 함수
-  const updateTurn = async (id) => {
-    // 턴 업데이트 API 호출
-    if (!stompClient.current || !stompClient.current.connected) {
-      console.error("STOMP 연결이 설정되지 않았습니다.");
-      return;
-    }
-
-    // 디버그 출력을 비활성화하는 빈 함수 설정
-    stompClient.current.debug = () => {};
-
-    const dataToSend = {
-      starter: id,
-    };
-    // 데이터 전송
-    console.log("데이터 전송:", dataToSend);
-    stompClient.current.send(
-      `/pub/room/${roomnumber}/starter/update`,
-      {},
-      JSON.stringify(dataToSend)
-    );
-  };
-
-  // 라운드 업데이트 함수
-  const updateRound = async () => {
-    // 라운드 업데이트 API 호출
-    if (!stompClient.current || !stompClient.current.connected) {
-      console.error("STOMP 연결이 설정되지 않았습니다.");
-      return;
-    }
-
-    // 디버그 출력을 비활성화하는 빈 함수 설정
-    stompClient.current.debug = () => {};
-
-    // 데이터 전송
-    console.log("라운드 업데이트 전송");
-    stompClient.current.send(`/pub/room/${roomnumber}/round/update`, {});
   };
 
   // number 값에 따라 starter 변경

@@ -3,22 +3,19 @@ import axios from "axios";
 
 // Custom Hook
 const useInquiryData = ({
+  ipAddress,
+  portNum,
   roomnumber,
   updateUserResources,
   updateGameResources,
   setScore,
   userInfos,
+  familyPosition,
+  setFamilyPosition,
 }) => {
   const [farmData, setFarmData] = useState([]);
   const [houseData, setHouseData] = useState([]);
   const [cageData, setCageData] = useState([]);
-
-  const [familyPosition, setFamilyPosition] = useState([]); // 가족 위치 저장
-
-  // API 호출 주소
-  const ipAddress = "localhost";
-  //const ipAddress = "172.17.74.133";
-  const portNum = "8080";
 
   // 밭 조회 함수
   const inquiryFarm = async (id, update = true) => {
@@ -205,8 +202,6 @@ const useInquiryData = ({
     houseData,
     cageData,
     setCageData,
-    familyPosition,
-    setFamilyPosition,
     inquiryFarm,
     inquiryHouse,
     inquiryCage,
