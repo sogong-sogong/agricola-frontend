@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef, startTransition } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { Stomp } from "@stomp/stompjs";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 import styles from "./Main.module.css";
 
@@ -15,6 +16,19 @@ import useInquiryData from "../hook/useInquiryData";
 
 function Main({ ipAddress, portNum }) {
   const {
+    updateGameResources,
+    setScore,
+    updateUserResources,
+    stompClient,
+    roomnumber,
+    setRoomnumber,
+    gameStart,
+    setGameStart,
+    currentShowUser,
+    setCurrentShowUser,
+    memberId,
+  } = useResources();
+  const {
     farmData,
     houseData,
     cageData,
@@ -24,18 +38,14 @@ function Main({ ipAddress, portNum }) {
     inquiryCage,
   } = useInquiryData();
 
-  const [roomnumber, setRoomnumber] = useState(); // 방 번호
   const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
   const [familyPosition, setFamilyPosition] = useState([]); // 플레이어 4명의 위치 저장
-  const [gameStart, setGameStart] = useState(false);
 
   // 테스트 함수
   const test = () => {
     inquiryCage(1);
     console.log(houseData);
   };
-
-  const [currentShowUser, setCurrentShowUser] = useState(0);
 
   const [visibleButtons, setVisibleButtons] = useState(
     new Set([32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
@@ -46,10 +56,6 @@ function Main({ ipAddress, portNum }) {
   const memberIdRef = useRef();
 
   const myID = findMemberInfo(Number(memberIdRef.current)).number; // 자신의 number
-  // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
-  const stompClient = useRef(null);
-
-  const { updateGameResources, setScore, updateUserResources } = useResources();
 
   const [familyID, setFamilyID] = useState([]);
 
@@ -601,12 +607,11 @@ function Main({ ipAddress, portNum }) {
     });
   };
 
-  // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
+  // 컴포넌트가 마운트될 때 쿠키에서 멤버 아이디를 가져온다.
   useEffect(() => {
-    const savedRoomNumber = Cookies.get("roomnumber");
-    if (savedRoomNumber) {
-      setRoomnumber(savedRoomNumber);
-    }
+    console.log("방 번호: ", roomnumber);
+
+    console.log("멤버 아이디: ", memberId);
 
     const savedMemberId = Cookies.get("memberId");
     if (savedMemberId) {

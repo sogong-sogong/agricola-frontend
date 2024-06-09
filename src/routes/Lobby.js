@@ -7,15 +7,17 @@ import styles from "./Lobby.module.css";
 
 import userImage from "../assets/icons/user.png";
 
+import { useResources } from "../context/ResourceContext";
+
 function Lobby({ ipAddress, portNum }) {
-  const [roomnumber, setRoomnumber] = useState();
+  const { stompClient, roomnumber, setRoomnumber, setMemberId } =
+    useResources();
+
+  const [roomnum, setRoomnum] = useState(); // 방 번호를 저장할 임시 변수
   const [rooms, setRooms] = useState([]); // 전체 방 목록을 저장할 상태
   const navigate = useNavigate();
 
-  const [messages, setMessages] = useState([]);
-
-  // Stomp.over에 WebSocket을 생성하는 공장 함수 전달
-  const stompClient = Stomp.over(
+  stompClient.current = Stomp.over(
     () => new WebSocket(`ws://${ipAddress}:${portNum}/ws-stomp`)
   );
 
@@ -37,7 +39,7 @@ function Lobby({ ipAddress, portNum }) {
 
     const data = await fetchData();
     if (data && data.roomId) {
-      setRoomnumber(data.roomId);
+      setRoomnum(data.roomId);
       Cookies.set("roomnumber", data.roomId);
       createMemberId();
     }
@@ -45,7 +47,7 @@ function Lobby({ ipAddress, portNum }) {
 
   // 방 목록에서 선택한 방에 입장한다.
   const onClickEnterGameRoom = (room) => {
-    setRoomnumber(room.roomId);
+    setRoomnum(room.roomId);
     Cookies.set("roomnumber", room.roomId);
     createMemberId();
   };
@@ -66,6 +68,7 @@ function Lobby({ ipAddress, portNum }) {
     };
     const data = await fetchDataEnterRoom();
     Cookies.set("memberId", data.memberId);
+    setMemberId(data.memberId);
   };
 
   // 컴포넌트 마운트 시 모든 방 조회하여 useState에 저장한다.
@@ -91,12 +94,18 @@ function Lobby({ ipAddress, portNum }) {
     fetchRooms();
   }, []);
 
+  // roomnumber 초기화
+  useEffect(() => {
+    setRoomnumber(null);
+  }, []);
+
   // roomnumber가 변경되었을 때 해당 경로로 이동한다.
   useEffect(() => {
-    if (roomnumber) {
-      navigate(`/main/${roomnumber}`);
+    if (roomnum && !roomnumber) {
+      setRoomnumber(roomnum);
+      navigate(`/main/${roomnum}`);
     }
-  }, [roomnumber, navigate]);
+  }, [roomnum, navigate]);
 
   return (
     <div className={styles.container}>
