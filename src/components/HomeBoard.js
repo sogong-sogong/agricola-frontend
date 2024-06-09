@@ -224,7 +224,7 @@ function HomeBoard({
       if (currentShowUser === 0 || currentShowUser === myID) {
         doUpdate = true;
       }
-      sendUserData({ data: { wood: data.wood - 2, cowshed: data.cowshed + 1 }, update: doUpdate });
+      sendUserData({ data: { wood: data.wood - 2, cowshed: data.cowshed - 1 }, update: doUpdate });
       // 공동자원
       sendCommonstorageData({
         roomId: {
