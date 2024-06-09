@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./ActBoard.module.css";
 import ResourceDisplay from "./ResourceDisplay";
 import { useResources } from "../context/ResourceContext";
-import { useNavigate } from "react-router-dom";  // import useNavigate
 
 import bush1 from "../assets/image/1_bush.png";
 import farmEx2 from "../assets/image/2_farm_expending.png";
@@ -126,7 +126,7 @@ const ActBoard = ({
   const [grainIsOpen, setGrainIsOpen] = useState(false);
   const [roundState, setRoundState] = useState(0); // 라운드 상태를 관리하는 useState 훅
   const [pigMarketImage, setPigMarketImage] = useState(round3a2); // 바뀜
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const resourceIcons = {
     branch: branchIcon,
@@ -713,7 +713,6 @@ const ActBoard = ({
     }
   };
 
-  
   const round61 = () => {
     let doUpdate = false;
     if (
@@ -770,17 +769,17 @@ const ActBoard = ({
     }
 
     // Change the image of id: "45" button
-    setButtonsData(prevButtonsData =>
-      prevButtonsData.map(button =>
+    setButtonsData((prevButtonsData) =>
+      prevButtonsData.map((button) =>
         button.id === "39" ? { ...button, src: round3a2 } : button
       )
     ); // 바뀜
   };
 
-    // 방의 번호를 useState와 Cookie에 저장한다.
-    const onClickLobbyroom = () => {
-      navigate('/');  // navigate to the Lobby page
-    }
+  const onClickLobbyroom = () => {
+    console.log("종료");
+    navigate(`/`);
+  };
 
   // 테스트 함수
   const test = async (id) => {
@@ -925,7 +924,9 @@ const ActBoard = ({
       <div className={styles.right}>
         <button onClick={handleDemo}>{getButtonText(roundState)}</button>
         <button onClick={round61}>자원 업데이트</button>
-        <button className={styles.close} onClick={onClickLobbyroom}>종료</button>
+        <button className={styles.close} onClick={onClickLobbyroom}>
+          종료
+        </button>
       </div>
       <div className={styles.grid}>
         {buttonsData.map((button) => (

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useRef } from "react";
 
 import woodImg from "../assets/objects/wood.png";
 import soilImg from "../assets/objects/soil.png";
@@ -21,6 +21,19 @@ import homeImg from "../assets/objects/home.png";
 const ResourceContext = createContext();
 
 export const ResourceProvider = ({ children }) => {
+  // API 호출 주소
+  const ipAddress = "localhost";
+  //const ipAddress = "172.17.74.133";
+  const portNum = "8080";
+
+  // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
+  const stompClient = useRef(null);
+
+  const [roomnumber, setRoomnumber] = useState(null); // 방 번호
+  const [memberId, setMemberId] = useState(null); // 멤버 아이디
+  const [gameStart, setGameStart] = useState(false); // 게임 시작 여부
+  const [currentShowUser, setCurrentShowUser] = useState(0); // 현재 행동판에 보이는 유저 번호 (1 ~ 4)
+
   // 공동창고 자원
   const [gameResources, setGameResources] = useState({
     wood: 0,
@@ -112,12 +125,23 @@ export const ResourceProvider = ({ children }) => {
   return (
     <ResourceContext.Provider
       value={{
+        ipAddress,
+        portNum,
+        stompClient,
         gameResources,
         userResources,
         updateGameResources,
         updateUserResources,
         score,
         setScore,
+        roomnumber,
+        setRoomnumber,
+        gameStart,
+        setGameStart,
+        currentShowUser,
+        setCurrentShowUser,
+        memberId,
+        setMemberId,
       }}
     >
       {children}
