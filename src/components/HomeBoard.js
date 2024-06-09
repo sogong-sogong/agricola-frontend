@@ -3,10 +3,14 @@ import { ResourceContext } from "../context/ResourceContext";
 // import { initialUserResources } from "./resources.js";
 import ResourceDisplay from "./ResourceDisplay";
 import ResourceDisplay2 from "./ResourceDisplay2";
-import { useResources } from "../context/ResourceContext";
 import styles from "./HomeBoard.module.css";
 // import resources from "../components/resources";
 import ActBoard from "./ActBoard";
+
+import { useResources } from "../context/ResourceContext";
+import useWebSocket from "../hook/useWebSocket";
+import useInquiryData from "../hook/useInquiryData";
+import useSendData from "../hook/useSendData";
 
 import emptyImg from "../assets/objects/empty.png";
 import woodHomeImg from "../assets/objects/wood_home.jpg";
@@ -50,31 +54,64 @@ const familyImages = [
   familyRedImg,
 ];
 
-function HomeBoard({
-  farmData,
-  houseData,
-  cageData,
-  inquiryFarm,
-  familyPosition,
-  currentShowUser,
-  myID,
-  updateFarmData,
-  updateHouseData,
-  inquiryHouse,
-  memberId,
-  updateCageData,
-  inquiryUserStorage,
-  sendUserData,
-  sendCommonstorageData,
-  roomnumber,
-}) {
-  //const { setResourceData1 } = useContext(ResourceContext);
+function HomeBoard({ myID }) {
   const {
-    gameResources,
-    userResources,
+    ipAddress,
+    portNum,
     updateGameResources,
+    setScore,
     updateUserResources,
+    userResources,
+    gameResources,
+    stompClient,
+    roomnumber,
+    memberId,
+    currentShowUser,
+    userInfos,
+    familyPosition,
+    setFamilyPosition,
   } = useResources();
+
+  const { sendCommonstorageData } = useWebSocket({
+    stompClient,
+    roomnumber,
+    memberId,
+    familyPosition,
+  });
+
+  const {
+    farmData,
+    houseData,
+    cageData,
+    setCageData,
+    inquiryFarm,
+    inquiryHouse,
+    inquiryCage,
+    inquiryUserStorage,
+  } = useInquiryData({
+    ipAddress,
+    portNum,
+    roomnumber,
+    updateUserResources,
+    updateGameResources,
+    setScore,
+    userInfos,
+    familyPosition,
+    setFamilyPosition,
+  });
+
+  const { updateFarmData, updateHouseData, updateCageData, sendUserData } =
+    useSendData({
+      ipAddress,
+      portNum,
+      memberId,
+      inquiryFarm,
+      inquiryHouse,
+      setCageData,
+      inquiryCage,
+      updateUserResources,
+    });
+  //const { setResourceData1 } = useContext(ResourceContext);
   // const [updatedUserResources, setUpdatedUserResources] =
   //   useState(initialUserResources);
   const [data, setData] = useState({
@@ -224,15 +261,18 @@ function HomeBoard({
       if (currentShowUser === 0 || currentShowUser === myID) {
         doUpdate = true;
       }
-      sendUserData({ data: { wood: data.wood - 2, cowshed: data.cowshed - 1 }, update: doUpdate });
+      sendUserData({
+        data: { wood: data.wood - 2, cowshed: data.cowshed - 1 },
+        update: doUpdate,
+      });
       // 공동자원
       sendCommonstorageData({
         roomId: {
           id: roomnumber,
         },
-        wood: gameResources.wood + 2
+        wood: gameResources.wood + 2,
       });
-    }else if (index === 12) {
+    } else if (index === 12) {
       console.log("집");
       updateHouseData(true, 0, "wood", index, 0);
     } else if (index === 1) {
@@ -497,31 +537,31 @@ function HomeBoard({
             />
           </div>
         );
-        case "pig_3":
-          return (
-            <div key={index} className={styles.image}>
-              <img src={pigIcon} alt="family" className={styles.overlay} />
-              <img src={pigIcon} alt="family" className={styles.overlay2} />
-              <img src={pigIcon} alt="family" className={styles.overlay3} />
-              <img
-                src={fence2Img}
-                alt="Fence2"
-                className={styles.pointerCursor}
-                onClick={() => handleCrops(index)}
-              />
-            </div>
-          );
-          case "cowshed":
-            return (
-              <div key={index} className={styles.image}>
-                <img
-                  src={cowshedImg}
-                  alt="cowshed"
-                  className={styles.pointerCursor}
-                  // onClick={() => handleCrops(index)}
-                />
-              </div>
-            );
+      case "pig_3":
+        return (
+          <div key={index} className={styles.image}>
+            <img src={pigIcon} alt="family" className={styles.overlay} />
+            <img src={pigIcon} alt="family" className={styles.overlay2} />
+            <img src={pigIcon} alt="family" className={styles.overlay3} />
+            <img
+              src={fence2Img}
+              alt="Fence2"
+              className={styles.pointerCursor}
+              onClick={() => handleCrops(index)}
+            />
+          </div>
+        );
+      case "cowshed":
+        return (
+          <div key={index} className={styles.image}>
+            <img
+              src={cowshedImg}
+              alt="cowshed"
+              className={styles.pointerCursor}
+              // onClick={() => handleCrops(index)}
+            />
+          </div>
+        );
       default:
         return null;
     }

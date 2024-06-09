@@ -5,6 +5,11 @@ import styles from "./LogBoard.module.css";
 
 import ScoreBoardComponent from "../components/ScoreBoard";
 
+import { useResources } from "../context/ResourceContext";
+import useWebSocket from "../hook/useWebSocket";
+import useInquiryData from "../hook/useInquiryData";
+import useSendData from "../hook/useSendData";
+
 import calenderIcon from "../assets/icons/calendar-add.png";
 import starIcon from "../assets/icons/star.png";
 
@@ -57,22 +62,53 @@ const scorecardStyles = {
 
 Modal.setAppElement("#root");
 
-function LogBoard({
-  memberId,
-  userInfos,
-  inquiryScore,
-  familyPosition,
-  setCurrentShowUser,
-  myID,
-  farmData,
-  inquiryFarm,
-  inquiryHouse,
-  inquiryCage,
-  inquiryUserStorage,
-  gameStart,
-  currentShowUser,
-  sendUserData,
-}) {
+function LogBoard({ myID }) {
+  const {
+    ipAddress,
+    portNum,
+    updateGameResources,
+    setScore,
+    updateUserResources,
+    stompClient,
+    roomnumber,
+    memberId,
+    gameStart,
+    currentShowUser,
+    setCurrentShowUser,
+    userInfos,
+    familyPosition,
+    setFamilyPosition,
+  } = useResources();
+
+  const {
+    setCageData,
+    inquiryFarm,
+    inquiryHouse,
+    inquiryCage,
+    inquiryUserStorage,
+    inquiryScore,
+  } = useInquiryData({
+    ipAddress,
+    portNum,
+    roomnumber,
+    updateUserResources,
+    updateGameResources,
+    setScore,
+    userInfos,
+    familyPosition,
+    setFamilyPosition,
+  });
+
+  const { sendUserData } = useSendData({
+    ipAddress,
+    portNum,
+    memberId,
+    inquiryFarm,
+    inquiryHouse,
+    setCageData,
+    inquiryCage,
+    updateUserResources,
+  });
   const [scorecardIsOpen, setScorecardIsOpen] = useState(false);
   const [scoreBoardIsOpen, setScoreBoardIsOpen] = useState(false);
   const [foodExchangeIsOpen, setFoodExchangeIsOpen] = useState(false);
@@ -81,8 +117,6 @@ function LogBoard({
   const [familyCount, setFamilyCount] = useState([2, 2, 2, 2]);
 
   const starter = findStarterNumber() - 1; // 자신의 선턴 상태
-
-  const [userSeq, setUserSeq] = useState([]);
 
   const closeScorecard = () => {
     setScorecardIsOpen(false);

@@ -261,53 +261,17 @@ function Main({ ipAddress, portNum }) {
         <div className={styles.gameBoard}>
           <div className={styles.actBoard}>
             <ActBoard
-              roomnumber={roomnumber}
-              memberId={Number(memberId)}
-              inquiryFamilyPosition={inquiryFamilyPosition}
-              updateFamilyPosition={updateFamilyPosition}
-              userInfos={userInfos}
-              familyPosition={familyPosition}
-              sendCommonstorageData={sendCommonstorageData}
-              sendUserData={sendUserData}
-              inquiryUserStorage={inquiryUserStorage}
-              currentShowUser={currentShowUser}
               myID={myID}
-              updateTurn={updateTurn}
-              visibleButtons={visibleButtons}
-              setVisibleButtons={setVisibleButtons}
-              updateRound={updateRound}
-              updateFarmData={updateFarmData}
-              inquiryFarm={inquiryFarm}
-              updateCageData={updateCageData}
-              cageData={cageData}
-              initializeFamilyPosition={initializeFamilyPosition}
-              familyCount={familyCount}
-              setFamilyCount={setFamilyCount}
               findMemberInfo={findMemberInfo}
+              familyCount={familyCount}
               familyID={familyID}
-              farmData={farmData}
+              setFamilyCount={setFamilyCount}
+              visibleButtons={visibleButtons}
             />
           </div>
           <div className={styles.rightBoard}>
             <div className={styles.homeBoard}>
-              <HomeBoard
-                farmData={farmData}
-                houseData={houseData}
-                cageData={cageData}
-                inquiryFarm={inquiryFarm}
-                familyPosition={familyPosition}
-                currentShowUser={currentShowUser}
-                myID={myID}
-                updateFarmData={updateFarmData}
-                updateHouseData={updateHouseData}
-                inquiryHouse={inquiryHouse}
-                memberId={Number(memberId)}
-                updateCageData={updateCageData}
-                inquiryUserStorage={inquiryUserStorage}
-                sendUserData={sendUserData}
-                sendCommonstorageData={sendCommonstorageData}
-                roomnumber={roomnumber}
-              />
+              <HomeBoard myID={myID} />
             </div>
 
             <div className={styles.cardBoard}>
@@ -325,22 +289,7 @@ function Main({ ipAddress, portNum }) {
         </div>
       </div>
       <div className={styles.logBoard}>
-        <LogBoard
-          memberId={Number(memberId)}
-          userInfos={userInfos}
-          inquiryScore={inquiryScore}
-          familyPosition={familyPosition}
-          setCurrentShowUser={setCurrentShowUser}
-          myID={myID}
-          farmData={farmData}
-          inquiryFarm={inquiryFarm}
-          inquiryHouse={inquiryHouse}
-          inquiryCage={inquiryCage}
-          inquiryUserStorage={inquiryUserStorage}
-          gameStart={gameStart}
-          currentShowUser={currentShowUser}
-          sendUserData={sendUserData}
-        />
+        <LogBoard myID={myID} />
       </div>
     </div>
   );
