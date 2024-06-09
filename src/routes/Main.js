@@ -756,6 +756,7 @@ function Main() {
               setFamilyCount={setFamilyCount}
               findMemberInfo={findMemberInfo}
               familyID={familyID}
+              farmData={farmData}
             />
           </div>
           <div className={styles.rightBoard}>

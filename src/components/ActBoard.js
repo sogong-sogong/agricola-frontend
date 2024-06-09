@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
 import axios from "axios";
 
 import styles from "./ActBoard.module.css";
@@ -70,6 +71,20 @@ import { isDisabled } from "@testing-library/user-event/dist/utils";
 
 const familyImages = [mark_blue, mark_green, mark_purple, mark_red];
 
+const ModalStyles = {
+  content: {
+    backgroundColor: "white",
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+  },
+};
+
+Modal.setAppElement("#root");
+
 const ActBoard = ({
   roomnumber,
   memberId,
@@ -96,6 +111,7 @@ const ActBoard = ({
   setFamilyCount,
   findMemberInfo,
   familyID,
+  farmData,
 }) => {
   const [selectedButton, setSelectedButton] = useState(false);
   const {
@@ -105,6 +121,7 @@ const ActBoard = ({
     updateUserResources,
   } = useResources();
 
+  const [grainIsOpen, setGrainIsOpen] = useState(false);
   const [roundState, setRoundState] = useState(0); // 라운드 상태를 관리하는 useState 훅
 
   const resourceIcons = {
@@ -205,19 +222,7 @@ const ActBoard = ({
   //+ 농장판 선택 연결필요
   const handleButton34 = async () => {
     console.log("곡식활용 클릭");
-    const data = await inquiryUserStorage({ id: memberId, update: false });
-    let doUpdate = false;
-    if (currentShowUser === 0 || currentShowUser === myID) {
-      doUpdate = true;
-    }
-    sendUserData({ data: { grain: data.grain - 1 }, update: doUpdate });
-    // 공동자원
-    sendCommonstorageData({
-      roomId: {
-        id: roomnumber,
-      },
-      grain: gameResources.grain + 1,
-    });
+    opencard();
   };
 
   //주요설비
@@ -838,8 +843,63 @@ const ActBoard = ({
     }
   };
 
+  const closecard = async () => {
+    setGrainIsOpen(false);
+    // 자원 업데이트
+    const data = await inquiryUserStorage({ id: memberId, update: false });
+    let doUpdate = false;
+    if (currentShowUser === 0 || currentShowUser === myID) {
+      doUpdate = true;
+    }
+    sendUserData({ data: { grain: data.grain - 2 }, update: doUpdate });
+    // 공동자원
+    sendCommonstorageData({
+      roomId: {
+        id: roomnumber,
+      },
+      grain: gameResources.grain + 2,
+    });
+    // 농장 업데이트
+    console.log(farmData);
+    if (farmData[0].xy === 7) {
+      updateFarmData(false, farmData[0].farmId, 1, 7, 3); // 곡식 3개
+    }
+    if (farmData[1].xy === 8) {
+      updateFarmData(false, farmData[1].farmId, 1, 8, 3); // 곡식 3개
+    }
+  };
+
+  const opencard = () => {
+    setGrainIsOpen(true);
+  };
+
   return (
     <div className={styles.container}>
+      <Modal
+        isOpen={grainIsOpen}
+        onRequestClose={closecard}
+        contentLabel="grain"
+        style={ModalStyles}
+      >
+        <div className={styles.modal}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              paddingBottom: "5%",
+              width: "100%",
+              borderBottom: "1px solid #000",
+            }}
+          ></div>
+          <img
+            src={seedIcon}
+            alt="aa"
+            onClick={closecard}
+            style={{ height: "20%" }}
+          />
+          <img src={vegetableIcon} alt="aa" style={{ height: "20%" }} />
+        </div>
+      </Modal>
       <div className={styles.right}>
         <button onClick={handleDemo}>{getButtonText(roundState)}</button>
         <button onClick={round52}>5-2</button>
