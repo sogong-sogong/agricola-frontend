@@ -255,6 +255,16 @@ function HomeBoard({
     updateCageData(false, cageData[0].cageId, 0, 1, index, 2);
   };
 
+  const onClickPlow = (index) => {
+    console.log(farmData);
+    if (farmData[0].xy === 7) {
+      updateFarmData(false, farmData[0].farmId, 1, 7, 3); // 곡식 3개
+    }
+    if (farmData[1].xy === 8) {
+      updateFarmData(false, farmData[1].farmId, 1, 8, 3); // 곡식 3개
+    }
+  };
+
   const updateBoard = () => {
     setData((prevState) => {
       const updatedFarm = [
@@ -415,7 +425,7 @@ function HomeBoard({
               src={plowImg}
               alt="Plow"
               className={styles.pointerCursor}
-              onClick={() => handleCrops(index)}
+              onClick={() => onClickPlow(index)}
             />
           </div>
         );
