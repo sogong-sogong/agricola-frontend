@@ -90,6 +90,9 @@ const familyImages = [mark_blue, mark_green, mark_purple, mark_red];
     const [showButtons, setShowButtons] = useState(false); // State to manage button visibility
     const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
     const [visibleButtons, setVisibleButtons] = useState(new Set([32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])); // Initial buttons covered
+    const [showOverlay, setShowOverlay] = useState(false); // State to manage overlay visibility
+    
+
 
     const resourceIcons = {
       branch: branchIcon,
@@ -117,9 +120,10 @@ const familyImages = [mark_blue, mark_green, mark_purple, mark_red];
 
       console.log("now user resources:", userResources)
 
+      //작동안됨 은정님 코드합쳐야함.
       sendUserData({
-        wood: userResources.wood -20,
-        weed: userResources.weed -20,
+        wood: userResources.wood -1,
+        weed: userResources.weed -1,
       })
       
 
@@ -129,18 +133,25 @@ const familyImages = [mark_blue, mark_green, mark_purple, mark_red];
     };
 
     //농장확장
-  const handleButton22 = () => {
-    sendCommonstorageData({
-      roomId: { id: roomnumber },
-      wood: gameResources.wood + 5,
-      weed: gameResources.wood + 2,
-    });
-
-    updateUserResources({
-      wood: userResources.wood - 5,
-      weed: userResources.weed - 2,
-    });
-  };
+    const handleButton22 = () => {
+      setShowOverlay(true);
+    };
+  
+    const handleConfirm = () => {
+      sendCommonstorageData({
+        roomId: { id: roomnumber },
+        wood: gameResources.wood + 5,
+        weed: gameResources.wood + 2,
+      });
+  
+      updateUserResources({
+        wood: userResources.wood - 5,
+        weed: userResources.weed - 2,
+      });
+  
+      setShowOverlay(false);
+    };
+  
 
   //양시장
   const handleButton32 = () => {
@@ -593,6 +604,14 @@ const familyImages = [mark_blue, mark_green, mark_purple, mark_red];
           resourceIcons={resourceIcons}
         />
       </div>
+            {showOverlay && (
+        <div className={styles.overlayContainer}>
+          <div className={styles.overlayBox}>
+            <p>Are you sure?</p>
+            <button onClick={handleConfirm}>Confirm</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

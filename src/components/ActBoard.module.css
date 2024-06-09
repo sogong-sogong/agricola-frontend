@@ -39,8 +39,8 @@
   display: grid;
   top: 10%;
   left: 50%;
-
 }
+
 .overlay {
   position: absolute;
   top: 0;
@@ -48,5 +48,26 @@
   width: 100%;
   height: 100%;
   border-radius: 10px;
-  background-color: rgb(218, 218, 218); /* Semi-transparent grey */
+  background-color: rgba(218, 218, 218, 0.8); /* Semi-transparent grey */
+}
+
+
+.overlayBox {
+  background: rgba(0, 0, 0, 0.5); 
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.confirmButton {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #4CAF50; /* Green */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
 }
