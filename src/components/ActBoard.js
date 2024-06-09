@@ -756,7 +756,7 @@ const ActBoard = ({
   // 테스트 함수
   const test = async (id) => {
     console.log(`Button with id ${id} clicked`);
-    console.log(familyID);
+    console.log(findMemberInfo(Number(memberId)).number);
     //console.log(familyPosition[0].family[0].xy);
   };
 
@@ -871,7 +871,14 @@ const ActBoard = ({
                     key={`${button.id}-${index}`}
                     className={styles.userMark}
                   >
-                    <img src={familyImages[index]} alt="User Mark" />
+                    <img
+                      src={
+                        familyImages[
+                          findMemberInfo(Number(family.memberId)).number - 1
+                        ]
+                      }
+                      alt="User Mark"
+                    />
                   </div>
                 )
             )}

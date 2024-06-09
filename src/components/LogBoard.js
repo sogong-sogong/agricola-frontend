@@ -82,6 +82,8 @@ function LogBoard({
 
   const starter = findStarterNumber() - 1; // 자신의 선턴 상태
 
+  const [userSeq, setUserSeq] = useState([]);
+
   const closeScorecard = () => {
     setScorecardIsOpen(false);
   };
@@ -191,9 +193,7 @@ function LogBoard({
     };
   }, []);
 
-  const test = () => {
-    console.log(userInfos);
-  };
+  const test = () => {};
 
   // familyPosition가 변화하면 가족의 남은 수를 계산한다.
   useEffect(() => {

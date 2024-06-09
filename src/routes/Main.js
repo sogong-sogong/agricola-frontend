@@ -80,6 +80,8 @@ function Main() {
             newMessage[0].memberId !== undefined
           ) {
             console.log("메시지 경로", `/pub/room/${roomnumber}`);
+            // number 순서로 정렬
+            newMessage.sort((a, b) => a.number - b.number);
             setUserInfos(newMessage);
             if (newMessage.length > 3) {
               setGameStart(true);
@@ -665,7 +667,7 @@ function Main() {
     //inquiryHouse();
 
     console.log(Cookies.get("memberId"));
-    console.log(familyPosition);
+    console.log(userInfos);
   };
 
   // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
