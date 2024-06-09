@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef, startTransition } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { Stomp } from "@stomp/stompjs";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 import styles from "./Main.module.css";
 
@@ -11,37 +12,49 @@ import CardBoard from "../components/CardBoard";
 import LogBoard from "../components/LogBoard";
 
 import { useResources } from "../context/ResourceContext";
+import useInquiryData from "../hook/useInquiryData";
 
-function Main() {
-  const [farmData, setFarmData] = useState([]);
-  const [houseData, setHouseData] = useState([]);
-  const [cageData, setCageData] = useState([]);
+function Main({ ipAddress, portNum }) {
+  const {
+    updateGameResources,
+    setScore,
+    updateUserResources,
+    stompClient,
+    roomnumber,
+    setRoomnumber,
+    gameStart,
+    setGameStart,
+    currentShowUser,
+    setCurrentShowUser,
+    memberId,
+  } = useResources();
+  const {
+    farmData,
+    houseData,
+    cageData,
+    setCageData,
+    inquiryFarm,
+    inquiryHouse,
+    inquiryCage,
+  } = useInquiryData();
 
-  const [roomnumber, setRoomnumber] = useState(); // 방 번호
   const [userInfos, setUserInfos] = useState([]); // 플레이어 4명의 ID, number, starter 저장
   const [familyPosition, setFamilyPosition] = useState([]); // 플레이어 4명의 위치 저장
-  const [gameStart, setGameStart] = useState(false);
 
-  const [currentShowUser, setCurrentShowUser] = useState(0);
+  // 테스트 함수
+  const test = () => {
+    inquiryCage(1);
+    console.log(houseData);
+  };
 
   const [visibleButtons, setVisibleButtons] = useState(
     new Set([32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45])
   );
   const [familyCount, setFamilyCount] = useState(0); // 가족 몇 명이 행동판에 올라갔는지 센다.
 
-  // 멤버 ID를 저장하는 Ref
-  const memberIdRef = useRef();
-
-  const myID = findMemberInfo(Number(memberIdRef.current)).number; // 자신의 number
-  // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
-  const stompClient = useRef(null);
-
-  const { updateGameResources, setScore, updateUserResources } = useResources();
+  const myID = findMemberInfo(memberId).number; // 자신의 number
 
   const [familyID, setFamilyID] = useState([]);
-
-  const address = "localhost";
-  const ipAddress = "172.17.74.133";
 
   function findMemberInfo(memberId) {
     const memberInfo = userInfos.find((member) => member.memberId === memberId);
@@ -54,7 +67,7 @@ function Main() {
   const connect = () => {
     // Stomp.over에 WebSocket을 생성하는 공장 함수 전달
     stompClient.current = Stomp.over(
-      () => new WebSocket(`ws://${ipAddress}:8080/ws-stomp`)
+      () => new WebSocket(`ws://${ipAddress}:${portNum}/ws-stomp`)
     );
 
     // 디버그 출력을 비활성화하는 빈 함수 설정
@@ -155,7 +168,7 @@ function Main() {
     stompClient.current.debug = () => {};
 
     const dataToSend = {
-      memberId: memberIdRef.current,
+      memberId: memberId,
     };
 
     // 데이터 전송
@@ -173,7 +186,7 @@ function Main() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://${ipAddress}:8080/commonstorage/${roomnumber}`
+          `http://${ipAddress}:${portNum}/commonstorage/${roomnumber}`
         );
         return res.data;
       } catch (error) {
@@ -223,7 +236,7 @@ function Main() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `http://${ipAddress}:8080/family/get/${roomnumber}`
+          `http://${ipAddress}:${portNum}/family/get/${roomnumber}`
         );
         return res.data;
       } catch (error) {
@@ -309,10 +322,10 @@ function Main() {
     // 점수 현황 조회 API 호출
     const fetchData = async () => {
       const urls = [
-        `http://${ipAddress}:8080/score/member/${userInfos[0].memberId}`,
-        `http://${ipAddress}:8080/score/member/${userInfos[1].memberId}`,
-        `http://${ipAddress}:8080/score/member/${userInfos[2].memberId}`,
-        `http://${ipAddress}:8080/score/member/${userInfos[3].memberId}`,
+        `http://${ipAddress}:${portNum}/score/member/${userInfos[0].memberId}`,
+        `http://${ipAddress}:${portNum}/score/member/${userInfos[1].memberId}`,
+        `http://${ipAddress}:${portNum}/score/member/${userInfos[2].memberId}`,
+        `http://${ipAddress}:${portNum}/score/member/${userInfos[3].memberId}`,
       ];
       try {
         const responses = await Promise.all(urls.map((url) => axios.get(url)));
@@ -328,79 +341,6 @@ function Main() {
     const data = await fetchData();
     if (data) {
       //console.log(data); // 전송받은 데이터 콘솔 출력
-    }
-  };
-
-  // 밭 조회 함수
-  const inquiryFarm = async (id, update = true) => {
-    // 밭 조회 API 호출
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          `http://${ipAddress}:8080/farm/member/${id}`
-        );
-        return res.data;
-      } catch (error) {
-        console.error("Error", error);
-        // 데이터를 받지 못하면 farm data를 빈 배열로 설정한다.
-        setFarmData([]);
-        return null;
-      }
-    };
-
-    const data = await fetchData();
-    if (data) {
-      console.log("farm", data); // 전송받은 데이터 콘솔 출력
-      if (update) {
-        setFarmData(data);
-      }
-      return data;
-    }
-  };
-
-  // 집 조회 함수
-  const inquiryHouse = async (id) => {
-    // 집 조회 API 호출
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          `http://${ipAddress}:8080/house/member/${id}`
-        );
-        return res.data;
-      } catch (error) {
-        console.error("Error", error);
-        return null;
-      }
-    };
-
-    const data = await fetchData();
-    if (data) {
-      console.log("house", data); // 전송받은 데이터 콘솔 출력
-      setHouseData(data);
-    }
-  };
-
-  // 우리 조회 함수
-  const inquiryCage = async (id) => {
-    // 우리 조회 API 호출
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          `http://${ipAddress}:8080/cage/member/${id}`
-        );
-        return res.data;
-      } catch (error) {
-        console.error("Error", error);
-        // 데이터를 받지 못하면 cage data를 빈 배열로 설정한다.
-        setCageData([]);
-        return null;
-      }
-    };
-
-    const data = await fetchData();
-    if (data) {
-      console.log("cage", data); // 전송받은 데이터 콘솔 출력
-      setCageData(data);
     }
   };
 
@@ -431,7 +371,7 @@ function Main() {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://${ipAddress}:8080/farm/member/${Number(memberIdRef.current)}`,
+          `http://${ipAddress}:${portNum}/farm/member/${Number(memberId)}`,
           farmData
         );
         return res.data;
@@ -444,7 +384,7 @@ function Main() {
     const response = await sendData();
     if (response) {
       console.log("Updated farm data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      inquiryFarm(Number(memberIdRef.current));
+      inquiryFarm(memberId);
     }
   };
 
@@ -471,9 +411,7 @@ function Main() {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://${ipAddress}:8080/house/member/${Number(
-            memberIdRef.current
-          )}`,
+          `http://${ipAddress}:${portNum}/house/member/${Number(memberId)}`,
           houseData
         );
         return res.data;
@@ -486,7 +424,7 @@ function Main() {
     const response = await sendData();
     if (response) {
       console.log("Updated house data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      inquiryHouse(Number(memberIdRef.current));
+      inquiryHouse(memberId);
     }
   };
 
@@ -518,7 +456,7 @@ function Main() {
     const sendData = async () => {
       try {
         const res = await axios.put(
-          `http://${ipAddress}:8080/cage/member/${Number(memberIdRef.current)}`,
+          `http://${ipAddress}:${portNum}/cage/member/${Number(memberId)}`,
           cageData
         );
         return res.data;
@@ -532,7 +470,7 @@ function Main() {
     const response = await sendData();
     if (response) {
       console.log("Updated cage data:", response); // 서버로부터 받은 응답 데이터를 콘솔에 출력
-      inquiryCage(Number(memberIdRef.current));
+      inquiryCage(memberId);
     }
   };
 
@@ -550,8 +488,8 @@ function Main() {
 
     // PUT 요청을 보내는 내부 함수
     const sendData = async () => {
-      const url = `http://${ipAddress}:8080/storage/update/${Number(
-        memberIdRef.current
+      const url = `http://${ipAddress}:${portNum}/storage/update/${Number(
+        memberId
       )}?${queryParams}`;
 
       try {
@@ -581,7 +519,9 @@ function Main() {
     // 개인 자원 조회 API 호출
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://${ipAddress}:8080/storage/${id}`);
+        const res = await axios.get(
+          `http://${ipAddress}:${portNum}/storage/${id}`
+        );
         return res.data;
       } catch (error) {
         // 조회가 안 될 경우 최대 n의 횟수만큼 재귀적으로 호출한다.
@@ -658,30 +598,11 @@ function Main() {
     });
   };
 
-  // 테스트 함수
-  const test = () => {
-    // 가족 초기 위치 가져오기
-    //updateFarmData(true, 2, 1, 1, 1);
-    //inquiryFamilyPosition();
-    //updateCageData(true, 0, 0, 0, 8, 0);
-    //inquiryHouse();
-
-    console.log(Cookies.get("memberId"));
-    console.log(userInfos);
-  };
-
-  // 컴포넌트가 마운트될 때 쿠키에서 방 번호와 멤버 아이디를 가져온다.
+  // 컴포넌트가 마운트될 때 쿠키에서 멤버 아이디를 가져온다.
   useEffect(() => {
-    const savedRoomNumber = Cookies.get("roomnumber");
-    if (savedRoomNumber) {
-      setRoomnumber(savedRoomNumber);
-    }
+    console.log("방 번호: ", roomnumber);
 
-    const savedMemberId = Cookies.get("memberId");
-    if (savedMemberId) {
-      memberIdRef.current = savedMemberId;
-      // memberIdRef가 설정되면 inquiryUserStorage 실행
-    }
+    console.log("멤버 아이디: ", memberId);
   }, []);
 
   // roomnumber가 설정될 때 connect 함수 호출
@@ -692,7 +613,7 @@ function Main() {
       connect(); // connect가 프로미스를 반환한다고 가정
       inquiryCommonstorage();
       inquiryFamilyPosition();
-      inquiryUserStorage({ id: Number(memberIdRef.current), update: true });
+      inquiryUserStorage({ id: memberId, update: true });
 
       //inquiryFarm();
     }
@@ -706,14 +627,14 @@ function Main() {
     if (roomnumber) {
       inquiryFamilyPosition();
     }
-    updateStarter(1)
+    //updateStarter(1)
   }, [userInfos]);
 
   useEffect(() => {
     let array = [];
     familyPosition.forEach((item) => {
       //console.log(item.memberId);
-      if (item.memberId === Number(memberIdRef.current)) {
+      if (item.memberId === memberId) {
         array.push(item.family[0].id); // 배열에 아이템을 추가
         array.push(item.family[1].id);
       }
@@ -734,7 +655,7 @@ function Main() {
           <div className={styles.actBoard}>
             <ActBoard
               roomnumber={roomnumber}
-              memberId={Number(memberIdRef.current)}
+              memberId={memberId}
               inquiryFamilyPosition={inquiryFamilyPosition}
               updateFamilyPosition={updateFamilyPosition}
               userInfos={userInfos}
@@ -773,7 +694,7 @@ function Main() {
                 updateFarmData={updateFarmData}
                 updateHouseData={updateHouseData}
                 inquiryHouse={inquiryHouse}
-                memberId={Number(memberIdRef.current)}
+                memberId={memberId}
                 updateCageData={updateCageData}
                 inquiryUserStorage={inquiryUserStorage}
                 sendUserData={sendUserData}
@@ -785,7 +706,7 @@ function Main() {
             <div className={styles.cardBoard}>
               <CardBoard
                 inquiryUserStorage={inquiryUserStorage}
-                memberId={Number(memberIdRef.current)}
+                memberId={memberId}
                 currentShowUser={currentShowUser}
                 myID={myID}
                 sendUserData={sendUserData}
@@ -798,7 +719,7 @@ function Main() {
       </div>
       <div className={styles.logBoard}>
         <LogBoard
-          memberId={Number(memberIdRef.current)}
+          memberId={memberId}
           userInfos={userInfos}
           inquiryScore={inquiryScore}
           familyPosition={familyPosition}
