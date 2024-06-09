@@ -14,7 +14,6 @@ import LogBoard from "../components/LogBoard";
 import { useResources } from "../context/ResourceContext";
 import useWebSocket from "../hook/useWebSocket";
 import useInquiryData from "../hook/useInquiryData";
-import useSendData from "../hook/useSendData";
 
 function Main({ ipAddress, portNum }) {
   const {
@@ -26,23 +25,13 @@ function Main({ ipAddress, portNum }) {
     memberId,
     gameStart,
     setGameStart,
-    currentShowUser,
-    setCurrentShowUser,
     userInfos,
     setUserInfos,
     familyPosition,
     setFamilyPosition,
   } = useResources();
 
-  const {
-    disconnect,
-    sendData,
-    sendCommonstorageData,
-    updateFamilyPosition,
-    initializeFamilyPosition,
-    updateTurn,
-    updateRound,
-  } = useWebSocket({
+  const { disconnect, sendData } = useWebSocket({
     stompClient,
     roomnumber,
     memberId,
@@ -72,18 +61,6 @@ function Main({ ipAddress, portNum }) {
     familyPosition,
     setFamilyPosition,
   });
-
-  const { updateFarmData, updateHouseData, updateCageData, sendUserData } =
-    useSendData({
-      ipAddress,
-      portNum,
-      memberId,
-      inquiryFarm,
-      inquiryHouse,
-      setCageData,
-      inquiryCage,
-      updateUserResources,
-    });
 
   // 테스트 함수
   const test = () => {
@@ -275,15 +252,7 @@ function Main({ ipAddress, portNum }) {
             </div>
 
             <div className={styles.cardBoard}>
-              <CardBoard
-                inquiryUserStorage={inquiryUserStorage}
-                memberId={Number(memberId)}
-                currentShowUser={currentShowUser}
-                myID={myID}
-                sendUserData={sendUserData}
-                sendCommonstorageData={sendCommonstorageData}
-                roomnumber={roomnumber}
-              />
+              <CardBoard myID={myID} />
             </div>
           </div>
         </div>

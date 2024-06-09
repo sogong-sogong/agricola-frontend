@@ -44,16 +44,62 @@ import hwaroOption04Image from "../assets/objects/hwaroOption04.jpg";
 import hwaroOption05Image from "../assets/objects/hwaroOption05.jpg";
 
 import { useResources } from "../context/ResourceContext";
+import useWebSocket from "../hook/useWebSocket";
+import useInquiryData from "../hook/useInquiryData";
+import useSendData from "../hook/useSendData";
 
-function CardBoard({
-  inquiryUserStorage,
-  memberId,
-  currentShowUser,
-  myID,
-  sendUserData,
-  sendCommonstorageData,
-  roomnumber,
-}) {
+function CardBoard({ myID }) {
+  const {
+    ipAddress,
+    portNum,
+    updateGameResources,
+    setScore,
+    updateUserResources,
+    stompClient,
+    roomnumber,
+    memberId,
+    currentShowUser,
+    userInfos,
+    familyPosition,
+    setFamilyPosition,
+  } = useResources();
+
+  const { sendCommonstorageData } = useWebSocket({
+    stompClient,
+    roomnumber,
+    memberId,
+    familyPosition,
+  });
+
+  const {
+    setCageData,
+    inquiryFarm,
+    inquiryHouse,
+    inquiryCage,
+    inquiryUserStorage,
+  } = useInquiryData({
+    ipAddress,
+    portNum,
+    roomnumber,
+    updateUserResources,
+    updateGameResources,
+    setScore,
+    userInfos,
+    familyPosition,
+    setFamilyPosition,
+  });
+
+  const { sendUserData } = useSendData({
+    ipAddress,
+    portNum,
+    memberId,
+    inquiryFarm,
+    inquiryHouse,
+    setCageData,
+    inquiryCage,
+    updateUserResources,
+  });
+
   const { gameResources } = useResources();
 
   const [modalOpen, setModalOpen] = useState(false);
