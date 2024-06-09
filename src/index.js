@@ -3,9 +3,12 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
+import { ResourceProvider } from "./context/ResourceContext";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <ResourceProvider>
+      <App />
+    </ResourceProvider>
   </React.StrictMode>
 );

@@ -21,6 +21,11 @@ import homeImg from "../assets/objects/home.png";
 const ResourceContext = createContext();
 
 export const ResourceProvider = ({ children }) => {
+  // API 호출 주소
+  const ipAddress = "localhost";
+  //const ipAddress = "172.17.74.133";
+  const portNum = "8080";
+
   // 공동창고 자원
   const [gameResources, setGameResources] = useState({
     wood: 0,
@@ -112,6 +117,8 @@ export const ResourceProvider = ({ children }) => {
   return (
     <ResourceContext.Provider
       value={{
+        ipAddress,
+        portNum,
         gameResources,
         userResources,
         updateGameResources,
