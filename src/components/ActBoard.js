@@ -114,7 +114,7 @@ const ActBoard = ({
 }) => {
   const { roomnumber, currentShowUser, memberId, gameResources } =
     useResources();
-
+  const [modalIsOpen, setModalIsOpen] = useState(false); // 모달 상태 관리
   const [grainIsOpen, setGrainIsOpen] = useState(false);
   const [roundState, setRoundState] = useState(0); // 라운드 상태를 관리하는 useState 훅
   const navigate = useNavigate();
@@ -692,13 +692,31 @@ const ActBoard = ({
     }
   };
 
+  // 모달 열기
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   const handleDemo = () => {
     if (roundState === 1) {
+      openModal();
       console.log("1라운드 종료");
       initializeFamilyPosition();
-
       handleRound();
-    } else if (roundState <= 14) {
+    } else if (roundState === 2) {
+      openModal();
+      initializeFamilyPosition();
+      handleRound();
+    } else if (roundState === 14) {
+      openModal();
+      initializeFamilyPosition();
+      handleRound();
+    } else if (roundState < 14) {
       initializeFamilyPosition();
       handleRound();
     } else {
@@ -912,6 +930,17 @@ const ActBoard = ({
             style={{ height: "20%" }}
           />
           <img src={vegetableIcon} alt="aa" style={{ height: "20%" }} />
+        </div>
+      </Modal>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Round 1 Ended"
+        style={ModalStyles}
+      >
+        <div className={styles.container}>
+          <h2>라운드가 끝났습니다.</h2>
+          <button onClick={closeModal}>확인</button>
         </div>
       </Modal>
       <div className={styles.right}>
