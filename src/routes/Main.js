@@ -128,8 +128,9 @@ function Main({ ipAddress, portNum }) {
               "메시지 경로",
               `/pub/room/${roomnumber}/starter/update`
             );
-            updateGameResources(newMessage);
+            //updateGameResources(newMessage);
             updateStarter(newMessage.starter);
+            console.log("업데이트:", newMessage);
           } else {
             console.log("undefined message....");
           }
@@ -508,7 +509,7 @@ function Main({ ipAddress, portNum }) {
 
   // 개인 자원 조회 함수
   // update가 false이면, 조회만 한다.
-  const inquiryUserStorage = async ({ id, n = 10, update = true }) => {
+  const inquiryUserStorage = async ({ id, n = 20, update = true }) => {
     // 개인 자원 조회 API 호출
     const fetchData = async () => {
       try {

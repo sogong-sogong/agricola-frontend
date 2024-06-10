@@ -262,8 +262,8 @@ const ActBoard = ({
   //회합장소
   //+ 설비 카드 모달 창, 선턴 얻는 거 추가 필요
   const handleButton23 = () => {
-    console.log("회합장소 클릭");
-    updateTurn(myID);
+    console.log("회합장ddd소 클릭: ", findMemberInfo(memberId));
+    updateTurn(findMemberInfo(memberId));
   };
 
   //숲
